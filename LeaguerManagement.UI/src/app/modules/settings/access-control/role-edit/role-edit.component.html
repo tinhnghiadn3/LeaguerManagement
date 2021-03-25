@@ -1,0 +1,42 @@
+<div class="form-wrapper">
+  <dx-validation-group #validationGroup>
+    <div class="field">
+      <span class="field-label">Tên vai trò <span class="lbl-required">*</span></span>
+      <div class="field-value">
+        <dx-text-box [(value)]="role.name" [maxLength]="255">
+          <dx-validator>
+            <dxi-validation-rule type="required"
+                                 [message]="GENERAL_MESSAGE.TheFieldIsRequired.format('Tên vai trò')"></dxi-validation-rule>
+          </dx-validator>
+        </dx-text-box>
+      </div>
+    </div>
+    <div class="field">
+      <span class="field-label"></span>
+      <div class="field-value">
+        <dx-list id="access-control"
+                 [dataSource]="accessControls"
+                 keyExpr="id"
+                 noDataText="Không có quyền"
+                 pageLoadMode="scrollBottom"
+                 itemTemplate="data"
+                 selectionMode="multiple"
+                 [showSelectionControls]="true"
+                 [(selectedItems)]="accessControlsOfRole">
+          <div *dxTemplate="let item of 'data'">
+            <div class="list-item">
+              <span>{{item.name}}</span>
+            </div>
+          </div>
+        </dx-list>
+      </div>
+    </div>
+    <div class="field-action">
+      <dx-button class="mr-2" type="default"
+                 [text]="isProcessing ? '' : 'Lưu'"
+                 icon="{{isProcessing?'fas fa-spinner fa-spin':''}}"
+                 (onClick)="onSave()" [disabled]="isProcessing"></dx-button>
+      <dx-button text="Hủy" (onClick)="onCancel()"></dx-button>
+    </div>
+  </dx-validation-group>
+</div>

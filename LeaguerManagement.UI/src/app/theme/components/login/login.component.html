@@ -1,0 +1,79 @@
+<app-layout-single-card>
+  <div class="login-from">
+    <div class="wrapper fadeInDown">
+      <div class="form-content">
+        <!-- Tabs Titles -->
+
+        <!-- Icon -->
+        <div class="fadeIn first">
+          <div class="form-title mt-3">
+            <span class="no-wrap">Trung tâm Công nghệ thông tin</span>
+            <span class="no-wrap">Sở TN&MT TP. Đà Nẵng</span>
+          </div>
+        </div>
+
+        <!-- Login Form -->
+        <div class="form-main">
+          <dx-validation-group #validationGroup>
+            <div class="mb-3 mt-2">
+              <dx-text-box mode="email"
+                           placeholder="Email"
+                           [valueChangeEvent]="'keyup'"
+                           (onEnterKey)="onLoginClick(validationGroup)"
+                           (onFocusOut)="removeSpaces()"
+                           [(value)]="userName"
+                           [inputAttr]="{ autocomplete: 'on' }">
+                <dx-validator>
+                  <dxi-validation-rule type="required"
+                                       [message]="GENERAL_MESSAGE.TheFieldIsRequired.format('Email')">
+                  </dxi-validation-rule>
+                  <dxi-validation-rule type="email"
+                                       [message]="GENERAL_MESSAGE.TheFieldIsInvalid.format('Email')">
+                  </dxi-validation-rule>
+                </dx-validator>
+              </dx-text-box>
+            </div>
+
+            <div class="mb-3">
+              <dx-text-box mode="password"
+                           [valueChangeEvent]="'input'" width="250px"
+                           (onEnterKey)="onLoginClick(validationGroup)"
+                           [(value)]="password"
+                           [inputAttr]="{ autocomplete: 'on' }">
+                <dx-validator>
+                  <dxi-validation-rule type="required"
+                                       [message]="GENERAL_MESSAGE.TheFieldIsRequired.format('Mật khẩu')"></dxi-validation-rule>
+                  <dxi-validation-rule type="stringLength" [min]="6"
+                                       [message]="GENERAL_MESSAGE.MustHaveAtLeastCharacter.format('Mật khẩu', '6')"></dxi-validation-rule>
+                </dx-validator>
+              </dx-text-box>
+            </div>
+
+            <div class="mb-3">
+              <label for="checkbox">
+                <input type="checkbox" id="checkbox" class="fadeIn fourth" name="rememberMe" [(ngModel)]="rememberMe">
+                Giữ đăng nhập vào lần sau?
+              </label>
+            </div>
+
+            <div class="mb-3">
+              <dx-button type="default" width="150px" class="fadeIn fifth"
+                         text="{{isSubmitting?'':'Đăng nhập'}}"
+                         icon="{{isSubmitting?'fas fa-spinner fa-spin':''}}"
+                         [disabled]="isSubmitting"
+                         [useSubmitBehavior]="false" (onClick)="onLoginClick(validationGroup)">
+              </dx-button>
+            </div>
+          </dx-validation-group>
+        </div>
+
+        <!-- Remind Passowrd -->
+        <div class="form-footer">
+          <a class="underlineHover" routerLink="/forgot">Quên mật khẩu?</a>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</app-layout-single-card>
+

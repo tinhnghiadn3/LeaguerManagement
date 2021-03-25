@@ -18,10 +18,6 @@ namespace LeaguerManagement.APIs.Configurations
             CreateMap<User, UserModel>().ReverseMap();
             CreateMap<AccessControl, AccessControlModel>().ReverseMap();
             CreateMap<Role, RoleModel>().ReverseMap();
-            CreateMap<Ward, WardModel>().ReverseMap();
-            CreateMap<District, DistrictModel>().ReverseMap();
-            CreateMap<Apartment, ApartmentModel>().ReverseMap();
-            CreateMap<Holiday, HolidayModel>().ReverseMap();
         }
     }
 }

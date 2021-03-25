@@ -1,0 +1,28 @@
+<header>
+  <div class="info">
+    <a class="logo city"><img src="assets/images/logo1.png"></a>
+    <p>Cung cấp thông tin dữ liệu Tài nguyên và Môi trường <br> trên địa bàn thành phố Đà Nẵng</p>
+    <a class="logo"><img src="assets/images/logo2.png"></a>
+  </div>
+  <nav class="navbar navbar-expand-lg p-0">
+    <button class="navbar-toggler p-0" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="toggle-menu d-flex align-items-center justify-content-start">
+        <i class="fas fa-bars mr-1"></i>
+        <span>{{currentMenu.text}}</span>
+      </div>
+    </button>
+
+    <app-user-panel *ngIf="deviceService.isTablet() || deviceService.isMobile()"></app-user-panel>
+
+    <div class="collapse navbar-collapse nav-collapse " id="navbarSupportedContent">
+      <ul class="navbar-nav m-auto">
+        <li class="nav-item" *ngFor="let item of menuItems" [hidden]="!item.visible">
+          <a class="nav-link menu-item" routerLink="{{item.path}}" routerLinkActive="active">{{item.text}}</a>
+        </li>
+      </ul>
+    </div>
+
+    <app-user-panel *ngIf="deviceService.isDesktop()"></app-user-panel>
+  </nav>
+</header>

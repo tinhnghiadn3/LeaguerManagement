@@ -23,9 +23,9 @@ namespace LeaguerManagement.Repositories
 
         public static IQueryable<UserModel> GetUsers(this IRepository<User> repository)
         {
-            var db = (LandStatusConfirmationContext)repository.DbContext;
-            return from u in db.User
-                join ur in db.UserRole on u.Id equals ur.UserId
+            var db = (LeaguerManagementContext)repository.DbContext;
+            return from u in db.Users
+                join ur in db.UserRoles on u.Id equals ur.UserId
                 where ur.IsActivated
                 select new UserModel
                 {

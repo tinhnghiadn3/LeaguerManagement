@@ -1,0 +1,157 @@
+header {
+  .info {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    margin-top: 5px;
+
+    p {
+      font-size: 25px;
+      text-align: center;
+      font-weight: bold;
+    }
+
+    .logo {
+      &.city {
+        img {
+          height: 85px;
+        }
+      }
+    }
+  }
+
+  nav {
+    background: #164f40;
+
+    button:focus {
+      outline: none !important;
+    }
+
+    .nav-collapse {
+      background: #164f40;
+
+      a.menu-item {
+        list-style: none;
+        margin: 0;
+        align-items: center;
+        cursor: pointer;
+        background: #164f40;
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+        padding: 0.7em 1em;
+        color: #fff;
+        text-decoration: none;
+
+        &:hover {
+          background: #21735d;
+        }
+
+        &.active {
+          background: #21735d;
+        }
+      }
+    }
+  }
+
+
+}
+
+/* Smartphones (portrait and landscape) ----------- */
+//@media only screen and (min-device-width: 320px) and (max-device-width: 480px) {
+@media (max-width: 767.98px) {
+  header {
+    .navbar-toggler {
+      border: none;
+
+
+      .toggle-menu {
+        i {
+          &.fas {
+            color: #fff;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media only screen and (min-device-width: 280px) {
+  header {
+    .info {
+
+      p {
+        font-size: 15px;
+      }
+
+      a.logo {
+        display: none;
+      }
+    }
+
+    .toggle-menu {
+      display: block;
+      cursor: pointer;
+      background: #164f40;
+      text-align: center;
+      color: #FFFFFF;
+      -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+      padding: 0.7em 1em;
+
+      &.collapsed {
+        display: none;
+      }
+
+      &:hover {
+        background: #21735d;
+      }
+    }
+
+    //.nav-collapse {
+    //  display: none;
+    //  flex-direction: column;
+    //
+    //  &.collapsed {
+    //    display: flex;
+    //  }
+    //
+    //  a.menu-item {
+    //    text-align: center;
+    //  }
+    //}
+  }
+}
+
+/* iPads (portrait and landscape) ----------- */
+//@media only screen and (min-device-width: 768px) and (max-device-width: 1024px) {
+@media only screen and (min-device-width: 768px) {
+  /* Styles */
+  header {
+    .info {
+      p {
+        font-size: 20px;
+      }
+
+      a.logo {
+        display: block;
+      }
+    }
+
+    .toggle-menu {
+      //display: none;
+    }
+
+    //.nav-collapse {
+    //  display: flex;
+    //  flex-direction: row;
+    //}
+  }
+}
+
+/* Desktops and laptops ----------- */
+@media only screen and (min-width: 1224px) {
+  /* Styles */
+}
+
+/* Large screens ----------- */
+@media only screen and (min-width: 1824px) {
+  /* Styles */
+}

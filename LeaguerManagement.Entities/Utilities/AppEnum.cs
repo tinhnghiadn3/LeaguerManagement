@@ -11,22 +11,8 @@ namespace LeaguerManagement.Entities.Utilities
     public enum AppDropdownDataType
     {
         Roles = 1,
-        Districts = 2,
-        Wards = 3,
-        ApplicantTypes = 4,
-        DocumentTypes = 5,
-        FileTypes = 6,
-        Notifications = 7,
-        Statuses = 8,
-        Cities = 9,
-        Streets = 10,
-        Formalities = 11,
-        Apartments = 12,
-        IdentifyNumberTypes = 13,
-        CopyTypes = 14,
-        Pronouns = 15,
-        ConfirmPurposes = 16,
-        PointTypes = 17,
+        Units = 2,
+        Statuses = 3,
     }
 
     public enum AppFileType
@@ -46,7 +32,7 @@ namespace LeaguerManagement.Entities.Utilities
     public enum AppConfirmPurposeType
     {
         Transfer = 3,
-        RentGDCM = 6,
+        RentGdcm = 6,
         Buy = 7
     }
 

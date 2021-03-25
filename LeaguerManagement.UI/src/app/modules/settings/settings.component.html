@@ -1,0 +1,32 @@
+<app-layout-default>
+  <div class="page-wrap" *ngIf="selectedTab">
+    <div class="header tabs mb-3">
+      <app-tabs [tabs]="tabs"
+                [showCloseIcon]="false"
+                [displayExpr]="'text'"
+                [valueExpr]="'value'"
+                [selectedTab]="selectedTab"
+                (onSelectionChanged)="changeTab($event)">
+      </app-tabs>
+    </div>
+
+    <div class="content">
+      <app-access-control *ngIf="selectedTab.value === settingValue.RoleAndAccessControl"></app-access-control>
+
+      <app-user *ngIf="selectedTab.value === settingValue.User"></app-user>
+
+      <app-district-ward *ngIf="selectedTab.value === settingValue.DistrictAndWard"></app-district-ward>
+
+      <app-street-apartment *ngIf="selectedTab.value === settingValue.StreetAndApartment"></app-street-apartment>
+
+      <app-notification-document-type
+        *ngIf="selectedTab.value === settingValue.NotificationAndDocumentType"></app-notification-document-type>
+
+      <app-copy-type-certificate-type
+        *ngIf="selectedTab.value === settingValue.CopyTypeAndCertificateType"></app-copy-type-certificate-type>
+
+      <app-holiday *ngIf="selectedTab.value === settingValue.Holiday"></app-holiday>
+
+    </div>
+  </div>
+</app-layout-default>

@@ -10,7 +10,7 @@ namespace LeaguerManagement.Entities.Utilities.Helper
 {
     public static class FileHelper
     {
-        private static readonly string[] _allowedFileTypes = { ".jpg", ".jpeg", ".png", ".gif" };
+        private static readonly string[] AllowedFileTypes = { ".jpg", ".jpeg", ".png", ".gif" };
         //private static readonly string Base64ImagePrefix = "data:image/";
 
         public static string GetValidFileName(this IFormFile file)
@@ -22,7 +22,7 @@ namespace LeaguerManagement.Entities.Utilities.Helper
                 throw new AppException(AppMessages.FileNameIsIncorrect);
 
             var fileType = Path.GetExtension(fileName);
-            if (StringExtensions.IsBlank(fileType) || !((IList)_allowedFileTypes).Contains(fileType.ToLower()))
+            if (StringExtensions.IsBlank(fileType) || !((IList)AllowedFileTypes).Contains(fileType.ToLower()))
                 throw new AppException(AppMessages.FileTypeNotSupported);
 
             return fileName;

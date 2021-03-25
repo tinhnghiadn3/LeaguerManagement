@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+
+#nullable disable
 
 namespace LeaguerManagement.Entities.Entities
 {
@@ -6,11 +9,11 @@ namespace LeaguerManagement.Entities.Entities
     {
         public AppliedDocument()
         {
-            AppliedDocumentAttachment = new HashSet<AppliedDocumentAttachment>();
+            AppliedDocumentAttachments = new HashSet<AppliedDocumentAttachment>();
         }
 
         public int Id { get; set; }
-        public int? FileId { get; set; }
+        public int LeaguerId { get; set; }
         public string Name { get; set; }
         public int? Amount { get; set; }
         public int? DistrictId { get; set; }
@@ -20,9 +23,7 @@ namespace LeaguerManagement.Entities.Entities
         public int? PointValue { get; set; }
         public bool? IsAttachment { get; set; }
 
-        public virtual District District { get; set; }
-        public virtual File File { get; set; }
-        public virtual PointType PointType { get; set; }
-        public virtual ICollection<AppliedDocumentAttachment> AppliedDocumentAttachment { get; set; }
+        public virtual Leaguer Leaguer { get; set; }
+        public virtual ICollection<AppliedDocumentAttachment> AppliedDocumentAttachments { get; set; }
     }
 }

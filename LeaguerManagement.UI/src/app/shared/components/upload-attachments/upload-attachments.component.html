@@ -1,0 +1,65 @@
+<dx-load-panel *ngIf="isProcessing"
+               [visible]="true" [showPane]="false"
+               [message]="'Processing'">
+</dx-load-panel>
+
+<div class="attachment-wrapper">
+
+  <dx-progress-bar *ngIf="data.isUploading" min="0" max="100"
+                   [value]="data.uploadingPercent"
+                   [showStatus]="false">
+  </dx-progress-bar>
+
+  <div class="d-flex align-items-center" *ngFor="let attachment of data.attachments"
+       [class.hovered]="attachment === selectedAttachment">
+    <div class="extension mr-1" [ngClass]="attachment.extension" (click)="showAttachment(attachment)">
+      <i></i>
+    </div>
+    <div *ngIf="(!attachment.isEditing); else editingName" class="file-name" [title]="attachment.fileName"
+         (click)="showAttachment(attachment)">
+      <a>{{attachment.fileName}}</a>
+    </div>
+    <ng-template #editingName>
+      <dx-text-box #renamingTextBox width="100%" height="30px"
+                   [(value)]="attachment.tmpName"
+                   (onEnterKey)="saveNameFile(attachment)"
+                   (onFocusOut)="saveNameFile(attachment, false)"
+                   (onKeyUp)="cancelEditNameByEscape($event, attachment)"
+                   (onKeyPress)="validateFileName($event)"
+                   [maxLength]="160"
+                   [valueChangeEvent]="'keyup'">
+        <dx-validator>
+          <dxi-validation-rule type="required" message="Name is required">
+          </dxi-validation-rule>
+        </dx-validator>
+      </dx-text-box>
+    </ng-template>
+    <a class="ml-2 pointer" [href]="attachment?.linkDownload"
+       [class.disabled]="selectedAttachment?.isDeleting" target="_parent">
+      <i class="fas fa-download" title="Tải về"></i>
+    </a>
+    <div class="ml-2 pointer" [class.disabled]="selectedAttachment?.isDeleting"
+       (click)="showRename(attachment)">
+      <i class="fas fa-pen" title="Sửa tên"></i>
+    </div>
+    <div class="ml-2 pointer" [class.disabled]="selectedAttachment?.isDeleting"
+       (click)="confirmDelete($event, attachment)">
+      <i class="far fa-trash-alt"></i>
+      <span *ngIf="selectedAttachment?.isDeleting" class="action-icon ml-3">
+				<i class="fas fa-spinner fa-spin" title="Xóa"></i>
+			</span>
+    </div>
+  </div>
+</div>
+
+<app-popover-confirm-box #deletingConfirmBox
+                         [message]="GENERAL_MESSAGE.DeleteRecordConfirm.format(selectedAttachment?.fileName)"
+                         (onConfirm)="deleteAttachment()">
+</app-popover-confirm-box>
+
+<app-attachments-viewer #attachmentsViewer
+                        [constructionId]="fileId"
+                        [attachments]="data?.attachments"
+                        [(selectedAttachment)]="selectedAttachment">
+</app-attachments-viewer>
+

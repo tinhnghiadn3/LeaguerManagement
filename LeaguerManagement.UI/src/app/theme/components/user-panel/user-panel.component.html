@@ -1,0 +1,25 @@
+<div class="user-panel">
+  <div class="user-info" *ngIf="currentUser" (click)="isShowingUserDetail = true">
+    <div class="user-name">{{currentUser.name}}</div>
+  </div>
+</div>
+
+<dx-popover target=".user-panel"
+            position="bottom"
+            [width]="215"
+            height="auto"
+            [shading]="true"
+            shadingColor="rgba(0, 0, 0, 0.5)"
+            (onHidden)="isShowingUserDetail = false"
+            [(visible)]="isShowingUserDetail">
+  <div *dxTemplate="let data of 'content'">
+    <div class="d-flex flex-column align-item-center">
+      <div *ngFor="let item of menuItems" (click)="item.onClick()" class="user-detail">
+        <i class="mr-2 {{item.icon}}" *ngIf="item.icon.length"></i>
+        <span>{{item.text}}</span>
+      </div>
+    </div>
+  </div>
+</dx-popover>
+
+<app-change-password [(visible)]="isShowingPopup"></app-change-password>

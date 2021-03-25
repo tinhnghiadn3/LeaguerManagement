@@ -1,0 +1,79 @@
+/* To learn more about this file see: https://angular.io/config/tsconfig. */
+{
+  "compileOnSave": true,
+  "compilerOptions": {
+    "baseUrl": "src",
+    "outDir": "./dist/out-tsc",
+    "sourceMap": true,
+    "declaration": false,
+    "downlevelIteration": true,
+    "experimentalDecorators": true,
+    "moduleResolution": "node",
+    "importHelpers": true,
+    "typeRoots": [
+      "node_modules/@types"
+    ],
+    "target": "es2015",
+    "module": "es2020",
+    "lib": [
+      "es2018",
+      "dom"
+    ],
+    "paths": {
+      "jszip": [
+        "node_modules/jszip/dist/jszip.min.js"
+      ],
+      "@environment": [
+        "environments/environment.ts"
+      ],
+      "@environments/*": [
+        "environments/*"
+      ],
+      "@app/utilities": [
+        "app/utilities"
+      ],
+      "@app/modules/*": [
+        "app/modules/*"
+      ],
+      "@app/shared/*": [
+        "app/shared/*.ts"
+      ],
+      "@app/shared/components": [
+        "app/shared/components/index.ts"
+      ],
+      "@app/shared/components/*": [
+        "app/shared/components/*"
+      ],
+      "@app/theme/*": [
+        "app/theme/*.ts"
+      ],
+      "@app/theme/components": [
+        "app/theme/components/index.ts"
+      ],
+      "@app/theme/directives": [
+        "app/theme/directives/index.ts"
+      ],
+      "@app/theme/layouts": [
+        "app/theme/layouts/index.ts"
+      ],
+      "@app/theme/pipes": [
+        "app/theme/pipes/*.ts"
+      ],
+      "@app/services/endpoints": [
+        "app/services/endpoints.ts"
+      ],
+      "@app/services/*": [
+        "app/services/*"
+      ],
+      "@app/models": [
+        "app/models"
+      ],
+      "@app/models/*": [
+        "app/models/*"
+      ],
+      "@app/interceptors/*": [
+        "app/interceptors/*"
+      ]
+    }
+  }
+}

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using LeaguerManagement.Entities.Contexts;
 using LeaguerManagement.Entities.Entities;
 using LeaguerManagement.Entities.Infrastructures;
 using LeaguerManagement.Entities.Utilities.Helper;
@@ -59,102 +58,6 @@ namespace LeaguerManagement.Repositories
         public static async Task<IList<AccessOfRole>> GetByRole(this IRepository<AccessOfRole> repository, int roleId)
         {
             return await repository.Entities.ToListAsync(_ => _.RoleId == roleId);
-        }
-
-        #endregion
-
-        #region Ward
-
-        public static async Task<bool> IsDuplicated(this IRepository<Ward> repository, int id, string name)
-        {
-            return await repository.Entities.AnyAsync(_ => _.Id != id && _.Name.ToLower() == name.ToLower());
-        }
-
-        public static IQueryable<WardModel> GetWardsQuery(this IRepository<Ward> repository)
-        {
-            var db = (LandStatusConfirmationContext)repository.DbContext;
-            return from w in db.Ward
-                join d in db.District on w.DistrictId equals d.Id
-                select new WardModel
-                {
-                    Id = w.Id,
-                    Name = w.Name,
-                    DistrictId = d.Id,
-                };
-        }
-
-        public static IQueryable<WardModel> GetWardsByDistrictQuery(this IRepository<Ward> repository, int districtId)
-        {
-            var db = (LandStatusConfirmationContext)repository.DbContext;
-            return from w in db.Ward
-                where w.DistrictId == districtId
-                select new WardModel
-                {
-                    Id = w.Id,
-                    Name = w.Name
-                };
-        }
-
-        #endregion
-
-        #region Holiday
-
-        public static async Task<IList<Holiday>> GetListHolidaySettings(this IRepository<Holiday> repository, int year)
-        {
-            return await repository.Entities.Where(_ => _.IsSettings != null && _.IsSettings.Value && _.Date.Year == year).ToListAsync();
-        }
-        public static async Task<Holiday> GetHolidaySettings(this IRepository<Holiday> repository, int year)
-        {
-            return await repository.Entities.FirstOrDefaultAsync(_ => _.IsSettings != null && _.IsSettings.Value && _.Date.Year == year);
-        }
-
-        public static async Task<IList<Holiday>> GetHolidays(this IRepository<Holiday> repository, int year)
-        {
-            return await repository.Entities.Where(_ => _.IsSettings != null && !_.IsSettings.Value && _.Date.Year == year).ToListAsync();
-        }
-
-        #endregion
-
-        #region District - Street - Apartment - Notification - DocumentType - CopyType
-
-        public static async Task<bool> IsDuplicated(this IRepository<District> repository, int id, string name)
-        {
-            return await repository.Entities.AnyAsync(_ => _.Id != id && _.Name.ToLower() == name.ToLower());
-        }
-
-        public static async Task<bool> IsDuplicated(this IRepository<Street> repository, int id, string name)
-        {
-            return await repository.Entities.AnyAsync(_ => _.Id != id && _.Name.ToLower() == name.ToLower());
-        }
-
-        public static async Task<bool> IsDuplicated(this IRepository<Apartment> repository, int id, string name)
-        {
-            return await repository.Entities.AnyAsync(_ => _.Id != id && _.Name.ToLower() == name.ToLower());
-        }
-
-        public static async Task<bool> IsDuplicated(this IRepository<Notification> repository, int id, string name)
-        {
-            return await repository.Entities.AnyAsync(_ => _.Id != id && _.Name.ToLower() == name.ToLower());
-        }
-
-        public static async Task<bool> IsDuplicated(this IRepository<DocumentType> repository, int id, string name)
-        {
-            return await repository.Entities.AnyAsync(_ => _.Id != id && _.Name.ToLower() == name.ToLower());
-        }
-
-        public static async Task<bool> IsDuplicated(this IRepository<CopyType> repository, int id, string name)
-        {
-            return await repository.Entities.AnyAsync(_ => _.Id != id && _.Name.ToLower() == name.ToLower());
-        }
-
-        public static async Task<bool> IsDuplicated(this IRepository<CertificateType> repository, int id, string name)
-        {
-            return await repository.Entities.AnyAsync(_ => _.Id != id && _.Name.ToLower() == name.ToLower());
-        }
-
-        public static async Task<bool> IsDuplicated(this IRepository<Holiday> repository, int id, string name, DateTime date)
-        {
-            return await repository.Entities.AnyAsync(_ => _.Id != id && (_.Name.ToLower() == name.ToLower() || _.Date == date));
         }
 
         #endregion

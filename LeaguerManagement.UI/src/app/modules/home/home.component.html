@@ -1,0 +1,163 @@
+<app-layout-default>
+
+  <dx-load-panel [visible]="true" *ngIf="isLoading" [showPane]="false"></dx-load-panel>
+  <dx-load-panel *ngIf="isProcessing"
+                 [visible]="true" [showPane]="false"
+                 [message]="'Processing'">
+  </dx-load-panel>
+
+  <div class="col-12">
+    <dx-data-grid
+      width="100%"
+      class="settings-grid"
+      keyExpr="id"
+      noDataText="Không có dữ liệu"
+      [class.loading]="!dataSource.isLoaded()"
+      [dataSource]="dataSource"
+      [showRowLines]="true"
+      [showColumnLines]="true"
+      [showBorders]="true"
+      [hoverStateEnabled]="true"
+      [columnResizingMode]="'widget'"
+      [allowColumnResizing]="true"
+      [rowAlternationEnabled]="true"
+      [masterDetail]="{ enabled: false, template: 'detail' }"
+      (onContentReady)="contentReady($event)"
+      (onSelectionChanged)="selectionChanged($event)">
+      <dxo-filter-row [visible]="true" [showOperationChooser]="true"></dxo-filter-row>
+      <dxo-remote-operations [filtering]="true" [sorting]="true" [paging]="true"></dxo-remote-operations>
+      <dxo-paging [pageSize]="pageSize"></dxo-paging>
+      <dxo-pager [showInfo]="false"
+                 [showPageSizeSelector]="false"
+                 [visible]="true"
+                 [showNavigationButtons]="true">
+      </dxo-pager>
+      <dxo-editing mode="form">
+        <dxo-texts saveRowChanges="Save"
+                   editRow="Edit"
+                   deleteRow="Delete"
+                   cancelRowChanges="Cancel">
+        </dxo-texts>
+      </dxo-editing>
+      <dxo-load-panel [showPane]="false"></dxo-load-panel>
+
+      <dxi-column caption="STT"
+                  alignment="center"
+                  [allowFiltering]="false"
+                  [allowEditing]="false"
+                  [allowSorting]="false"
+                  [allowResizing]="false"
+                  [formItem]="{visible: false}"
+                  [width]="80"
+                  [fixed]="true"
+                  cellTemplate="indexCellTemplate">
+        <div *dxTemplate="let cell of 'indexCellTemplate'">
+          <ng-container>
+            {{cell.rowIndex + 1}}
+          </ng-container>
+        </div>
+      </dxi-column>
+
+      <dxi-column dataField="unitId" caption="Chi bộ"
+                  [minWidth]="150">
+        <dxo-lookup
+          [dataSource]="units"
+          displayExpr="value"
+          valueExpr="key">
+        </dxo-lookup>
+      </dxi-column>
+
+      <dxi-column dataField="name" caption="Họ và tên" [minWidth]="150"></dxi-column>
+
+      <dxi-column dataField="bornYear" caption="Năm sinh" [minWidth]="80" alignment="center"></dxi-column>
+
+      <dxi-column dataField="gender" caption="Giới tính" [minWidth]="80">
+        <dxo-lookup
+          [dataSource]="genderItems"
+          displayExpr="text"
+          valueExpr="value">
+        </dxo-lookup>
+      </dxi-column>
+
+      <dxi-column dataField="religion" caption="Tôn giáo" [minWidth]="90"></dxi-column>
+
+      <dxi-column dataField="folk" caption="Dân tộc" [minWidth]="90"></dxi-column>
+
+      <dxi-column dataField="homeTown" caption="Quê quán" [minWidth]="150"></dxi-column>
+
+      <dxi-column dataField="workingUnit" caption="Đơn vị công tác" [minWidth]="120"></dxi-column>
+
+      <dxi-column dataField="position" caption="Chức vị" [minWidth]="100"></dxi-column>
+
+      <dxi-column caption="Ngày vào Đảng">
+        <dxi-column dataField="preliminaryApplyDate" caption="Dự bị" [minWidth]="110"></dxi-column>
+        <dxi-column dataField="officialApplyDate" caption="Chính thức" [minWidth]="110"></dxi-column>
+      </dxi-column>
+
+      <dxi-column dataField="cardNumber" caption="Số thẻ Đảng viên" [minWidth]="100"></dxi-column>
+
+      <dxi-column dataField="backgroundNumber" caption="Số lý lịch Đảng viên" [minWidth]="100"></dxi-column>
+
+      <dxi-column dataField="badgeNumber" caption="Số huy hiệu Đảng" [minWidth]="100"></dxi-column>
+
+      <dxi-column dataField="moveOutDated" caption="Ngày chuyển đi, đến Đảng bộ cơ sở" dataType="date" [minWidth]="110" cellTemplate="'moveOutCellTemplate'">
+        <div *dxTemplate="let cell of 'moveOutCellTemplate'">
+          {{cell.data.moveOutDated}}, đến {{cell.data.officeBefore}}
+        </div>
+      </dxi-column>
+
+      <dxi-column dataField="officeComing" caption="Ngày chuyển đến, ở Đảng bộ cơ sở" [minWidth]="120" cellTemplate="'moveInCellTemplate'">
+        <div *dxTemplate="let cell of 'moveInCellTemplate'">
+          {{cell.data.moveInDated}}, ở {{cell.data.officeComing}}
+        </div>
+      </dxi-column>
+
+      <dxi-column dataField="deadDate" caption="Ngày từ trần" dataType="date" format="dd/MM/yyyy"
+                  [minWidth]="110">
+      </dxi-column>
+
+      <dxi-column dataField="getOutDate" caption="Ngày ra khỏi Đảng" [minWidth]="150"></dxi-column>
+
+      <dxi-column dataField="phone" caption="Điện thoại" [minWidth]="110"></dxi-column>
+
+      <dxi-column caption="Thao tác"
+                  type="'buttons'"
+                  alignment="center"
+                  [fixed]="true"
+                  fixedPosition="right"
+                  [width]="80"
+                  [allowFiltering]="false"
+                  [allowSorting]="false"
+                  [allowResizing]="false"
+                  [allowEditing]="false"
+                  cellTemplate="actionsCellTemplate">
+        <div *dxTemplate="let cell of 'actionsCellTemplate'">
+          <div class="action-inline text-center">
+            <i class="fas fa-info-circle" title="Thông tin"
+               (click)="goToDetail(cell.data)"></i>
+          </div>
+        </div>
+      </dxi-column>
+
+      <div *dxTemplate="let item of 'detail'">
+        <div class="row">
+          <div class="col-6">
+            <p>Trình độ văn hóa: {{item.data.educationalLevel}}</p>
+            <p>Trình độ ngoại ngữ: {{item.data.foreignLanguageLevel}}</p>
+            <p>Nghề nghiệp trước khi vào Đảng: {{item.data.beforeEnteringCareer}}</p>
+          </div>
+          <div class="col-6">
+            <p>Trình độ lý luận chính trị: {{item.data.politicalTheoryLevel}}</p>
+            <p>Nghiệp vụ chuyên môn: {{item.data.specializeMajor}}</p>
+            <p>Nghề nghiệp hiện nay: {{item.data.currentCareer}}</p>
+          </div>
+          <p>Lý do từ trần: {{item.data.formOut || 'Chưa từ trần'}}</p>
+          <p>Hình thức ra khỏi Đảng: {{item.data.formOut || 'Chưa ra khỏi Đảng'}}</p>
+          <p>Ghi chú: {{!item.data.notes ? 'Không có' : item.data.notes}}</p>
+        </div>
+      </div>
+
+    </dx-data-grid>
+  </div>
+
+</app-layout-default>

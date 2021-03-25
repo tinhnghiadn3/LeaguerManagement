@@ -1,0 +1,39 @@
+<dx-popup #attachmentPopup class="attachment-popup" width="auto" height="auto"
+		  [showTitle]="false"
+		  [closeOnOutsideClick]="true"
+		  [dragEnabled]="false"
+		  [animation]="null"
+		  [shadingColor]="'#000000A0'"
+		  [position]=""
+		  (onHidden)="selectedAttachment = null">
+	<div *dxTemplate="let data of 'content'">
+		<span (click)="close()">
+			<i class="far fa-times-circle"></i>
+		</span>
+
+    <img *ngIf="selectedAttachment?.isImage" [src]="selectedAttachment?.fileUrl"/>
+
+    <iframe *ngIf="selectedAttachment && !selectedAttachment.isImage" [src]="url"></iframe>
+
+		<div *ngIf="selectedAttachment">
+			<header>{{selectedAttachment.fileName}}</header>
+
+			<time>
+				<span>Thêm vào</span>
+				<span>
+					{{selectedAttachment.createdDate | date: 'EEEE, MMMM d'}}
+					{{' at '}}
+					{{selectedAttachment.createdDate | date: 'shortTime'}}
+				</span>
+			</time>
+
+			<aside class="left" (click)="openPreviousAttachment()" [class.disabled]="!havePreviousAttachment()">
+				<i class="fas fa-chevron-left"></i>
+			</aside>
+
+			<aside class="right" (click)="openNextAttachment()" [class.disabled]="!haveNextAttachment()">
+				<i class="fas fa-chevron-right"></i>
+			</aside>
+		</div>
+	</div>
+</dx-popup>

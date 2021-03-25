@@ -1,0 +1,111 @@
+@import "variables";
+@import "utilities";
+
+.attachment-wrap {
+  margin-bottom: 8px;
+  position: relative;
+
+  > dx-progress-bar {
+    position: absolute;
+    top: 20px;
+    right: 0;
+    left: 24px;
+    height: 6px;
+    line-height: 0;
+  }
+
+  div.attachment {
+    position: relative;
+    margin-left: 25px;
+    padding-left: 20px;
+    height: 26px;
+    line-height: 26px;
+    cursor: pointer;
+
+    > .extension {
+      position: absolute;
+      top: 0;
+      left: 2px;
+      width: 20px;
+      height: 26px;
+      line-height: 26px;
+    }
+
+    > .file-name {
+      padding-right: 84px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      height: 100%;
+      cursor: pointer;
+    }
+
+    > .action-icon {
+      display: none;
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      right: 0;
+      width: 26px;
+      font-size: 14px;
+      text-align: center;
+      border-left: 1px solid $border-color;
+
+      &.copy-url {
+        right: 52px;
+      }
+
+      &.expand {
+        right: 26px;
+      }
+
+      &:hover {
+        background-color: $main-hover-color;
+      }
+
+      > a {
+        display: block;
+        width: 100%;
+        height: 100%;
+        color: #333;
+      }
+    }
+
+    &:hover,
+    &.hovered {
+      background-color: #ddd;
+      border-radius: 2px;
+
+      > .action-icon {
+        display: block;
+      }
+    }
+  }
+}
+
+.disabled {
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+.action-icon {
+
+}
+
+.attachment-loading {
+  text-align: center;
+
+  .loading-message {
+    margin-top: -5px;
+  }
+}
+
+a.failed {
+  color: red;
+  font-weight: 700;
+}
+
+a.success {
+  color: #5cb85c;
+  font-weight: 700;
+}

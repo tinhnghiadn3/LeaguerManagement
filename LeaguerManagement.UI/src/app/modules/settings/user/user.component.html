@@ -1,0 +1,123 @@
+<dx-load-panel *ngIf="isProcessing"
+               [visible]="true" [showPane]="false"
+               [message]="'Processing'">
+</dx-load-panel>
+
+<ng-container>
+  <dx-data-grid
+    class="settings-grid"
+    [class.loading]="!userDataSource.isLoaded()"
+    [dataSource]="userDataSource"
+    [showRowLines]="true"
+    [showColumnLines]="true"
+    [showBorders]="true"
+    [hoverStateEnabled]="true"
+    [columnResizingMode]="'widget'"
+    [allowColumnResizing]="true"
+    [rowAlternationEnabled]="true"
+    (onRowInserted)="onAdded($event)">
+    <dxo-filter-row [visible]="true" [showOperationChooser]="true"></dxo-filter-row>
+    <dxo-remote-operations [filtering]="true" [sorting]="true" [paging]="true"></dxo-remote-operations>
+    <dxo-paging [pageSize]="pageSize"></dxo-paging>
+    <dxo-pager [showInfo]="true"
+               [showPageSizeSelector]="false"
+               [visible]="true"
+               [showNavigationButtons]="true">
+    </dxo-pager>
+    <dxo-editing mode="form">
+      <dxo-texts saveRowChanges="Save"
+                 editRow="Edit"
+                 deleteRow="Delete"
+                 cancelRowChanges="Cancel">
+      </dxo-texts>
+    </dxo-editing>
+    <dxo-load-panel [showPane]="false"></dxo-load-panel>
+
+    <dxi-column caption="STT"
+                alignment="center" dataField="companyClassNo"
+                [allowFiltering]="false"
+                [allowEditing]="false"
+                [allowSorting]="false"
+                [allowResizing]="false"
+                [formItem]="{visible: false}"
+                [width]="80"
+                [fixed]="true"
+                headerCellTemplate="indexHeaderCellTemplate"
+                cellTemplate="indexCellTemplate">
+      <div *dxTemplate="let row of 'indexHeaderCellTemplate'">
+        <dx-button type="default" icon="plus" class="btn-add-row-circle"
+                   [stylingMode]="'outlined'"
+                   hint="Add Row"
+                   (onClick)="onShowEditingPopup(row.data)">
+        </dx-button>
+      </div>
+      <div *dxTemplate="let cell of 'indexCellTemplate'">
+        <ng-container>
+          {{cell.rowIndex + 1}}
+        </ng-container>
+      </div>
+    </dxi-column>
+
+    <dxi-column dataField="name" caption="Tên"
+                [minWidth]="200">
+    </dxi-column>
+
+    <dxi-column dataField="email" caption="Email"
+                [minWidth]="200">
+    </dxi-column>
+
+    <dxi-column dataField="jobPosition" caption="Chức vụ"
+                [minWidth]="200">
+    </dxi-column>
+
+    <dxi-column [minWidth]="150" dataField="roleId" [filterOperations]="['=']"
+                alignment="center" caption="Vai trò">
+      <dxo-lookup
+        [dataSource]="roles"
+        displayExpr="value"
+        valueExpr="key">
+      </dxo-lookup>
+    </dxi-column>
+
+    <dxi-column caption="Thao tác"
+                type="'buttons'"
+                alignment="center"
+                [fixed]="true"
+                fixedPosition="right"
+                [width]="80"
+                [allowFiltering]="false"
+                [allowSorting]="false"
+                [allowResizing]="false"
+                [allowEditing]="false"
+                cellTemplate="actionsCellTemplate">
+      <div *dxTemplate="let cell of 'actionsCellTemplate'">
+        <div class="action-inline text-center">
+          <i class="fas fa-pencil-alt" title="Sửa" *ngIf="cell.data.roleId !== AppRoleValue.Admin || isAllowSettingAdminUser"
+             (click)="onShowEditingPopup(cell.data)"></i>
+          <i class="far fa-trash-alt" title="Xóa" *ngIf="cell.data.roleId !== AppRoleValue.Admin || isAllowSettingAdminUser"
+             (click)="openDeletingConfirmPopup(cell.data, $event)"></i>
+        </div>
+      </div>
+    </dxi-column>
+  </dx-data-grid>
+</ng-container>
+
+<app-popover-confirm-box #deletingConfirmBox
+                         [message]="GENERAL_MESSAGE.DeleteRecordConfirmQuestion.format('Người dùng', selectedUser.name)"
+                         (onConfirm)="onDelete()">
+</app-popover-confirm-box>
+
+<app-popup-container *ngIf="isShowEditingPopup"
+                     [title]="!selectedUser.id ? 'Tạo mới người dùng' : 'Cập nhật người dùng'"
+                     [width]="550"
+                     [height]="'100%'"
+                     [position]="'right'"
+                     [(visible)]="isShowEditingPopup">
+  <app-user-editing #editingComponent
+                    [(visible)]="isShowEditingPopup"
+                    [selectedUser]="selectedUser"
+                    [roles]="roles"
+                    [isProcessing]="isProcessing"
+                    (onEditingLocationChange)="onSave($event)">
+  </app-user-editing>
+</app-popup-container>

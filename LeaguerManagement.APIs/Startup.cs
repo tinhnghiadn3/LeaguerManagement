@@ -57,10 +57,13 @@ namespace LeaguerManagement.APIs
 
             //
             // Register db context
-            services.AddDbContext<LandStatusConfirmationContext>((options) =>
+            services.AddDbContext<LeaguerManagementContext>((options) =>
             {
                 // Connection String
-                options.UseSqlServer(_settings.ConnectionStrings);
+                options.UseSqlServer(_settings.ConnectionStrings)
+                    .EnableSensitiveDataLogging()
+                    .EnableDetailedErrors()
+                    .LogTo(Console.WriteLine);
             }, ServiceLifetime.Transient, ServiceLifetime.Transient);
             //
             // Config cross origin
@@ -134,7 +137,7 @@ namespace LeaguerManagement.APIs
             services.AddFactory<IUnitOfWork>(serviceProvider =>
             {
                 var scopedServiceProvider = serviceProvider.CreateScope().ServiceProvider;
-                var dbContext = scopedServiceProvider.GetService<LandStatusConfirmationContext>();
+                var dbContext = scopedServiceProvider.GetService<LeaguerManagementContext>();
                 var httpContext = serviceProvider.GetService<IHttpContextAccessor>().HttpContext;
                 var currentUser = new CurrentUserModel
                 {
@@ -148,6 +151,7 @@ namespace LeaguerManagement.APIs
             // Add Services
             services.AddScoped<UserService>();
             services.AddScoped<SettingService>();
+            services.AddScoped<LeaguerService>();
             //
             // If using IIS:
             services.Configure<IISServerOptions>(options =>
@@ -198,7 +202,7 @@ namespace LeaguerManagement.APIs
                     const string regex = @"^vendor.([a-z0-9]*).bundle.js";
                     if (Regex.Match(ctx.File.Name, regex, RegexOptions.IgnoreCase).Success)
                     {
-                        duration = duration * 10;
+                        duration *= 10;
                     }
                     if (ctx.File.Name.Equals("index.html"))
                     {

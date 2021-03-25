@@ -1,0 +1,20 @@
+<div class="container">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="error-template">
+				<h2 class="pb-3">Access Denied</h2>
+				<div class="error-details">
+          You don't have permission to access this page.
+				</div>
+				<div class="error-actions">
+					<a routerLink="/" class="btn btn-primary btn-md">
+						Back to home page
+					</a>
+					<a href="/" class="btn btn-default btn-md" (click)="logout($event)" *ngIf="isLoggedIn">
+						Logout
+					</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

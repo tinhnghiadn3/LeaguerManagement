@@ -1,0 +1,37 @@
+::ng-deep dx-data-grid.settings-grid {
+  height: calc(100vh - 255px);
+}
+
+.header {
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+}
+
+// Small devices (landscape phones, 576px and up)
+@media (min-width: 576px) {
+
+}
+
+// Medium devices (tablets, 768px and up)
+@media (min-width: 768px) {
+
+}
+
+// Large devices (desktops, 992px and up)
+@media (min-width: 992px) {
+  dx-data-grid#settings-grid, .header {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+}
+
+// Extra large devices (large desktops, 1200px and up)
+@media (min-width: 1200px) {
+
+}
+
+// Super large devices
+@media (min-width: 1500px) {
+
+}

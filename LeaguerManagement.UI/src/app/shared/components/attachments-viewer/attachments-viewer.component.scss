@@ -1,0 +1,131 @@
+@import 'variables';
+
+::ng-deep .attachment-popup.dx-popup-wrapper {
+	> .dx-overlay-content {
+		overflow: visible;
+		transform: none !important;
+		top: 50px !important;
+		right: 50px !important;
+		bottom: 120px !important;
+		left: 50px !important;
+
+		> .dx-popup-content {
+			height: 100% !important;
+			padding: 0;
+			overflow: visible;
+
+			> .dx-template-wrapper {
+				position: relative;
+				text-align: center;
+
+				> img {
+					width: auto;
+					height: auto;
+					max-width: 100%;
+					max-height: 100%;
+				}
+
+				> iframe {
+					width: 100%;
+					height: 100%;
+					border: none;
+				}
+
+				> span {
+					display: block;
+					position: absolute;
+					top: -38px;
+					right: -38px;
+					width: 26px;
+					height: 26px;
+					line-height: 26px;
+					font-size: 24px;
+					text-align: center;
+					color: white;
+					cursor: pointer;
+
+					&:hover {
+						color: red;
+					}
+				}
+
+				> div {
+					position: absolute;
+					top: auto;
+					right: -50px;
+					bottom: -121px;
+					left: -50px;
+					height: 120px;
+					text-align: center;
+					padding: 12px 10px 10px 10px;
+					color: white;
+					width: 500px;
+					margin: 0 auto;
+
+					> header {
+						font-size: 1.3rem;
+						font-weight: 600;
+						margin-bottom: 10px;
+					}
+
+					> time {
+						display: block;
+						font-size: 12px;
+						margin-bottom: 12px;
+					}
+
+					> div {
+						font-size: 13px;
+
+						> a {
+							color: white;
+							padding: 0 10px;
+							cursor: pointer;
+
+							> i {
+								margin-right: 3px;
+							}
+
+							> span {
+								text-decoration: underline;
+							}
+
+							&:hover {
+								text-shadow: 0 0 3px $main-dark-color;
+							}
+						}
+					}
+
+					> aside {
+						position: absolute;
+						top: 0;
+						bottom: 0;
+						width: 100px;
+						line-height: 120px;
+						font-size: 2rem;
+						text-align: center;
+						color: white;
+						cursor: pointer;
+
+						&.left {
+							left: -100px;
+						}
+
+						&.right {
+							right: -100px;
+						}
+
+						&.disabled{
+							color: gray;
+							opacity: 0.3;
+						}
+
+						&:not(.disabled):hover {
+							background-color: rgba(0,0,0, 0.5);
+						}
+					}
+				}
+			}
+		}
+	}
+}

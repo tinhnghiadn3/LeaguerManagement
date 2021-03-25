@@ -1,0 +1,87 @@
+@import "variables";
+
+::ng-deep .custom-tab {
+  background-color: white;
+
+  dx-tabs {
+    border: none;
+    max-width: 100%;
+
+    > div.dx-tabs-scrollable {
+      height: 100%;
+    }
+
+    > div.dx-tabs-nav-button > .dx-button-content > i {
+      color: $base-accent;
+    }
+
+    div.dx-tabs-wrapper {
+      border: none;
+
+      > div.dx-tab {
+        background-color: white;
+        padding: 0 20px;
+
+        .tab-icon {
+          margin-top: 3px;
+          margin-right: 6px;
+        }
+
+        .wiki-info {
+          display: none;
+        }
+
+        &.dx-tab-selected {
+          border-bottom-color: $base-accent;
+          color: $base-accent;
+          -webkit-border-radius: 3px;
+          -moz-border-radius: 3px;
+          border-radius: 3px;
+
+          .wiki-info {
+            display: block;
+          }
+
+          .dx-tab-text {
+            font-weight: bold;
+            text-transform: uppercase;
+          }
+        }
+
+        &.dx-state-hover {
+          color: $main-hover-color;
+          border-bottom-color: $main-hover-color;
+        }
+
+
+        &:after,
+        &.dx-tab-selected:after {
+          border-top: none;
+          border-left: none;
+          border-right: none;
+          border-bottom: 2px solid $base-accent;
+          top: 0;
+          right: 0;
+          bottom: 0;
+          left: 0;
+        }
+
+        .dx-tab-text {
+          line-height: 2.35715;
+          font-size: 17px;
+        }
+      }
+
+      i.dx-icon.fas {
+        margin-right: 0;
+        margin-left: 5px;
+        font-size: 16px;
+        color: #d2d2d2;
+
+        &:hover {
+          color: $base-accent;
+        }
+      }
+    }
+  }
+}

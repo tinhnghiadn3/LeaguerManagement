@@ -20,13 +20,13 @@ namespace LeaguerManagement.Repositories.Base
 
         public DbContext Context { get; private set; }
 
-		public UnitOfWork(LandStatusConfirmationContext context)
+		public UnitOfWork(LeaguerManagementContext context)
 		{
 			Context = context;
 			Repositories = new Dictionary<string, dynamic>();
 		}
 
-		public UnitOfWork(LandStatusConfirmationContext context, ICurrentUser currentUser) : this(context)
+		public UnitOfWork(LeaguerManagementContext context, ICurrentUser currentUser) : this(context)
 		{
             CurrentUser = currentUser;
         }
@@ -92,6 +92,7 @@ namespace LeaguerManagement.Repositories.Base
 			_transaction = null;
 
 			Context?.Dispose();
+            GC.SuppressFinalize(this);
 		}
 
 		public IRepository<TEntity> Repository<TEntity>() where TEntity : class

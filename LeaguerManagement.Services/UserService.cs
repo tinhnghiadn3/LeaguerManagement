@@ -124,13 +124,6 @@ namespace LeaguerManagement.Services
             UserTokenHelper.InitUserTokens(tokens);
         }
 
-        private async Task AddUserToken(UserToken userToken)
-        {
-            using var unitOfWork = UnitOfWorkFactory.Invoke();
-            await unitOfWork.Repository<UserToken>().InsertAsync(userToken);
-
-            UserTokenHelper.AddToken(_mapper.Map<UserTokenModel>(userToken));
-        }
         public async Task RevokeToken(string accessToken)
         {
             using var unitOfWork = UnitOfWorkFactory.Invoke();
@@ -203,6 +196,14 @@ namespace LeaguerManagement.Services
                 _logger.Error(e, e.Message);
                 throw new AppException(e.Message);
             }
+        }
+
+        private async Task AddUserToken(UserToken userToken)
+        {
+            using var unitOfWork = UnitOfWorkFactory.Invoke();
+            await unitOfWork.Repository<UserToken>().InsertAsync(userToken);
+
+            UserTokenHelper.AddToken(_mapper.Map<UserTokenModel>(userToken));
         }
 
         #endregion

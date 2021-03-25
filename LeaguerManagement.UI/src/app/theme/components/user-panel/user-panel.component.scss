@@ -1,0 +1,43 @@
+@import "variables";
+
+:host {
+  .user-panel {
+    display: flex;
+    align-items: center;
+    background-color: #164f40;
+    height: 46px;
+
+    &:hover {
+      .user-info {
+        .user-name {
+          color: #0f9abd;
+        }
+      }
+    }
+
+    .user-info {
+
+      .user-name {
+        font-size: 15px;
+        font-weight: bold;
+        color: #0f76bd;
+        background-color: #FFFFFF;
+        padding: 6px;
+        border-radius: 50px;
+      }
+    }
+  }
+}
+
+.user-detail{
+  font-size: 17px;
+  font-weight: 500;
+  font-style: inherit;
+  color: #0f76bd;
+  cursor: pointer;
+  padding: 5px 0;
+
+  &:hover {
+    color: #188bda;
+  }
+}

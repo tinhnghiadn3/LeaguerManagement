@@ -19,7 +19,7 @@ namespace LeaguerManagement.Services
         protected readonly Func<IUnitOfWork> UnitOfWorkFactory;
         protected static GlobalSettings Settings;
 
-        private static readonly string[] _allowedFileTypes = { ".jpg", ".jpeg", ".png", ".gif" };
+        private static readonly string[] AllowedFileTypes = { ".jpg", ".jpeg", ".png", ".gif" };
 
 
         public BaseService(Func<IUnitOfWork> unitOfWorkFactory, IOptionsSnapshot<GlobalSettings> settings)
@@ -40,7 +40,7 @@ namespace LeaguerManagement.Services
                 throw new AppException(string.Format(AppMessages.FileNameTooLong, Settings.MaxFileNameLength));
 
             var fileType = Path.GetExtension(fullFileName);
-            if (fileType.IsBlank() || !_allowedFileTypes.Contains(fileType.ToLower()))
+            if (fileType.IsBlank() || !AllowedFileTypes.Contains(fileType.ToLower()))
                 throw new AppException(AppMessages.FileTypeNotSupported);
 
             if (fileSize.GetValueOrDefault() > Settings.MaxFileSize)

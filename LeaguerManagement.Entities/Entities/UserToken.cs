@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+
+#nullable disable
 
 namespace LeaguerManagement.Entities.Entities
 {
@@ -10,7 +13,5 @@ namespace LeaguerManagement.Entities.Entities
         public string ImageToken { get; set; }
         public DateTime ExpireAt { get; set; }
         public bool IsRevoked { get; set; }
-
-        public virtual User User { get; set; }
     }
 }

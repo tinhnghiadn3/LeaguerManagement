@@ -1,0 +1,175 @@
+@import "variables";
+@import "mixins";
+
+.dx-texteditor.dx-editor-outlined {
+  border-color: #00a39c;
+}
+
+.dx-texteditor.dx-state-hover {
+  border-color: #b0dedc !important;
+}
+
+dx-button {
+  height: 35px;
+  border-radius: 5px !important;
+
+  &.dx-state-hover {
+    .dx-icon {
+      color: $main-hover-color;
+    }
+  }
+}
+
+dx-text-box.conceal-native {
+  input {
+    font-family: 'text-security-disc', serif !important;
+  }
+}
+
+dx-autocomplete#search {
+  .dx-button-content:after {
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAZiS0dEAAAAAAAA+UO7fwAAAAlwSFlzAAAASAAAAEgARslrPgAAAPNJREFUSMftk0sKwjAURVMpugkRsYtw4Afchq6lyyjuQIvL0HWo+Js5dVAnx8ktlIDGRB0o3skj5b570iTPmL9CBQyAHDgBBXAE5kD/1eAYmPJYGRCHAsrwC5ACHaCumuo7QBYSPqyEd+94uhVIzxeQqzF1+FL5Zr6Akxo7Dl8i39EXUKix7vA15CtcmTVrfVZtOvqalv9pwFJ14ugbq658j6jv+YoGXgAFZNYcJJqDxJqDhXe4AHEFck8L1S3QDgX1gBlwAK56wnl5LAp/DeLYQAtYC7Jzzc73QmqhwaWiKNobY0bGmM3bd2/9Sfsjl/37ugHjAahKFqaMOgAAACV0RVh0ZGF0ZTpjcmVhdGUAMjAyMC0wMi0wM1QwNzo1NTozMSswMDowMJMVufgAAAAldEVYdGRhdGU6bW9kaWZ5ADIwMjAtMDItMDNUMDc6NTU6MzErMDA6MDDiSAFEAAAAKHRFWHRzdmc6YmFzZS11cmkAZmlsZTovLy90bXAvbWFnaWNrLWJWcllLZ0l2ESdfaAAAAABJRU5ErkJggg==');
+    width: 20px;
+    height: 20px;
+  }
+}
+
+dx-autocomplete#search {
+  &.searching {
+    .dx-button-content:after {
+      background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAZiS0dEAAAAAAAA+UO7fwAAAAlwSFlzAAAASAAAAEgARslrPgAAAIVJREFUSMft0LEJAlEQBuE7hUu0Eq3CDgSDa0Gja8QSjC3ISAOr0MDIz2QPHsZ7CPIm2WyG/Zvmr0GHHmdc8cyU73D3RYZ4jmPhvGDAGouMwCh/4YBZ9iyjfJMmDnlXbL5PlUegLzZPm6UUbeOe2rZ9T/HBLT5Ypcsj8IjAcpJApVKp/JAPCTmZXsCnYFcAAAAldEVYdGRhdGU6Y3JlYXRlADIwMjAtMDItMDRUMDc6MTI6NTErMDA6MDD6hiDxAAAAJXRFWHRkYXRlOm1vZGlmeQAyMDIwLTAyLTA0VDA3OjEyOjUxKzAwOjAwi9uYTQAAACh0RVh0c3ZnOmJhc2UtdXJpAGZpbGU6Ly8vdG1wL21hZ2ljay11VkxxUVBBVzKou/oAAAAASUVORK5CYII=');
+      -webkit-animation: spin 1.5s linear infinite; /* Safari */
+      animation: spin 1.5s linear infinite;
+    }
+  }
+}
+
+dx-data-grid {
+  &.loading {
+    .dx-datagrid {
+      .dx-datagrid-pager {
+        display: none;
+      }
+    }
+  }
+
+  .dx-datagrid-headers .dx-header-row {
+    background-color: $bg-header;
+    font-weight: bold;
+  }
+
+  .selected-column-header {
+    color: $base-accent;
+    margin-right: 10px;
+  }
+
+  .unselected-column {
+    color: $base-accent;
+    margin-right: 10px;
+  }
+
+  .selected-column {
+    color: #39a0d3;
+    cursor: pointer;
+  }
+
+  .action-inline {
+    color: $base-accent;
+
+    i {
+      cursor: pointer;
+
+      &.fa-pencil-alt, &.fa-tools, &.fa-calendar-plus {
+        margin-right: 10px;
+      }
+
+      &:hover {
+        color: $main-hover-color;
+      }
+    }
+  }
+}
+
+/**
+ * Dx-RadioGroup
+ */
+
+.dx-radiobutton-icon:before {
+  border-color: #00a39c;
+}
+
+/**
+ * Popup
+ */
+.dx-popup-title {
+  color: #fff !important;
+  background-color: #00A39C !important;
+
+  .dx-item {
+    max-width: 100% !important;
+  }
+
+  .dx-icon.dx-icon-close {
+    color: #fff !important;
+  }
+}
+
+.dx-popup-bottom {
+  padding: 10px !important;
+  background-color: white !important;
+  border-top: 1px solid #dee2e6;
+}
+
+// override look up
+.dx-lookup-popup-wrapper {
+  .dx-overlay-content {
+    .dx-popup-bottom {
+      padding: 10px;
+    }
+  }
+}
+
+// override loading panel
+dx-load-panel {
+  .dx-overlay-wrapper {
+    @include flexbox();
+    @include justify-content(center);
+    @include align-items(center);
+    width: 100% !important;
+    height: 100% !important;
+    margin-top: 16px;
+    background-color: rgba(white, 0.8) !important;
+
+    .dx-loadpanel-content {
+      font-size: medium;
+      position: relative;
+      font-weight: bold;
+      height: 100px !important;
+      left: unset !important;
+      right: unset !important;
+      transform: unset !important;
+    }
+  }
+}
+
+// override date box - date picker - small device
+.dx-dateviewroller .dx-scrollable-content:before {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .dx-lookup-popup-wrapper {
+    .dx-toolbar.dx-popup-title {
+      display: none;
+    }
+  }
+}
+
+// overide tool-bar
+.dx-toolbar .dx-toolbar-items-container {
+  height: 80px;
+}
+
+.dx-datagrid-table .dx-data-row.dx-state-hover:not(.dx-selection):not(.dx-row-inserted):not(.dx-row-removed):not(.dx-edit-row):not(.dx-row-focused) > td:not(.dx-focused) {
+  background-color: #FFFFFF;
+}
