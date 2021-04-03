@@ -1,5 +1,5 @@
 import {Component, Input, EventEmitter, OnInit, Output, ViewChild} from '@angular/core';
-import {AttachmentsViewerComponent, PopoverConfirmBoxComponent} from '..';
+import {AttachmentsViewerComponent, PopoverConfirmBoxComponent} from '../index';
 import {GENERAL_MESSAGE} from '@app/shared/messages';
 import {AttachmentModel, ReferenceWithAttachmentModel} from '@app/models';
 import {AppNotify} from '@app/shared/utilities/notification-helper';

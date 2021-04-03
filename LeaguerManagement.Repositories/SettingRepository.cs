@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using LeaguerManagement.Entities.Entities;
 using LeaguerManagement.Entities.Infrastructures;
 using LeaguerManagement.Entities.Utilities.Helper;
-using LeaguerManagement.Entities.ViewModels.Settings;
+using LeaguerManagement.Entities.ViewModels;
 using LeaguerManagement.Repositories.Extensions;
 using Microsoft.EntityFrameworkCore;
 

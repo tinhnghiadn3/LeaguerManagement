@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace LeaguerManagement.Entities.ViewModels.Shared
+namespace LeaguerManagement.Entities.ViewModels
 {
     public class ColumnFilter
     {

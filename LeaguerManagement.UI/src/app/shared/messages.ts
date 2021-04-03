@@ -20,7 +20,7 @@ export const GENERAL_MESSAGE = {
   NOTHING_CHANGE: 'Không có gì thay đổi',
   ERROR: 'Xuất hiện lỗi!',
   RESUBMIT_SUCCESS: 'Gửi lại thành công!',
-  ADD_SUCCESS: 'Tạo mới {0} "{1}" thành công!',
+  ADD_SUCCESS: 'Thêm mới {0} "{1}" thành công!',
   ADD_REFERENCE_SUCCESS: 'Add {0} "{1}" to {2} "{3}" successfully!',
   UPDATE_REFERENCE_SUCCESS: 'Cập nhật {0} "{1}" of {2} "{3}" thành công!',
   UPDATE_REFERENCES_SUCCESS: 'The {0} of {1} "{2}" has been updated successfully!',

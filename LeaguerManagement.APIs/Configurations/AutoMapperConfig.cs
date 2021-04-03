@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using LeaguerManagement.Entities.Entities;
-using LeaguerManagement.Entities.ViewModels.Authentication;
-using LeaguerManagement.Entities.ViewModels.Settings;
+using LeaguerManagement.Entities.ViewModels;
 
 namespace LeaguerManagement.APIs.Configurations
 {
@@ -18,6 +17,8 @@ namespace LeaguerManagement.APIs.Configurations
             CreateMap<User, UserModel>().ReverseMap();
             CreateMap<AccessControl, AccessControlModel>().ReverseMap();
             CreateMap<Role, RoleModel>().ReverseMap();
+            // Leaguer
+            CreateMap<Leaguer, LeaguerModel>().ReverseMap();
         }
     }
 }

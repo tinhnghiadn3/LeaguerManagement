@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace LeaguerManagement.Entities.ViewModels.Shared
+namespace LeaguerManagement.Entities.ViewModels
 {
     public class SearchResultModel<T>
     {

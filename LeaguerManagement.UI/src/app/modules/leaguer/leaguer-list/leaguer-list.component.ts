@@ -1,15 +1,117 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import DataSource from 'devextreme/data/data_source';
+import {DropDownModel, LeaguerModel} from '@app/models';
+import {GENDER_ITEMS} from '@app/shared/constants';
+import {Subscription} from 'rxjs';
+import {LeaguerService} from '@app/services/features/leaguer.service';
+import {Router} from '@angular/router';
+import {LookupService} from '@app/services/shared';
+import {GENERAL_MESSAGE} from '@app/shared/messages';
+import {PopoverConfirmBoxComponent} from '@app/shared/base-components';
+import {AppNotify} from '@app/shared/utilities/notification-helper';
 
 @Component({
   selector: 'app-leaguer-list',
   templateUrl: './leaguer-list.component.html',
   styleUrls: ['./leaguer-list.component.scss']
 })
-export class LeaguerListComponent implements OnInit {
+export class LeaguerListComponent implements OnInit, OnDestroy {
+  @ViewChild('deletingConfirmBox', {static: true}) deletingConfirmBox: PopoverConfirmBoxComponent;
+  @ViewChild('deletingAccessControlConfirmBox', {static: true}) deletingAccessControlConfirmBox: PopoverConfirmBoxComponent;
+  @ViewChild('streaming', {static: false}) streamingCanvas: ElementRef;
 
-  constructor() { }
+  pageSize = 20;
+  dataSource: DataSource;
 
-  ngOnInit(): void {
+  units: DropDownModel[] = [];
+  leaguers: LeaguerModel[] = [];
+  selectedLeaguer: LeaguerModel = new LeaguerModel();
+
+  isShowEditingPopup: boolean = false;
+  isLoading: boolean = false;
+  isProcessing: boolean = false;
+
+  genderItems = GENDER_ITEMS;
+  GENERAL_MESSAGE = GENERAL_MESSAGE;
+  subscription: Subscription = new Subscription();
+
+  constructor(private leaguerService: LeaguerService,
+              private router: Router,
+              private lookupService: LookupService) {
+    this.subscription.add(
+      this.lookupService.lookup.subscribe(lookup => {
+        this.units = lookup.units;
+      }));
   }
 
+  ngOnInit() {
+    this.getAllStaffs();
+  }
+
+  getAllStaffs() {
+    this.dataSource = new DataSource({
+      load: (loadOptions) => {
+        loadOptions.requireTotalCount = true;
+        return this.leaguerService.getAllLeaguers(loadOptions).toPromise();
+      }
+    });
+  }
+
+  contentReady(e) {
+    if (!e.component.getSelectedRowKeys().length) {
+      e.component.selectRowsByIndexes(0);
+    }
+  }
+
+  selectionChanged(e) {
+    e.component.collapseAll(-1);
+    e.component.expandRow(e.currentSelectedRowKeys[0]);
+    this.selectedLeaguer = e.currentSelectedRowKeys[0];
+  }
+
+  goToDetail(data: LeaguerModel) {
+    this.router.navigate([`/leaguer/${data.id}`]).then();
+  }
+
+  onShowEditingPopup(data: LeaguerModel = null) {
+    this.selectedLeaguer = data || new LeaguerModel();
+    this.isShowEditingPopup = true;
+  }
+
+  onSave(e: LeaguerModel) {
+    this.showProcessing();
+    this.leaguerService.addLeaguer(e).subscribe(res => {
+      this.hideProcessing();
+      AppNotify.success(GENERAL_MESSAGE.ADD_SUCCESS.format('Đảng viên', this.selectedLeaguer.name));
+      this.router.navigate([`/leaguer/${res}/detail`]).then();
+    }, () => {
+      this.hideProcessing();
+    });
+  }
+
+  /**
+   * Utilities
+   */
+
+  refresh() {
+    setTimeout(() => {
+      this.getAllStaffs();
+    }, 100);
+  }
+
+  showProcessing() {
+    setTimeout(() => {
+      this.isProcessing = true;
+    });
+  }
+
+  hideProcessing() {
+    setTimeout(() => {
+      this.isProcessing = false;
+    });
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
+  }
 }

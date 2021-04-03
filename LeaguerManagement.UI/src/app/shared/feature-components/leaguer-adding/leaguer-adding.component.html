@@ -1,0 +1,100 @@
+<div class="form-wrapper">
+  <dx-validation-group #validationGroup>
+    <div class="field">
+      <span class="field-label">Chi bộ <span class="lbl-required">*</span></span>
+      <div class="field-value">
+        <dx-select-box [dataSource]="units"
+                       valueExpr="key" displayExpr="value"
+                       [(value)]="leaguer.unitId">
+          <dxi-validation-rule type="required"
+                               [message]="GENERAL_MESSAGE.TheFieldIsRequired.format('Chi bộ')"></dxi-validation-rule>
+        </dx-select-box>
+      </div>
+    </div>
+    <div class="field">
+      <span class="field-label">Họ và tên <span class="lbl-required">*</span></span>
+      <div class="field-value">
+        <dx-text-box [(value)]="leaguer.name" [maxLength]="255">
+          <dx-validator>
+            <dxi-validation-rule type="required"
+                                 [message]="GENERAL_MESSAGE.TheFieldIsRequired.format('Họ và tên')"></dxi-validation-rule>
+          </dx-validator>
+        </dx-text-box>
+      </div>
+    </div>
+    <div class="field">
+      <span class="field-label">Năm sinh <span class="lbl-required">*</span></span>
+      <div class="field-value">
+        <dx-number-box [(value)]="leaguer.bornYear">
+          <dx-validator>
+            <dxi-validation-rule type="required"
+                                 [message]="GENERAL_MESSAGE.TheFieldIsRequired.format('Năm sinh')"></dxi-validation-rule>
+          </dx-validator>
+        </dx-number-box>
+      </div>
+    </div>
+    <div class="field">
+      <span class="field-label">Giới tính <span class="lbl-required">*</span></span>
+      <div class="field-value">
+        <dx-select-box [dataSource]="genderItems"
+                       valueExpr="value" displayExpr="text"
+                       [(value)]="leaguer.gender">
+          <dxi-validation-rule type="required"
+                               [message]="GENERAL_MESSAGE.TheFieldIsRequired.format('Giới tính')"></dxi-validation-rule>
+        </dx-select-box>
+      </div>
+    </div>
+    <div class="field">
+      <span class="field-label">Tôn giáo <span class="lbl-required">*</span></span>
+      <div class="field-value">
+        <dx-text-box [(value)]="leaguer.religion" [maxLength]="255">
+          <dx-validator>
+            <dxi-validation-rule type="required"
+                                 [message]="GENERAL_MESSAGE.TheFieldIsRequired.format('Tôn giáo')"></dxi-validation-rule>
+          </dx-validator>
+        </dx-text-box>
+      </div>
+    </div>
+    <div class="field">
+      <span class="field-label">Dân tộc <span class="lbl-required">*</span></span>
+      <div class="field-value">
+        <dx-text-box [(value)]="leaguer.folk">
+          <dx-validator>
+            <dxi-validation-rule type="required"
+                                 [message]="GENERAL_MESSAGE.TheFieldIsRequired.format('Dân tộc')"></dxi-validation-rule>
+          </dx-validator>
+        </dx-text-box>
+      </div>
+    </div>
+    <div class="field">
+      <span class="field-label">Số thẻ Đảng viên <span class="lbl-required">*</span></span>
+      <div class="field-value">
+        <dx-text-box [(value)]="leaguer.cardNumber">
+          <dx-validator>
+            <dxi-validation-rule type="required"
+                                 [message]="GENERAL_MESSAGE.TheFieldIsRequired.format('Số thẻ Đảng viên')"></dxi-validation-rule>
+          </dx-validator>
+        </dx-text-box>
+      </div>
+    </div>
+    <div class="field">
+      <span class="field-label">Số lý lịch Đảng viên</span>
+      <div class="field-value">
+        <dx-text-box [(value)]="leaguer.backgroundNumber"></dx-text-box>
+      </div>
+    </div>
+    <div class="field">
+      <span class="field-label">Số huy hiệu Đảng</span>
+      <div class="field-value">
+        <dx-text-box [(value)]="leaguer.badgeNumber"></dx-text-box>
+      </div>
+    </div>
+    <div class="field-action">
+      <dx-button class="mr-2" type="default"
+                 [text]="isProcessing ? '' : 'Lưu'"
+                 icon="{{isProcessing?'fas fa-spinner fa-spin':''}}"
+                 (onClick)="onSave()" [disabled]="isProcessing"></dx-button>
+      <dx-button text="Hủy" (onClick)="onCancel()"></dx-button>
+    </div>
+  </dx-validation-group>
+</div>

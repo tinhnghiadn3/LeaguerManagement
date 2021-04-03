@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace LeaguerManagement.Entities.ViewModels.Authentication
+namespace LeaguerManagement.Entities.ViewModels
 {
     public class LoggedUserModel
     {

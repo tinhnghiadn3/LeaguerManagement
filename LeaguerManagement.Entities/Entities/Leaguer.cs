@@ -27,8 +27,8 @@ namespace LeaguerManagement.Entities.Entities
         public string BeforeEnteringCareer { get; set; }
         public string CurrentCareer { get; set; }
         public string Position { get; set; }
-        public DateTime PreliminaryApplyDate { get; set; }
-        public DateTime OfficialApplyDate { get; set; }
+        public DateTime? PreliminaryApplyDate { get; set; }
+        public DateTime? OfficialApplyDate { get; set; }
         public string CardNumber { get; set; }
         public string BackgroundNumber { get; set; }
         public string BadgeNumber { get; set; }

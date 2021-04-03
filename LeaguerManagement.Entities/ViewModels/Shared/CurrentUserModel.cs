@@ -1,6 +1,6 @@
 ﻿using LeaguerManagement.Entities.Infrastructures;
 
-namespace LeaguerManagement.Entities.ViewModels.Shared
+namespace LeaguerManagement.Entities.ViewModels
 {
     public class CurrentUserModel : ICurrentUser
     {

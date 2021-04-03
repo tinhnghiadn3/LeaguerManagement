@@ -1,3 +1,5 @@
+import {LeaguerModel} from '@app/models';
+
 export enum KeyCode {
   Escape = 27,
   Space = 32,
@@ -13,12 +15,7 @@ export enum LookupDataType {
   Statuses = 'Statuses',
 }
 
-export enum ApplicantType {
-  Personal = 1,
-  Organization = 2
-}
-
-export enum AppFileStatus {
+export enum AppLeaguerStatus {
   Handling = 1,
   Returning = 2,
   Finished = 3

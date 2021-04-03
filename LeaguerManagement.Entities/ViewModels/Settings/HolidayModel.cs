@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace LeaguerManagement.Entities.ViewModels.Settings
+namespace LeaguerManagement.Entities.ViewModels
 {
     public class HolidayModel
     {

@@ -1,7 +1,6 @@
 ﻿using System.Threading.Tasks;
 using LeaguerManagement.Entities.Utilities;
-using LeaguerManagement.Entities.ViewModels.Authentication;
-using LeaguerManagement.Entities.ViewModels.Shared;
+using LeaguerManagement.Entities.ViewModels;
 using LeaguerManagement.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

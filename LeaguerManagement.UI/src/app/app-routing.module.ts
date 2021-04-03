@@ -16,6 +16,11 @@ const routes: Routes = [
     canActivate: [AuthGuard],
   },
   {
+    path: 'leaguer',
+    loadChildren: () => import('@app/modules/leaguer/leaguer.module').then(m => m.LeaguerModule),
+    canActivate: [AuthGuard],
+  },
+  {
     path: 'settings',
     loadChildren: () => import('@app/modules/settings/settings.module').then(m => m.SettingsModule),
     canActivate: [AuthGuard, NgxPermissionsGuard],

@@ -3,7 +3,7 @@ using System.IO;
 using System.Net;
 using System.Threading.Tasks;
 using LeaguerManagement.Entities.Utilities;
-using LeaguerManagement.Entities.ViewModels.Shared;
+using LeaguerManagement.Entities.ViewModels;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;

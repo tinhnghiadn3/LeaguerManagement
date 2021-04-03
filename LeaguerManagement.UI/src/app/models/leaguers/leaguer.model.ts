@@ -14,8 +14,8 @@ export class LeaguerModel {
   beforeEnteringCareer: string;
   currentCareer: string;
   position: string;
-  preliminaryApplyDate: string;
-  officialApplyDate: string;
+  preliminaryApplyDate: Date | null;
+  officialApplyDate: Date | null;
   cardNumber: string;
   backgroundNumber: string;
   badgeNumber: string;

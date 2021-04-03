@@ -6,9 +6,7 @@ using LeaguerManagement.Entities.Contexts;
 using LeaguerManagement.Entities.Entities;
 using LeaguerManagement.Entities.Infrastructures;
 using LeaguerManagement.Entities.Utilities.Helper;
-using LeaguerManagement.Entities.ViewModels.Authentication;
-using LeaguerManagement.Entities.ViewModels.Settings;
-using LeaguerManagement.Entities.ViewModels.Shared;
+using LeaguerManagement.Entities.ViewModels;
 using LeaguerManagement.Repositories.Extensions;
 using Microsoft.EntityFrameworkCore;
 

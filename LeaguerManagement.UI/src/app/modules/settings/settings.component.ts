@@ -16,7 +16,7 @@ export class SettingsComponent implements OnInit{
   isSmall: boolean = false;
   loggedUser: LoggedUserModel = new LoggedUserModel();
   tabs = SETTING_ITEMS;
-  selectedTab = SETTING_ITEMS[6];
+  selectedTab = SETTING_ITEMS[0];
   settingValue = SETTING_VALUE;
 
   constructor(private router: Router,

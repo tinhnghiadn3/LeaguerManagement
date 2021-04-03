@@ -1,8 +1,7 @@
 ﻿using System.Threading.Tasks;
 using DevExtreme.AspNet.Data;
 using DevExtreme.AspNet.Data.ResponseModel;
-using LeaguerManagement.Entities.ViewModels.Settings;
-using LeaguerManagement.Entities.ViewModels.Shared;
+using LeaguerManagement.Entities.ViewModels;
 using LeaguerManagement.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

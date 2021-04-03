@@ -38,11 +38,17 @@
       "@app/shared/*": [
         "app/shared/*.ts"
       ],
-      "@app/shared/components": [
-        "app/shared/components/index.ts"
+      "@app/shared/base-components": [
+        "app/shared/base-components/index.ts"
       ],
-      "@app/shared/components/*": [
-        "app/shared/components/*"
+      "@app/shared/base-components/*": [
+        "app/shared/base-components/*"
+      ],
+      "@app/shared/feature-components": [
+        "app/shared/feature-components/index.ts"
+      ],
+      "@app/shared/feature-components/*": [
+        "app/shared/feature-components/*"
       ],
       "@app/theme/*": [
         "app/theme/*.ts"

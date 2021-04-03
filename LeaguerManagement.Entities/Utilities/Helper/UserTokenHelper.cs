@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using LeaguerManagement.Entities.ViewModels.Authentication;
+using LeaguerManagement.Entities.ViewModels;
 
 namespace LeaguerManagement.Entities.Utilities.Helper {
 	public static class UserTokenHelper {

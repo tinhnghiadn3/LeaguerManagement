@@ -73,21 +73,11 @@ export const ResultStatusItems = [
 export const SETTING_VALUE = {
   RoleAndAccessControl: 0,
   User: 1,
-  DistrictAndWard: 2,
-  StreetAndApartment: 3,
-  NotificationAndDocumentType: 4,
-  CopyTypeAndCertificateType: 5,
-  Holiday: 6,
 };
 
 export const SETTING_ITEMS = [
   {value: SETTING_VALUE.RoleAndAccessControl, text: 'Quyền'},
   {value: SETTING_VALUE.User, text: 'Người dùng'},
-  {value: SETTING_VALUE.DistrictAndWard, text: 'Quận/Huyện - Xã/Phường'},
-  {value: SETTING_VALUE.StreetAndApartment, text: 'Đường - Chung cư'},
-  {value: SETTING_VALUE.NotificationAndDocumentType, text: 'Thông báo và Loại văn bản'},
-  {value: SETTING_VALUE.CopyTypeAndCertificateType, text: 'Loại sao lưu và loại GCN'},
-  {value: SETTING_VALUE.Holiday, text: 'Ngày nghỉ'},
 ];
 
 /**

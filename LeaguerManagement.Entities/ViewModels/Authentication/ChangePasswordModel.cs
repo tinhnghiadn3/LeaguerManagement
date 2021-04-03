@@ -1,4 +1,4 @@
-﻿namespace LeaguerManagement.Entities.ViewModels.Authentication
+﻿namespace LeaguerManagement.Entities.ViewModels
 {
     public class ChangePasswordModel
     {

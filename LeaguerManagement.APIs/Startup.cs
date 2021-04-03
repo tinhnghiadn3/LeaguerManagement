@@ -8,7 +8,7 @@ using LeaguerManagement.Entities.Contexts;
 using LeaguerManagement.Entities.DependencyInjection;
 using LeaguerManagement.Entities.Infrastructures;
 using LeaguerManagement.Entities.Utilities;
-using LeaguerManagement.Entities.ViewModels.Shared;
+using LeaguerManagement.Entities.ViewModels;
 using LeaguerManagement.Repositories.Base;
 using LeaguerManagement.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;

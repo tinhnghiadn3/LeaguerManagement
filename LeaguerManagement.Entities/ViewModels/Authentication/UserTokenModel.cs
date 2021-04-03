@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace LeaguerManagement.Entities.ViewModels.Authentication
+namespace LeaguerManagement.Entities.ViewModels
 {
 	public class UserTokenModel
     {

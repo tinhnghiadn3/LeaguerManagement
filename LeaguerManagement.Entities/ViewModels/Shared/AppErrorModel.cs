@@ -1,4 +1,4 @@
-﻿namespace LeaguerManagement.Entities.ViewModels.Shared
+﻿namespace LeaguerManagement.Entities.ViewModels
 {
 	public class AppErrorModel
     {

@@ -92,9 +92,9 @@
                 cellTemplate="actionsCellTemplate">
       <div *dxTemplate="let cell of 'actionsCellTemplate'">
         <div class="action-inline text-center">
-          <i class="fas fa-pencil-alt" title="Sửa" *ngIf="cell.data.roleId !== AppRoleValue.Admin || isAllowSettingAdminUser"
+          <i class="fas fa-pencil-alt" title="Sửa" *ngIf="cell.data.roleId === AppRoleValue.Admin"
              (click)="onShowEditingPopup(cell.data)"></i>
-          <i class="far fa-trash-alt" title="Xóa" *ngIf="cell.data.roleId !== AppRoleValue.Admin || isAllowSettingAdminUser"
+          <i class="far fa-trash-alt" title="Xóa" *ngIf="cell.data.roleId === AppRoleValue.Admin"
              (click)="openDeletingConfirmPopup(cell.data, $event)"></i>
         </div>
       </div>

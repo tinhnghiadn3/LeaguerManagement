@@ -69,9 +69,9 @@
 
       <dxi-column dataField="name" caption="Họ và tên" [minWidth]="150"></dxi-column>
 
-      <dxi-column dataField="bornYear" caption="Năm sinh" [minWidth]="80" alignment="center"></dxi-column>
+      <dxi-column dataField="bornYear" caption="Năm sinh" [width]="80" alignment="center"></dxi-column>
 
-      <dxi-column dataField="gender" caption="Giới tính" [minWidth]="80">
+      <dxi-column dataField="gender" caption="Giới tính" [width]="80" alignment="center">
         <dxo-lookup
           [dataSource]="genderItems"
           displayExpr="text"
@@ -79,46 +79,44 @@
         </dxo-lookup>
       </dxi-column>
 
-      <dxi-column dataField="religion" caption="Tôn giáo" [minWidth]="90"></dxi-column>
+      <dxi-column dataField="religion" caption="Tôn giáo" [width]="90" alignment="center"></dxi-column>
 
-      <dxi-column dataField="folk" caption="Dân tộc" [minWidth]="90"></dxi-column>
+      <dxi-column dataField="folk" caption="Dân tộc" [width]="90" alignment="center"></dxi-column>
 
       <dxi-column dataField="homeTown" caption="Quê quán" [minWidth]="150"></dxi-column>
 
-      <dxi-column dataField="workingUnit" caption="Đơn vị công tác" [minWidth]="120"></dxi-column>
+      <dxi-column dataField="position" caption="Chức vụ" [width]="100"></dxi-column>
 
-      <dxi-column dataField="position" caption="Chức vị" [minWidth]="100"></dxi-column>
-
-      <dxi-column caption="Ngày vào Đảng">
-        <dxi-column dataField="preliminaryApplyDate" caption="Dự bị" [minWidth]="110"></dxi-column>
-        <dxi-column dataField="officialApplyDate" caption="Chính thức" [minWidth]="110"></dxi-column>
+      <dxi-column caption="Ngày vào Đảng" alignment="center">
+        <dxi-column dataField="preliminaryApplyDate" caption="Dự bị" [width]="110"></dxi-column>
+        <dxi-column dataField="officialApplyDate" caption="Chính thức" [width]="110"></dxi-column>
       </dxi-column>
 
-      <dxi-column dataField="cardNumber" caption="Số thẻ Đảng viên" [minWidth]="100"></dxi-column>
+      <dxi-column dataField="cardNumber" caption="Số thẻ Đảng viên" [width]="120"></dxi-column>
 
-      <dxi-column dataField="backgroundNumber" caption="Số lý lịch Đảng viên" [minWidth]="100"></dxi-column>
+      <dxi-column dataField="backgroundNumber" caption="Số lý lịch Đảng viên" [width]="120"></dxi-column>
 
-      <dxi-column dataField="badgeNumber" caption="Số huy hiệu Đảng" [minWidth]="100"></dxi-column>
+      <dxi-column dataField="badgeNumber" caption="Số huy hiệu Đảng" [width]="120"></dxi-column>
 
-      <dxi-column dataField="moveOutDated" caption="Ngày chuyển đi, đến Đảng bộ cơ sở" dataType="date" [minWidth]="110" cellTemplate="'moveOutCellTemplate'">
-        <div *dxTemplate="let cell of 'moveOutCellTemplate'">
-          {{cell.data.moveOutDated}}, đến {{cell.data.officeBefore}}
-        </div>
-      </dxi-column>
+      <!--      <dxi-column dataField="moveOutDated" caption="Ngày chuyển đi, đến Đảng bộ cơ sở" dataType="date" [minWidth]="110"-->
+      <!--                  cellTemplate="'moveOutCellTemplate'" [allowFiltering]="false">-->
+      <!--        <div *dxTemplate="let cell of 'moveOutCellTemplate'">-->
+      <!--          {{cell.data.moveOutDated}}, đến {{cell.data.officeBefore}}-->
+      <!--        </div>-->
+      <!--      </dxi-column>-->
 
-      <dxi-column dataField="officeComing" caption="Ngày chuyển đến, ở Đảng bộ cơ sở" [minWidth]="120" cellTemplate="'moveInCellTemplate'">
-        <div *dxTemplate="let cell of 'moveInCellTemplate'">
-          {{cell.data.moveInDated}}, ở {{cell.data.officeComing}}
-        </div>
-      </dxi-column>
+      <!--      <dxi-column dataField="officeComing" caption="Ngày chuyển đến, ở Đảng bộ cơ sở" [minWidth]="120"-->
+      <!--                  cellTemplate="'moveInCellTemplate'">-->
+      <!--        <div *dxTemplate="let cell of 'moveInCellTemplate'">-->
+      <!--          {{cell.data.moveInDated}}, ở {{cell.data.officeComing}}-->
+      <!--        </div>-->
+      <!--      </dxi-column>-->
 
-      <dxi-column dataField="deadDate" caption="Ngày từ trần" dataType="date" format="dd/MM/yyyy"
-                  [minWidth]="110">
-      </dxi-column>
+      <!--      <dxi-column dataField="deadDate" caption="Ngày từ trần" dataType="date" format="dd/MM/yyyy" [minWidth]="110">-->
+      <!--      </dxi-column>-->
 
-      <dxi-column dataField="getOutDate" caption="Ngày ra khỏi Đảng" [minWidth]="150"></dxi-column>
-
-      <dxi-column dataField="phone" caption="Điện thoại" [minWidth]="110"></dxi-column>
+      <!--      <dxi-column dataField="getOutDate" caption="Ngày ra khỏi Đảng" dataType="date" format="dd/MM/yyyy"-->
+      <!--                  [minWidth]="110"></dxi-column>-->
 
       <dxi-column caption="Thao tác"
                   type="'buttons'"
@@ -141,18 +139,25 @@
 
       <div *dxTemplate="let item of 'detail'">
         <div class="row">
+          <p>Điện thoại: {{item.data.phone}}</p>
           <div class="col-6">
+            <p>Ngày chuuyển đi: {{item.data.moveOutDated}}</p>
+            <p>Ngày chuuyển đến: {{item.data.moveInDated}}</p>
             <p>Trình độ văn hóa: {{item.data.educationalLevel}}</p>
             <p>Trình độ ngoại ngữ: {{item.data.foreignLanguageLevel}}</p>
             <p>Nghề nghiệp trước khi vào Đảng: {{item.data.beforeEnteringCareer}}</p>
           </div>
           <div class="col-6">
+            <p>Đến Đảng bộ cơ sở: {{item.data.officeBefore}}</p>
+            <p>Ở Đảng bộ cơ sở: {{item.data.officeComing}}</p>
             <p>Trình độ lý luận chính trị: {{item.data.politicalTheoryLevel}}</p>
             <p>Nghiệp vụ chuyên môn: {{item.data.specializeMajor}}</p>
             <p>Nghề nghiệp hiện nay: {{item.data.currentCareer}}</p>
           </div>
-          <p>Lý do từ trần: {{item.data.formOut || 'Chưa từ trần'}}</p>
-          <p>Hình thức ra khỏi Đảng: {{item.data.formOut || 'Chưa ra khỏi Đảng'}}</p>
+          <p>Ngày từ trần: {{item.data.deadDate}}</p>
+          <p>Lý do từ trần: {{item.data.formOut || 'Chưa'}}</p>
+          <p>Ngày ra khỏi Đảng: {{item.data.getOutDate}}</p>
+          <p>Hình thức ra khỏi Đảng: {{item.data.formOut || 'Chưa'}}</p>
           <p>Ghi chú: {{!item.data.notes ? 'Không có' : item.data.notes}}</p>
         </div>
       </div>

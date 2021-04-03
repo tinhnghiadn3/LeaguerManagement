@@ -1,5 +1,4 @@
 import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {PopoverConfirmBoxComponent} from '@app/shared/components';
 import {DropDownModel, LeaguerModel} from '@app/models';
 import {Subscription} from 'rxjs';
 import {LookupService} from '@app/services/shared';
@@ -8,6 +7,7 @@ import {LeaguerService} from '@app/services/features/leaguer.service';
 import DataSource from 'devextreme/data/data_source';
 import {Router} from '@angular/router';
 import {GENDER_ITEMS} from '@app/shared/constants';
+import {PopoverConfirmBoxComponent} from '@app/shared/base-components/popover-confirm-box/popover-confirm-box.component';
 
 @Component({
   selector: 'app-home',
@@ -44,14 +44,14 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.getAllStaffs();
+    this.getCurrentStaffs();
   }
 
-  getAllStaffs() {
+  getCurrentStaffs() {
     this.dataSource = new DataSource({
       load: (loadOptions) => {
         loadOptions.requireTotalCount = true;
-        return this.fileService.getAllStaffs(loadOptions).toPromise();
+        return this.fileService.getCurrentLeaguers(loadOptions).toPromise();
       }
     });
   }
@@ -70,7 +70,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   refresh() {
     setTimeout(() => {
-      this.getAllStaffs();
+      this.getCurrentStaffs();
     }, 100);
   }
 

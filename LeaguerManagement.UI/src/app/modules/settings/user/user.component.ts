@@ -1,6 +1,5 @@
 import {Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {isEqual} from 'lodash';
-import {PopoverConfirmBoxComponent} from '@app/shared/components';
 import {UserEditingComponent} from '@app/modules/settings/user/user-editing/user-editing.component';
 import {DropDownModel, LoggedUserModel, UserModel} from '@app/models';
 import {GENERAL_MESSAGE} from '@app/shared/messages';
@@ -11,6 +10,7 @@ import {LookupService} from '@app/services/shared/lookup.service';
 import {Subscription} from 'rxjs';
 import DataSource from 'devextreme/data/data_source';
 import {AppRoleValue} from '@app/shared/constants';
+import {PopoverConfirmBoxComponent} from '@app/shared/base-components';
 
 @Component({
   selector: 'app-user',

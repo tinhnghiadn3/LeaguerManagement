@@ -6,9 +6,10 @@ import {
   PopoverConfirmBoxComponent,
   PopoverTitleComponent, TabsComponent,
   UploadAttachmentsComponent, YesNoConfirmComponent,
-} from '@app/shared/components';
+} from './base-components';
 import {ThemeModule} from '../theme/theme.module';
 import {YearDatePipe} from '@app/shared/pipes/year.datepipe';
+import {LeaguerAddingComponent} from '@app/shared/feature-components';
 
 const PROVIDERS = [
   //
@@ -24,6 +25,8 @@ const PROVIDERS = [
 ];
 
 const COMPONENTS = [
+  //
+  // BASE
   PopoverConfirmBoxComponent,
   PopoverTitleComponent,
   TabsComponent,
@@ -31,6 +34,9 @@ const COMPONENTS = [
   UploadAttachmentsComponent,
   BaseSettingEditingComponent,
   YesNoConfirmComponent,
+  //
+  // FEATURE
+  LeaguerAddingComponent,
   //
   // PIPE
   YearDatePipe

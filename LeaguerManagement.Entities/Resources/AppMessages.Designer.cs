@@ -39,7 +39,7 @@ namespace LeaguerManagement.Entities.Resources {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("LandStatusConfirmation.Entities.Resources.AppMessages", typeof(AppMessages).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("LeaguerManagement.Entities.Resources.AppMessages", typeof(AppMessages).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

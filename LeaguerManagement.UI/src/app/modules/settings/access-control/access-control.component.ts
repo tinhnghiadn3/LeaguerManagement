@@ -8,9 +8,9 @@ import {LookupService} from '@app/services/shared';
 import {LoggedUserService} from '@app/services/auth';
 import {SettingsService} from '@app/services/features';
 import {AccessControlModel, LoggedUserModel, RoleModel} from '@app/models';
-import {PopoverConfirmBoxComponent} from '@app/shared/components';
 import DataSource from 'devextreme/data/data_source';
 import {LookupDataType} from '@app/shared/enums';
+import {PopoverConfirmBoxComponent} from '@app/shared/base-components';
 
 @Component({
   selector: 'app-access-control',
