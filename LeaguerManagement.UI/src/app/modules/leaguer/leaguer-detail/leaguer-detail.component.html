@@ -10,177 +10,73 @@
       <div class="form-group mt-2">
         <div class="row">
           <div class="col-12 col-lg-6">
-            <!--applicant type-->
             <div class="field row-layout enter">
-              <div class="field-label">Cung cấp cho:</div>
-              <dx-radio-group class="field-value w-100"
-                              #applicantTypeRadioGroup
-                              [items]="applicantTypes"
-                              [(value)]="leaguer.applicant.applicantTypeId"
-                              [tabIndex]="1"
-                              displayExpr="value"
-                              valueExpr="key"
-                              layout="horizontal">
-              </dx-radio-group>
+              <div class="field-label">Họ và tên:</div>
+              <dx-text-box class="field-value w-100" [(value)]="leaguer.name" [valueChangeEvent]="'keyup'">
+                <dx-validator>
+                  <dxi-validation-rule type="required"
+                                       [message]="GENERAL_MESSAGE.TheFieldIsRequired.format('Họ và tên')"></dxi-validation-rule>
+                </dx-validator>
+              </dx-text-box>
             </div>
-          </div>
-          <!--applied time-->
-          <div class="col-12 col-lg-6">
             <div class="field row-layout enter">
-              <div class="field-label">Thời gian:</div>
-              <dx-date-box class="field-value w-100" [(value)]="now" [tabIndex]="2"
-                           [displayFormat]="'dd/MM/yyyy'" [min]="minDate"
-                           [valueChangeEvent]="'keyup'"></dx-date-box>
-            </div>
-          </div>
-          <div class="col-12 col-lg-10" *ngIf="leaguer.applicant.applicantTypeId === applicantType.Organization">
-            <div class="field row-layout">
-              <div class="field-label">Tên tổ chức yêu cầu cung cấp thông tin:</div>
-              <dx-text-box class="field-value w-100" [(value)]="leaguer.applicant.organizationName"
-                           [tabIndex]="3" [valueChangeEvent]="'keyup'"></dx-text-box>
-            </div>
-          </div>
-          <!--applicant name-->
-          <div class="col-12 col-lg-6">
-            <div class="field row-layout enter">
-              <div class="field-label d-flex align-items-center"
-                   *ngIf="leaguer.applicant.applicantTypeId === applicantType.Personal">Họ tên
-                <dx-select-box [dataSource]="pronouns" width="105px" class="ml-1 mr-1"
-                               displayExpr="value" [tabIndex]="4"
-                               valueExpr="key"
-                               placeholder="Ông/Bà"
-                               noDataText="Không có nhân xưng"
-                               [(value)]="leaguer.applicant.pronounsId"
-                               [valueChangeEvent]="'input'">
-                  <dx-validator>
-                    <dxi-validation-rule type="required"
-                                         [message]="GENERAL_MESSAGE.TheFieldIsRequired.format('Ông/Bà')"></dxi-validation-rule>
-                  </dx-validator>
-                </dx-select-box>
-                yêu cầu cung cấp thông tin:
-              </div>
-              <div class="field-label d-flex align-items-center"
-                   *ngIf="leaguer.applicant.applicantTypeId === applicantType.Organization">Họ tên
-                <dx-select-box [dataSource]="pronouns" width="105px" class="ml-1 mr-1"
-                               displayExpr="value" [tabIndex]="5"
-                               valueExpr="key"
-                               placeholder="Ông/Bà"
-                               noDataText="Không có nhân xưng"
-                               [(value)]="leaguer.applicant.pronounsId"
-                               [valueChangeEvent]="'input'">
-                  <dx-validator>
-                    <dxi-validation-rule type="required"
-                                         [message]="GENERAL_MESSAGE.TheFieldIsRequired.format('Ông/Bà')"></dxi-validation-rule>
-                  </dx-validator>
-                </dx-select-box>
-                đại diện:
-              </div>
-              <dx-text-box class="field-value w-100" [(value)]="leaguer.applicant.name" [tabIndex]="6"
-                           [valueChangeEvent]="'keyup'" (onValueChanged)="setContent()"></dx-text-box>
+              <dx-select-box [dataSource]="units" class="field-value w-100"
+                             displayExpr="value"
+                             valueExpr="key"
+                             placeholder="Ông/Bà"
+                             noDataText=""
+                             [(value)]="leaguer.unitId"
+                             [valueChangeEvent]="'input'">
+                <dx-validator>
+                  <dxi-validation-rule type="required"
+                                       [message]="GENERAL_MESSAGE.TheFieldIsRequired.format('Chi bộ')"></dxi-validation-rule>
+                </dx-validator>
+              </dx-select-box>
             </div>
           </div>
           <!--year of birth-->
           <div class="col-12 col-lg-6">
             <div class="field row-layout enter">
               <div class="field-label">Năm sinh:</div>
-              <dx-text-box class="field-value w-100" [(value)]="leaguer.applicant.yearOfBirth" [tabIndex]="7"
+              <dx-number-box class="field-value w-100" [(value)]="leaguer.bornYear"
+                             [valueChangeEvent]="'keyup'"></dx-number-box>
+            </div>
+          </div>
+          <!--gender-->
+          <div class="col-12 col-lg-4">
+            <div class="field row-layout enter">
+              <div class="field-label">Giới tính:</div>
+              <dx-select-box [dataSource]="GENDER_ITEMS" class="field-label"
+                             valueExpr="value" displayExpr="text" placeholder="Chọn..."
+                             [(value)]="leaguer.gender"></dx-select-box>
+            </div>
+          </div>
+          <!--religion-->
+          <div class="col-12 col-lg-4">
+            <div class="field row-layout">
+              <div class="field-label">Tôn giáo:</div>
+              <dx-text-box class="field-value w-100" [(value)]="leaguer.religion"
                            [valueChangeEvent]="'keyup'"></dx-text-box>
             </div>
           </div>
-          <!--identify-->
           <div class="col-12 col-lg-4">
             <div class="field row-layout">
-              <dx-select-box [dataSource]="identifyNumberTypes" class="field-label"
-                             valueExpr="key" displayExpr="value" [tabIndex]="8" placeholder="Chọn..."
-                             [(value)]="leaguer.applicant.identifyNumberTypeId"></dx-select-box>
-              <dx-number-box class="field-value w-100" [(value)]="leaguer.applicant.identifyCode"
-                             [tabIndex]="9" [valueChangeEvent]="'keyup'"></dx-number-box>
+              <div class="field-label">Dân tộc:</div>
+              <dx-text-box class="field-value w-100" [(value)]="leaguer.folk"
+                           [valueChangeEvent]="'keyup'"></dx-text-box>
             </div>
           </div>
-          <div class="col-12 col-lg-4">
-            <div class="field row-layout">
-              <div class="field-label">Ngày cấp:</div>
-              <dx-date-box class="field-value w-100"
-                           [displayFormat]="'dd/MM/yyyy'"
-                           [(value)]="leaguer.applicant.datedIdentifyCode" type="date"
-                           [max]="maxDate" [tabIndex]="10"
-                           [valueChangeEvent]="'keyup'"></dx-date-box>
-            </div>
-          </div>
-          <div class="col-12 col-lg-4">
-            <div class="field row-layout">
-              <div class="field-label">Nơi cấp:</div>
-              <dx-select-box [dataSource]="cities" class="field-value w-100"
-                             valueExpr="key" displayExpr="value" [tabIndex]="11"
-                             [(value)]="leaguer.applicant.cityId"></dx-select-box>
-            </div>
-          </div>
-          <!--address-->
-          <div class="col-12 col-lg-4">
-            <div class="field row-layout">
-              <div class="field-label">Tổ:</div>
-              <dx-text-box class="field-value w-100" [(value)]="leaguer.applicant.zone"
-                           [tabIndex]="12" [valueChangeEvent]="'keyup'"></dx-text-box>
-            </div>
-          </div>
-          <div class="col-12 col-lg-4">
-            <div class="field row-layout">
-              <div class="field-label">Số nhà:</div>
-              <dx-text-box class="field-value w-100" [(value)]="leaguer.applicant.houseCode"
-                           [tabIndex]="13" [valueChangeEvent]="'keyup'"></dx-text-box>
-            </div>
-          </div>
-          <div class="col-12 col-lg-4">
-            <div class="field row-layout">
-              <div class="field-label">Đường:</div>
-              <div class="d-flex justify-content-start align-items-center field-value w-100">
-                <dx-select-box [dataSource]="streets" class="mr-2 w-100" [tabIndex]="14"
-                               valueExpr="key" displayExpr="value" [searchEnabled]="true"
-                               [(value)]="leaguer.applicant.streetId"></dx-select-box>
-                <dx-button type="normal" icon="{{isProcessing?'fas fa-spinner fa-spin':'fas fa-plus-circle'}}"
-                           [tabIndex]="15" (onClick)="openStreetEditingPopup()" [disabled]="isProcessing"></dx-button>
-              </div>
-            </div>
-          </div>
-          <!--district-->
+          <!--phone-->
           <div class="col-12 col-lg-6">
-            <div class="field row-layout enter">
-              <div class="field-label">Quận/Huyện:</div>
-              <dx-select-box [dataSource]="districts" class="field-value w-100"
-                             valueExpr="key" displayExpr="value"
-                             (onValueChanged)="filterWards()" [tabIndex]="16"
-                             [(value)]="leaguer.applicant.districtId"></dx-select-box>
-            </div>
             <div class="field row-layout enter">
               <div class="field-label">Điện thoại:</div>
-              <dx-text-box class="field-value w-100" [(value)]="leaguer.applicant.phoneNumber"
-                           [tabIndex]="18" [valueChangeEvent]="'keyup'"></dx-text-box>
-            </div>
-          </div>
-          <!--ward-->
-          <div class="col-12 col-lg-6">
-            <div class="field row-layout enter">
-              <div class="field-label">Phường/Xã:</div>
-              <dx-select-box [dataSource]="filteredWards" class="field-value w-100"
-                             valueExpr="id" displayExpr="name" [tabIndex]="17"
-                             [(value)]="leaguer.applicant.wardId"></dx-select-box>
-            </div>
-            <div class="field row-layout enter">
-              <div class="field-label">Email:</div>
-              <dx-text-box class="field-value w-100" [(value)]="leaguer.applicant.email"
-                           [tabIndex]="19" [valueChangeEvent]="'keyup'">
-                <dx-validator>
-                  <dxi-validation-rule
-                    type="email"
-                    message="Email không đúng định dạng">
-                  </dxi-validation-rule>
-                </dx-validator>
-              </dx-text-box>
+              <dx-number-box class="field-value w-100" [(value)]="leaguer.phone"
+                           [tabIndex]="18" [valueChangeEvent]="'keyup'"></dx-number-box>
             </div>
           </div>
           <div class="col-12 d-flex justify-content-end align-items-center">
             <dx-button class="mr-2" type="default" [tabIndex]="25"
-                       [text]="isProcessing ? '' : 'Lưu và in phiếu hẹn'"
+                       [text]="isProcessing ? '' : 'Lưu'"
                        icon="{{isProcessing?'fas fa-spinner fa-spin':''}}"
                        (onClick)="save(validationGroup)" [disabled]="isProcessing"></dx-button>
             <dx-button text="Hủy" (onClick)="refresh()"></dx-button>

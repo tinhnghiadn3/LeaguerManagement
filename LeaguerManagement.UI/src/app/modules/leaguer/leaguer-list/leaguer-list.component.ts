@@ -70,7 +70,7 @@ export class LeaguerListComponent implements OnInit, OnDestroy {
   }
 
   goToDetail(data: LeaguerModel) {
-    this.router.navigate([`/leaguer/${data.id}`]).then();
+    this.router.navigate([`/leaguer/${data.id}/detail`]).then();
   }
 
   onShowEditingPopup(data: LeaguerModel = null) {

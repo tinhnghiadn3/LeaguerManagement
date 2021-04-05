@@ -6,6 +6,7 @@ import {LookupService} from '@app/services/shared';
 import {LeaguerService} from '@app/services/features/leaguer.service';
 import {ActivatedRoute} from '@angular/router';
 import {AppNotify} from '@app/shared/utilities/notification-helper';
+import {GENDER_ITEMS} from '@app/shared/constants';
 
 @Component({
   selector: 'app-leaguer-detail',
@@ -29,6 +30,7 @@ export class LeaguerDetailComponent implements OnInit, OnDestroy {
   maxDate: Date;
   subscription = new Subscription();
 
+  GENDER_ITEMS = GENDER_ITEMS;
   GENERAL_MESSAGE = GENERAL_MESSAGE;
 
   constructor(private lookupService: LookupService,
