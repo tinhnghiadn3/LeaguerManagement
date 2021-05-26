@@ -143,28 +143,30 @@
       </div>
     </dxi-column>
 
-    <div *dxTemplate="let item of 'detail'">
-      <div class="row">
-        <p>Điện thoại: {{item.data.phone}}</p>
-        <div class="col-6">
-          <p>Ngày chuuyển đi: {{item.data.moveOutDated}}</p>
-          <p>Ngày chuuyển đến: {{item.data.moveInDated}}</p>
-          <p>Trình độ văn hóa: {{item.data.educationalLevel}}</p>
-          <p>Trình độ ngoại ngữ: {{item.data.foreignLanguageLevel}}</p>
-          <p>Nghề nghiệp trước khi vào Đảng: {{item.data.beforeEnteringCareer}}</p>
+    <div *dxTemplate="let item of 'detail'" class="container-fluid form-wrapper">
+      <p>Điện thoại: {{item.data.phone}}</p>
+      <p>Ngày từ trần: {{item.data.deadDate}}</p>
+      <p>Lý do từ trần: {{item.data.formOut || 'Chưa'}}</p>
+      <p>Ngày ra khỏi Đảng: {{item.data.getOutDate}}</p>
+      <p>Hình thức ra khỏi Đảng: {{item.data.formOut || 'Chưa'}}</p>
+      <p>Ghi chú: {{!item.data.notes ? 'Không có' : item.data.notes}}</p>
+      <div class="form-group">
+        <div class="row">
+          <div class="col-12 col-lg-6">
+            <p>Ngày chuyển đi: {{item.data.moveOutDated}}</p>
+            <p>Ngày chuyển đến: {{item.data.moveInDated}}</p>
+            <p>Trình độ văn hóa: {{item.data.educationalLevel}}</p>
+            <p>Trình độ ngoại ngữ: {{item.data.foreignLanguageLevel}}</p>
+            <p>Nghề nghiệp trước khi vào Đảng: {{item.data.beforeEnteringCareer}}</p>
+          </div>
+          <div class="col-12 col-lg-6">
+            <p>Đến Đảng bộ cơ sở: {{item.data.officeBefore}}</p>
+            <p>Ở Đảng bộ cơ sở: {{item.data.officeComing}}</p>
+            <p>Trình độ lý luận chính trị: {{item.data.politicalTheoryLevel}}</p>
+            <p>Nghiệp vụ chuyên môn: {{item.data.specializeMajor}}</p>
+            <p>Nghề nghiệp hiện nay: {{item.data.currentCareer}}</p>
+          </div>
         </div>
-        <div class="col-6">
-          <p>Đến Đảng bộ cơ sở: {{item.data.officeBefore}}</p>
-          <p>Ở Đảng bộ cơ sở: {{item.data.officeComing}}</p>
-          <p>Trình độ lý luận chính trị: {{item.data.politicalTheoryLevel}}</p>
-          <p>Nghiệp vụ chuyên môn: {{item.data.specializeMajor}}</p>
-          <p>Nghề nghiệp hiện nay: {{item.data.currentCareer}}</p>
-        </div>
-        <p>Ngày từ trần: {{item.data.deadDate}}</p>
-        <p>Lý do từ trần: {{item.data.formOut || 'Chưa'}}</p>
-        <p>Ngày ra khỏi Đảng: {{item.data.getOutDate}}</p>
-        <p>Hình thức ra khỏi Đảng: {{item.data.formOut || 'Chưa'}}</p>
-        <p>Ghi chú: {{!item.data.notes ? 'Không có' : item.data.notes}}</p>
       </div>
     </div>
 
