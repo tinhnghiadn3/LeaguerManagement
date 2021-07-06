@@ -7,6 +7,7 @@ namespace LeaguerManagement.Entities.ViewModels
         public int Id { get; set; }
         public int UnitId { get; set; }
         public string Name { get; set; }
+        public int AvatarId { get; set; }
         public int BornYear { get; set; }
         public bool Gender { get; set; }
         public string Religion { get; set; }
@@ -34,6 +35,7 @@ namespace LeaguerManagement.Entities.ViewModels
         public string FormOut { get; set; }
         public int? Phone { get; set; }
         public string Notes { get; set; }
+        public int StatusId { get; set; }
         public bool IsActivated { get; set; }
     }
 }

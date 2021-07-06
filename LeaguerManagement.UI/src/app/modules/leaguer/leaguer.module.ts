@@ -5,10 +5,11 @@ import {LeaguerDetailComponent} from './leaguer-detail/leaguer-detail.component'
 import {ThemeModule} from '@app/theme/theme.module';
 import {SharedModule} from '@app/shared/shared.module';
 import {RouterModule} from '@angular/router';
+import { LeaguerTransferOfficalComponent } from './leaguer-transfer-offical/leaguer-transfer-offical.component';
 
 
 @NgModule({
-  declarations: [LeaguerComponent, LeaguerListComponent, LeaguerDetailComponent],
+  declarations: [LeaguerComponent, LeaguerListComponent, LeaguerDetailComponent, LeaguerTransferOfficalComponent],
   imports: [
     ThemeModule,
     SharedModule,

@@ -11,7 +11,7 @@
 			<i class="far fa-times-circle"></i>
 		</span>
 
-    <img *ngIf="selectedAttachment?.isImage" [src]="selectedAttachment?.fileUrl"/>
+    <img *ngIf="selectedAttachment?.isImage" [src]="selectedAttachment?.imageLink"/>
 
     <iframe *ngIf="selectedAttachment && !selectedAttachment.isImage" [src]="url"></iframe>
 

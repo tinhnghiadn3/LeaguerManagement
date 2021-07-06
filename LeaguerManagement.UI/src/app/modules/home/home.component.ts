@@ -23,6 +23,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   dataSource: DataSource;
 
   units: DropDownModel[] = [];
+  statuses: DropDownModel[] = [];
   files: LeaguerModel[] = [];
   selectedFile: LeaguerModel = new LeaguerModel();
 
@@ -40,6 +41,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.subscription.add(
       this.lookupService.lookup.subscribe(lookup => {
         this.units = lookup.units;
+        this.statuses = lookup.statuses;
       }));
   }
 
@@ -47,10 +49,13 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.getCurrentStaffs();
   }
 
-  getCurrentStaffs() {
+  getCurrentStaffs(statusId = null) {
     this.dataSource = new DataSource({
       load: (loadOptions) => {
         loadOptions.requireTotalCount = true;
+        if (statusId) {
+          loadOptions.filter = ['statusId', '=', statusId];
+        }
         return this.fileService.getCurrentLeaguers(loadOptions).toPromise();
       }
     });
@@ -75,7 +80,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   goToDetail(data: LeaguerModel) {
-    this.router.navigate([`/staffs/${data.id}`]).then();
+    this.router.navigate([`/leaguer/${data.id}/detail`]).then();
   }
 
   ngOnDestroy() {

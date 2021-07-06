@@ -47,7 +47,7 @@ namespace LeaguerManagement.Services
                 throw new AppException(string.Format(AppMessages.FileTooLarge, Math.Round((decimal)Settings.MaxFileSize / 1024 / 1024, 2)));
         }
 
-        protected string GetOrCreateConstructionFolder(string childPath, int fileId)
+        protected string GetOrCreateLeaguerFolder(string childPath, int fileId)
         {
             var folderPath = Path.Combine("Contents", "Uploads", fileId.ToString(), childPath);
             if (Directory.Exists(folderPath))

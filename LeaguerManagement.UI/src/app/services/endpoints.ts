@@ -13,6 +13,6 @@ export const API_ENDPOINT = {
   // Staffs
   Leaguers: `api/leaguers`,
   //
-  // Attachment
-  Attachments: `api/attachments`,
+  // Files
+  Files: `api/files`,
 };

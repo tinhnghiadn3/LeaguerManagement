@@ -20,18 +20,18 @@ export class UploadAttachmentsComponent implements OnInit {
   @ViewChild('deletingConfirmBox', {static: true}) deletingConfirmBox: PopoverConfirmBoxComponent;
   @ViewChild('renamingTextBox', {static: false}) renamingTextBox: DxTextBoxComponent;
 
-  @Input() fileId: number;
+  @Input() leaguerId: number;
 
   private _data: ReferenceWithAttachmentModel<any> = new ReferenceWithAttachmentModel<any>();
   @Input()
   get data() {
-    AttachmentModel.setAttachmentsList(this._data.attachments, this.fileId);
+    AttachmentModel.setAttachmentsList(this._data.attachments, this.leaguerId);
     return this._data;
   }
 
   set data(value) {
     this._data = value;
-    AttachmentModel.setAttachmentsList(this._data.attachments, this.fileId);
+    AttachmentModel.setAttachmentsList(this._data.attachments, this.leaguerId);
   }
 
   @Output() onAttachmentChanged = new EventEmitter();

@@ -21,7 +21,6 @@ namespace LeaguerManagement.APIs.Controllers
         [AllowAnonymous]
         [HttpPost("login")]
         public async Task<AuthenticationUserModel> LoginAsync([FromBody]LoginModel input)
-
         {
             return await _userService.Login(input);
         }

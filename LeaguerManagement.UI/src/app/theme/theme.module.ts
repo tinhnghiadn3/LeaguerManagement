@@ -38,7 +38,7 @@ import {
   DxValidationGroupModule,
   DxValidatorModule,
   DxTabsModule,
-  DxDateBoxModule, DxCheckBoxModule
+  DxDateBoxModule, DxCheckBoxModule, DxPieChartModule
 } from 'devextreme-angular';
 import {ChangePasswordComponent} from '@app/theme/components/change-password/change-password.component';
 
@@ -67,7 +67,8 @@ const DEVEXTREME_MODULES = [
   DxLookupModule,
   DxTabsModule,
   DxDateBoxModule,
-  DxCheckBoxModule
+  DxCheckBoxModule,
+  DxPieChartModule
 ];
 //
 const BASE_MODULES = [

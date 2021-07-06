@@ -10,6 +10,7 @@ namespace LeaguerManagement.Entities.Entities
         public Leaguer()
         {
             AppliedDocuments = new HashSet<AppliedDocument>();
+            LeaguerAttachments = new HashSet<LeaguerAttachment>();
         }
 
         public int Id { get; set; }
@@ -48,5 +49,6 @@ namespace LeaguerManagement.Entities.Entities
         public virtual Status Status { get; set; }
         public virtual Unit Unit { get; set; }
         public virtual ICollection<AppliedDocument> AppliedDocuments { get; set; }
+        public virtual ICollection<LeaguerAttachment> LeaguerAttachments { get; set; }
     }
 }

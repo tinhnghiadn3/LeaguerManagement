@@ -1,1 +1,15 @@
-<p>header-dashboard works!</p>
+<div class="dashboard mt-2">
+  <div class="total">
+    <dx-pie-chart id="pie" type="doughnut" title="Thống kê năm 2021" palette="Soft Pastel"
+                  [dataSource]="statusStatistics" (onPointClick)="pointClickHandler($event)">
+      <dxi-series argumentField="statusName" valueField="amount">
+        <dxo-label [visible]="true">
+          <dxo-connector [visible]="true"></dxo-connector>
+        </dxo-label>
+      </dxi-series>
+      <dxo-export [enabled]="false"></dxo-export>
+      <dxo-legend [margin]="0" horizontalAlignment="right" verticalAlignment="top"></dxo-legend>
+      <dxo-tooltip [enabled]="true" [customizeTooltip]="customizeTooltip"></dxo-tooltip>
+    </dx-pie-chart>
+  </div>
+</div>

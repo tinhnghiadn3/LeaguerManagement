@@ -23,6 +23,7 @@ namespace LeaguerManagement.Entities.Contexts
         public virtual DbSet<AppliedDocument> AppliedDocuments { get; set; }
         public virtual DbSet<AppliedDocumentAttachment> AppliedDocumentAttachments { get; set; }
         public virtual DbSet<Leaguer> Leaguers { get; set; }
+        public virtual DbSet<LeaguerAttachment> LeaguerAttachments { get; set; }
         public virtual DbSet<Pronoun> Pronouns { get; set; }
         public virtual DbSet<Role> Roles { get; set; }
         public virtual DbSet<Status> Statuses { get; set; }
@@ -125,6 +126,31 @@ namespace LeaguerManagement.Entities.Contexts
                     .HasForeignKey(d => d.UnitId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK__Leaguer__UnitId__300424B4");
+            });
+
+            modelBuilder.Entity<LeaguerAttachment>(entity =>
+            {
+                entity.ToTable("LeaguerAttachment");
+
+                entity.Property(e => e.CreatedDate).HasColumnType("datetime");
+
+                entity.Property(e => e.FileExtension).IsRequired();
+
+                entity.Property(e => e.FileName).IsRequired();
+
+                entity.Property(e => e.FilePath).IsRequired();
+
+                entity.HasOne(d => d.CreatedByUser)
+                    .WithMany(p => p.LeaguerAttachments)
+                    .HasForeignKey(d => d.CreatedByUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__LeaguerAt__Creat__5DCAEF64");
+
+                entity.HasOne(d => d.Leaguer)
+                    .WithMany(p => p.LeaguerAttachments)
+                    .HasForeignKey(d => d.LeaguerId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__LeaguerAt__Leagu__5CD6CB2B");
             });
 
             modelBuilder.Entity<Role>(entity =>

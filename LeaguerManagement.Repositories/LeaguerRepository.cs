@@ -41,5 +41,33 @@ namespace LeaguerManagement.Repositories
             return await repository.Entities.AnyAsync(_ =>
                 _.Id != id && string.Equals(_.Name, name) && string.Equals(_.CardNumber, cardNumber));
         }
+
+        public static async Task<ReferenceWithAttachmentModel<LeaguerModel>> GetLeaguerDetail(this IRepository<Leaguer> repository, int id)
+        {
+            var source = new ReferenceWithAttachmentModel<LeaguerModel>();
+            await repository.LoadStoredProc("spGetLeaguer")
+                .WithSqlParam("@Id", id)
+                .ExecuteStoredProcAsync((result) =>
+                {
+                    source.Reference = result.ReadNextListOrEmpty<LeaguerModel>().FirstOrDefault();
+
+                    if (source.Reference == null) return;
+
+                    var avatar = result.ReadNextListOrEmpty<AttachmentModel>().FirstOrDefault();
+                    if (avatar != null) source.Reference.AvatarId = avatar.Id;
+
+                    source.Attachments = result.ReadNextListOrEmpty<AttachmentModel>().ToList();
+
+                    source.TotalAttachments = source.Attachments.Count;
+                });
+
+            return source;
+        }
+
+        public static async Task<int> GetCurrentAvatarId(this IRepository<LeaguerAttachment> repository, int leaguerId)
+        {
+            var avatar = await repository.Entities.FirstOrDefaultAsync(_ => _.LeaguerId == leaguerId && _.IsAvatar);
+            return avatar?.Id ?? 0; 
+        }
     }
 }

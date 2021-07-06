@@ -21,6 +21,7 @@ export * from './shared/dropdown.model';
 export * from './shared/search-params.model';
 export * from './shared/single-or-default.model';
 export * from './shared/attachment.model';
+export * from './shared/statistics.model';
 
 /**
  * Settings

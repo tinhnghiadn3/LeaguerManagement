@@ -29,9 +29,27 @@ export class LeaguerModel {
   formOut: string;
   phone: number;
   notes: string;
+  statusId: number;
   isActivated: boolean;
+  //
+  avatarId: number;
+  avatarImg: string;
 
   constructor(init?: Partial<LeaguerModel>) {
     Object.assign(this, init);
+  }
+
+  public static copy(source: LeaguerModel, destination: LeaguerModel) {
+    if (!source || !destination) {
+      return destination;
+    }
+
+    Object.assign(destination, source);
+
+    return destination;
+  }
+
+  public static clone(source: LeaguerModel): LeaguerModel {
+    return LeaguerModel.copy(source, new LeaguerModel());
   }
 }

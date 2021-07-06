@@ -138,6 +138,9 @@
   <data name="FileIsDeleted" xml:space="preserve">
     <value>Tệp đã bị xóa</value>
   </data>
+  <data name="FileNotBelongToLeaguer" xml:space="preserve">
+    <value>Tệp không thuộc Đảng viên này</value>
+  </data>
   <data name="AttachmentNotBelongToFile" xml:space="preserve">
     <value>Tài liệu không thuộc về hồ sơ hiện tại</value>
   </data>

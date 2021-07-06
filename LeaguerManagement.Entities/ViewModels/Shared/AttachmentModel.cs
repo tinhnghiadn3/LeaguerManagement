@@ -17,6 +17,7 @@ namespace LeaguerManagement.Entities.ViewModels
         public DateTime CreatedDate { get; set; }
         public int? CreatedByUserId { get; set; }
         public string CreatedByName { get; set; }
+        public bool IsAvatar { get; set; }
         public bool IsImage => Extension != null && (Extension == "jpg" || Extension == "jpeg" || Extension == "gif" || Extension == "png");
     }
 

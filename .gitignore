@@ -349,3 +349,4 @@ MigrationBackup/
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
 /LeaguerManagement.APIs/wwwroot
+/LeaguerManagement.APIs/Contents/Uploads/2/Avatar

@@ -13,7 +13,7 @@ export class AttachmentsViewerComponent implements OnInit {
   @ViewChild('attachmentPopup', {static: true}) attachmentPopup: DxPopupComponent;
 
   @Input() attachments: AttachmentModel[] = [];
-  @Input() constructionId: number;
+  @Input() leaguerId: number;
 
   private _selectedAttachment: AttachmentModel;
   @Input()
@@ -24,7 +24,7 @@ export class AttachmentsViewerComponent implements OnInit {
   set selectedAttachment(value: AttachmentModel) {
     this._selectedAttachment = value;
     if (value) {
-      AttachmentModel.setAttachmentsList([value], this.constructionId);
+      AttachmentModel.setAttachmentsList([value], this.leaguerId);
     }
 
     this.selectedAttachmentChange.emit(value);
@@ -49,7 +49,7 @@ export class AttachmentsViewerComponent implements OnInit {
     }
 
     this.selectedAttachment = a;
-    const link = AttachmentModel.getPreviewLink(a.id, this.constructionId, a.referenceName);
+    const link = AttachmentModel.getPreviewLink(a.id, this.leaguerId, a.referenceName);
     this.url = this.sanitizer.bypassSecurityTrustResourceUrl(link);
     if (!this.attachmentPopup.instance.option('visible')) {
       this.attachmentPopup.instance.show();

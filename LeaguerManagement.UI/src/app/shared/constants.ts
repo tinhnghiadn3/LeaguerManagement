@@ -25,6 +25,7 @@ export const VALIDATION_REGEX = {
 // tslint:disable-next-line:max-line-length
 // export const ALLOWED_FILE_TYPES = '.jpg,.jpeg,.png,.gif,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.pdf,.rtf,.txt,.zip, .mp4,.webm, .mpeg4, .3gpp, .mov, .avi, .mpeg, .mpegps, .wmv, .flv, .ogg, .mp3, .m4a, .wav, .sql';
 export const ALLOWED_FILE_TYPES = ['.JPG', '.jpg', '.jpeg', '.png', '.gif', '.doc', '.docx', '.xls', '.xlsx', '.ppt', '.pptx', '.pdf', '.rtf', '.txt'];
+export const ALLOWED_AVATAR_TYPES = ['.JPG', '.jpg', '.jpeg', '.png', '.gif'];
 
 
 export const AppRoleValue = {

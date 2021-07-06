@@ -19,6 +19,7 @@ namespace LeaguerManagement.APIs.Configurations
             CreateMap<Role, RoleModel>().ReverseMap();
             // Leaguer
             CreateMap<Leaguer, LeaguerModel>().ReverseMap();
+            CreateMap<LeaguerAttachment, AttachmentModel>().ReverseMap();
         }
     }
 }

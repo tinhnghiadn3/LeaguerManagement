@@ -1,6 +1,6 @@
 import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import DataSource from 'devextreme/data/data_source';
-import {DropDownModel, LeaguerModel} from '@app/models';
+import {AttachmentModel, DropDownModel, LeaguerModel} from '@app/models';
 import {GENDER_ITEMS} from '@app/shared/constants';
 import {Subscription} from 'rxjs';
 import {LeaguerService} from '@app/services/features/leaguer.service';
@@ -28,6 +28,7 @@ export class LeaguerListComponent implements OnInit, OnDestroy {
   selectedLeaguer: LeaguerModel = new LeaguerModel();
 
   isShowEditingPopup: boolean = false;
+  isShowTransferringPopup: boolean = false;
   isLoading: boolean = false;
   isProcessing: boolean = false;
 
@@ -67,14 +68,18 @@ export class LeaguerListComponent implements OnInit, OnDestroy {
     e.component.collapseAll(-1);
     e.component.expandRow(e.currentSelectedRowKeys[0]);
     this.selectedLeaguer = e.currentSelectedRowKeys[0];
+    // set avatar
+    if (this.selectedLeaguer.avatarId) {
+      this.selectedLeaguer.avatarImg = AttachmentModel.getImageLink(this.selectedLeaguer.avatarId, this.selectedLeaguer.id, 'avatar');
+    }
   }
 
   goToDetail(data: LeaguerModel) {
     this.router.navigate([`/leaguer/${data.id}/detail`]).then();
   }
 
-  onShowEditingPopup(data: LeaguerModel = null) {
-    this.selectedLeaguer = data || new LeaguerModel();
+  onShowAddingPopup() {
+    this.selectedLeaguer = new LeaguerModel();
     this.isShowEditingPopup = true;
   }
 
@@ -87,6 +92,22 @@ export class LeaguerListComponent implements OnInit, OnDestroy {
     }, () => {
       this.hideProcessing();
     });
+  }
+
+  openDeletingConfirmPopup(leaguer, e) {
+    this.selectedLeaguer = leaguer;
+    if (this.deletingConfirmBox) {
+      this.deletingConfirmBox.show(e.currentTarget);
+    }
+  }
+
+  onShowTransferPopup(leaguer) {
+    this.selectedLeaguer = leaguer;
+    this.isShowTransferringPopup = true;
+  }
+
+  onCancelTransferring() {
+    this.isShowTransferringPopup = true;
   }
 
   /**

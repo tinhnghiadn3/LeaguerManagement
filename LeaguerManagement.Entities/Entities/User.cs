@@ -7,6 +7,11 @@ namespace LeaguerManagement.Entities.Entities
 {
     public partial class User
     {
+        public User()
+        {
+            LeaguerAttachments = new HashSet<LeaguerAttachment>();
+        }
+
         public int Id { get; set; }
         public string Name { get; set; }
         public string Email { get; set; }
@@ -14,5 +19,7 @@ namespace LeaguerManagement.Entities.Entities
         public string Salt { get; set; }
         public bool IsActivated { get; set; }
         public string JobPosition { get; set; }
+
+        public virtual ICollection<LeaguerAttachment> LeaguerAttachments { get; set; }
     }
 }

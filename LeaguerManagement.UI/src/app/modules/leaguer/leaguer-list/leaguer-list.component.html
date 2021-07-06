@@ -54,7 +54,7 @@
         <dx-button type="default" icon="plus" class="btn-add-row-circle"
                    [stylingMode]="'outlined'"
                    hint="Add Row"
-                   (onClick)="onShowEditingPopup(row.data)">
+                   (onClick)="onShowAddingPopup()">
         </dx-button>
       </div>
       <div *dxTemplate="let cell of 'indexCellTemplate'">
@@ -104,32 +104,12 @@
 
     <dxi-column dataField="badgeNumber" caption="Số huy hiệu Đảng" [width]="135"></dxi-column>
 
-    <!--      <dxi-column dataField="moveOutDated" caption="Ngày chuyển đi, đến Đảng bộ cơ sở" dataType="date" [minWidth]="110"-->
-    <!--                  cellTemplate="'moveOutCellTemplate'" [allowFiltering]="false">-->
-    <!--        <div *dxTemplate="let cell of 'moveOutCellTemplate'">-->
-    <!--          {{cell.data.moveOutDated}}, đến {{cell.data.officeBefore}}-->
-    <!--        </div>-->
-    <!--      </dxi-column>-->
-
-    <!--      <dxi-column dataField="officeComing" caption="Ngày chuyển đến, ở Đảng bộ cơ sở" [minWidth]="120"-->
-    <!--                  cellTemplate="'moveInCellTemplate'">-->
-    <!--        <div *dxTemplate="let cell of 'moveInCellTemplate'">-->
-    <!--          {{cell.data.moveInDated}}, ở {{cell.data.officeComing}}-->
-    <!--        </div>-->
-    <!--      </dxi-column>-->
-
-    <!--      <dxi-column dataField="deadDate" caption="Ngày từ trần" dataType="date" format="dd/MM/yyyy" [minWidth]="110">-->
-    <!--      </dxi-column>-->
-
-    <!--      <dxi-column dataField="getOutDate" caption="Ngày ra khỏi Đảng" dataType="date" format="dd/MM/yyyy"-->
-    <!--                  [minWidth]="110"></dxi-column>-->
-
     <dxi-column caption="Thao tác"
                 type="'buttons'"
                 alignment="center"
                 [fixed]="true"
                 fixedPosition="right"
-                [width]="80"
+                [width]="95"
                 [allowFiltering]="false"
                 [allowSorting]="false"
                 [allowResizing]="false"
@@ -137,34 +117,53 @@
                 cellTemplate="actionsCellTemplate">
       <div *dxTemplate="let cell of 'actionsCellTemplate'">
         <div class="action-inline text-center">
-          <i class="fas fa-info-circle" title="Thông tin"
-             (click)="goToDetail(cell.data)"></i>
+          <i class="fas fa-sort-amount-up" title="Công nhận chính thức" (click)="onShowTransferPopup(cell.data)"></i>
+          <i class="fas fa-pencil-alt" title="Sửa" (click)="goToDetail(cell.data)"></i>
+          <i class="far fa-trash-alt" title="Xóa" (click)="openDeletingConfirmPopup(cell.data, $event)"></i>
         </div>
       </div>
     </dxi-column>
 
     <div *dxTemplate="let item of 'detail'" class="container-fluid form-wrapper">
-      <p>Điện thoại: {{item.data.phone}}</p>
-      <p>Ngày từ trần: {{item.data.deadDate}}</p>
-      <p>Lý do từ trần: {{item.data.formOut || 'Chưa'}}</p>
-      <p>Ngày ra khỏi Đảng: {{item.data.getOutDate}}</p>
-      <p>Hình thức ra khỏi Đảng: {{item.data.formOut || 'Chưa'}}</p>
-      <p>Ghi chú: {{!item.data.notes ? 'Không có' : item.data.notes}}</p>
       <div class="form-group">
         <div class="row">
-          <div class="col-12 col-lg-6">
-            <p>Ngày chuyển đi: {{item.data.moveOutDated}}</p>
-            <p>Ngày chuyển đến: {{item.data.moveInDated}}</p>
-            <p>Trình độ văn hóa: {{item.data.educationalLevel}}</p>
-            <p>Trình độ ngoại ngữ: {{item.data.foreignLanguageLevel}}</p>
-            <p>Nghề nghiệp trước khi vào Đảng: {{item.data.beforeEnteringCareer}}</p>
+          <div class="col-12 col-lg-4 user-avatar-zone">
+            <div class="img-circle profile-user-img">
+              <img *ngIf="item.data.avatarImg"
+                   [src]="item.data.avatarImg"
+                   title="{{item.data.name}}"
+                   alt="{{item.data.name}}">
+              <div *ngIf="!item.data.avatarImg"
+                   class="default-img">{{item.data.name}}</div>
+            </div>
           </div>
-          <div class="col-12 col-lg-6">
-            <p>Đến Đảng bộ cơ sở: {{item.data.officeBefore}}</p>
-            <p>Ở Đảng bộ cơ sở: {{item.data.officeComing}}</p>
-            <p>Trình độ lý luận chính trị: {{item.data.politicalTheoryLevel}}</p>
-            <p>Nghiệp vụ chuyên môn: {{item.data.specializeMajor}}</p>
-            <p>Nghề nghiệp hiện nay: {{item.data.currentCareer}}</p>
+          <div class="col-12 col-lg-8">
+            <div class="row">
+              <div class="col-12 col-lg-4">
+                <p>Điện thoại: {{item.data.phone}}</p>
+                <p>Ngày từ trần: {{item.data.deadDate || 'Chưa'}}</p>
+                <p>Lý do từ trần: {{item.data.formOut || 'Chưa'}}</p>
+                <p>Ngày ra khỏi Đảng: {{item.data.getOutDate || 'Chưa'}}</p>
+                <p>Hình thức ra khỏi Đảng: {{item.data.formOut || 'Chưa'}}</p>
+              </div>
+              <div class="col-12 col-lg-4">
+                <p>Ngày chuyển đi: {{item.data.moveOutDated}}</p>
+                <p>Ngày chuyển đến: {{item.data.moveInDated}}</p>
+                <p>Trình độ văn hóa: {{item.data.educationalLevel}}</p>
+                <p>Trình độ ngoại ngữ: {{item.data.foreignLanguageLevel}}</p>
+                <p>Nghề nghiệp trước khi vào Đảng: {{item.data.beforeEnteringCareer}}</p>
+              </div>
+              <div class="col-12 col-lg-4">
+                <p>Đến Đảng bộ cơ sở: {{item.data.officeBefore}}</p>
+                <p>Ở Đảng bộ cơ sở: {{item.data.officeComing}}</p>
+                <p>Trình độ lý luận chính trị: {{item.data.politicalTheoryLevel}}</p>
+                <p>Nghiệp vụ chuyên môn: {{item.data.specializeMajor}}</p>
+                <p>Nghề nghiệp hiện nay: {{item.data.currentCareer}}</p>
+              </div>
+              <div class="col-12">
+                <p>Ghi chú: {{!item.data.notes ? 'Không có' : item.data.notes}}</p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -184,4 +183,16 @@
                       [isProcessing]="isProcessing"
                       (onEditingChange)="onSave($event)">
   </app-leaguer-adding>
+</app-popup-container>
+
+<app-popup-container *ngIf="isShowTransferringPopup"
+                     title="Thêm mới Đảng viên"
+                     [width]="'80%'"
+                     [height]="'auto'"
+                     [(visible)]="isShowTransferringPopup">
+  <app-leaguer-transfer-offical [(visible)]="isShowTransferringPopup"
+                      [selectedLeaguer]="selectedLeaguer"
+                      [isProcessing]="isProcessing"
+                      (onHidden)="onCancelTransferring()">
+  </app-leaguer-transfer-offical>
 </app-popup-container>

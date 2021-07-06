@@ -124,6 +124,15 @@ namespace LeaguerManagement.Entities.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Tệp không thuộc Đảng viên này.
+        /// </summary>
+        public static string FileNotBelongToLeaguer {
+            get {
+                return ResourceManager.GetString("FileNotBelongToLeaguer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Không tìm thấy tập tin.
         /// </summary>
         public static string FileNotFound {

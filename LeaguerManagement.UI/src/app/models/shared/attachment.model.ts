@@ -94,7 +94,6 @@ export class AttachmentModel {
     if (!attachments || !fileId) {
       return;
     }
-
     attachments.forEach(a => {
       a.linkDownload = AttachmentModel.getDownloadLink(a.id, fileId, a.referenceName);
       a.imageLink = AttachmentModel.getImageLink(a.id, fileId, a.referenceName);
@@ -102,18 +101,44 @@ export class AttachmentModel {
     });
   }
 
-  public static getImageLink(attachmentId: number, fileId: number, referenceName: string): string {
-    return this.getFileLink(attachmentId, fileId, 'image', referenceName);
+  public static replaceImagesLinks(str: string, path = 'image'): string {
+    return this.replaceFileLinks(str, path);
   }
 
-  public static getDownloadLink(attachmentId: number, fileId: number, referenceName: string): string {
-    return this.getFileLink(attachmentId, fileId, 'download', referenceName);
+  public static getImageLink(attachmentId: number, leaguerId: number, referenceName: string): string {
+    return this.getFileLink(attachmentId, leaguerId, 'image', referenceName);
   }
 
-  public static getPreviewLink(attachmentId: number, fileId: number, referenceName: string): string {
-    const link = this.getFileLink(attachmentId, fileId, 'download', referenceName);
+  public static getDownloadLink(attachmentId: number, leaguerId: number, referenceName: string): string {
+    return this.getFileLink(attachmentId, leaguerId, 'download', referenceName);
+  }
+
+  public static getPreviewLink(attachmentId: number, leaguerId: number, referenceName: string): string {
+    const link = this.getFileLink(attachmentId, leaguerId, 'download', referenceName);
 
     return STORAGE.LINK_PREVIEW + encodeURIComponent(link);
+  }
+
+  private static replaceFileLinks(str: string, path: string): string {
+    if (!str) {
+      return str;
+    }
+
+    const imageToken = localStorage.getItem(IMAGE_TOKEN_KEY);
+    const baseUrl = environment.baseUrl ? environment.baseUrl : location.origin;
+    const endpoint = baseUrl + '/files/' + path + '?id=';
+    //
+    // Fix issue the & char is encoded to &amp;
+    str = str.replace(/&amp;export=download/g, '&export=download');
+    str = str.replace(/&amp;sc=/g, '&sc=');
+    str = str.replace(STORAGE.LINK_APP_REGEXP, (x) => {
+      const firstIndex = x.indexOf('?id=');
+      const secondIndex = x.indexOf('&sc=');
+      const fileid = x.substring(firstIndex + 4, secondIndex);
+      return endpoint + fileid + '&sc=' + imageToken;
+    });
+
+    return str;
   }
 
   private static getFileLink(attachmentId: number, fileId: number, path: string, type: string): string {
@@ -123,7 +148,7 @@ export class AttachmentModel {
     const imageToken = AppStorage.getTokenData(IMAGE_TOKEN_KEY);
     const baseUrl = environment.baseUrl ? environment.baseUrl : location.origin;
 
-    return `${baseUrl}/${API_ENDPOINT.Attachments}/${type}/${path}?fileId=${fileId}&attId=${attachmentId}&sc=${imageToken}`;
+    return `${baseUrl}/${API_ENDPOINT.Files}/${type}/${path}?leaId=${fileId}&attId=${attachmentId}&sc=${imageToken}`;
   }
 }
 

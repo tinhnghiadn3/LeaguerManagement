@@ -150,18 +150,23 @@ i.fas, i.far {
 
       .field-label {
         margin-right: 1rem;
-        min-width: 24%;
+        min-width: 30%;
+        max-width: 50%;
 
         .lbl-required {
           color: red;
         }
       }
 
-      &.enter {
+      &.label-small {
         .field-label {
-          margin-right: 1rem;
-          min-width: 50%;
-          max-width: 50%;
+          min-width: 20%;
+        }
+      }
+
+      &.label-large {
+        .field-label {
+          min-width: 40%;
         }
       }
     }
@@ -177,6 +182,7 @@ i.fas, i.far {
       .lbl-required {
         color: red;
       }
+
     }
 
     .field-value {

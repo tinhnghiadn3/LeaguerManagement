@@ -7,76 +7,348 @@
 <div class="form-wrapper">
   <dx-scroll-view [showScrollbar]="'onScroll'" class="scrolling mt-2">
     <dx-validation-group #validationGroup>
-      <div class="form-group mt-2">
+      <div class="form-group">
+        <!--personal info-->
+        <div class="form-group mt-2">
+          <div class="group-title">Thông tin cá nhân:</div>
+          <div class="row">
+            <!--avatar-->
+            <div class="col-12 col-lg-4 user-avatar-zone mb-2">
+              <div class="img-circle profile-user-img">
+                <img *ngIf="leaguer.avatarImg"
+                     [src]="leaguer.avatarImg"
+                     title="{{leaguer.name}}"
+                     alt="{{leaguer.name}}">
+                <div *ngIf="!leaguer.avatarImg"
+                     title="Add photo"
+                     (click)="addAttachment(avatarInput)"
+                     class="default-img">{{leaguer.name}}</div>
+                <div class="button-section">
+                    <span *ngIf="leaguer.avatarImg">
+                      <i class="far fa-trash-alt" title="Remove photo" (click)="removeImg()"></i>
+                    </span>
+                </div>
+              </div>
+              <input #avatarInput type="file" style="display: none;"
+                     [accept]="ALLOWED_AVATAR_TYPES"
+                     (change)="uploadAvatar($event)">
+            </div>
+            <div class="col-12 col-lg-8">
+              <div class="row">
+              <!--name-->
+              <div class="col-12 col-lg-6">
+                <div class="field row-layout">
+                  <div class="field-label">Họ và tên:</div>
+                  <dx-text-box class="field-value w-100" [(value)]="leaguer.name" [valueChangeEvent]="'keyup'">
+                    <dx-validator>
+                      <dxi-validation-rule type="required"
+                                           [message]="GENERAL_MESSAGE.TheFieldIsRequired.format('Họ và tên')"></dxi-validation-rule>
+                    </dx-validator>
+                  </dx-text-box>
+                </div>
+              </div>
+              <!--year of birth-->
+              <div class="col-12 col-lg-6">
+                <div class="field row-layout">
+                  <div class="field-label">Năm sinh:</div>
+                  <dx-number-box class="field-value w-100" [(value)]="leaguer.bornYear"
+                                 [valueChangeEvent]="'keyup'"></dx-number-box>
+                </div>
+              </div>
+              <!--gender-->
+              <div class="col-12 col-lg-6">
+                <div class="field row-layout">
+                  <div class="field-label">Giới tính:</div>
+                  <dx-radio-group
+                    [items]="GENDER_ITEMS"
+                    [(value)]="leaguer.gender"
+                    displayExpr="text"
+                    valueExpr="value"
+                    layout="horizontal">
+                  </dx-radio-group>
+                </div>
+              </div>
+              <!--religion-->
+              <div class="col-12 col-lg-6">
+                <div class="field row-layout">
+                  <div class="field-label">Tôn giáo:</div>
+                  <dx-text-box class="field-value w-100" [(value)]="leaguer.religion"
+                               [valueChangeEvent]="'keyup'"></dx-text-box>
+                </div>
+              </div>
+              <!--folk-->
+              <div class="col-12 col-lg-6">
+                <div class="field row-layout">
+                  <div class="field-label">Dân tộc:</div>
+                  <dx-text-box class="field-value w-100" [(value)]="leaguer.folk"
+                               [valueChangeEvent]="'keyup'"></dx-text-box>
+                </div>
+              </div>
+              <!--homeTown-->
+              <div class="col-12 col-lg-6">
+                <div class="field row-layout">
+                  <div class="field-label">Quê quán:</div>
+                  <dx-text-box class="field-value w-100" [(value)]="leaguer.homeTown"
+                               [valueChangeEvent]="'keyup'"></dx-text-box>
+                </div>
+              </div>
+              <!--educationalLevel-->
+              <div class="col-12 col-lg-6">
+                <div class="field row-layout">
+                  <div class="field-label">Văn hóa:</div>
+                  <dx-text-box class="field-value w-100" [(value)]="leaguer.educationalLevel"
+                               [valueChangeEvent]="'keyup'"></dx-text-box>
+                </div>
+              </div>
+              <!--politicalTheoryLevel-->
+              <div class="col-12 col-lg-6">
+                <div class="field row-layout">
+                  <div class="field-label">Lý luận chính trị:</div>
+                  <dx-text-box class="field-value w-100" [(value)]="leaguer.politicalTheoryLevel"
+                               [valueChangeEvent]="'keyup'"></dx-text-box>
+                </div>
+              </div>
+              <!--ForeignLanguageLevel-->
+              <div class="col-12 col-lg-6">
+                <div class="field row-layout">
+                  <div class="field-label">Ngoại ngữ:</div>
+                  <dx-text-box class="field-value w-100" [(value)]="leaguer.foreignLanguageLevel"
+                               [valueChangeEvent]="'keyup'"></dx-text-box>
+                </div>
+              </div>
+              <!--ForeignLanguageLevel-->
+              <div class="col-12 col-lg-6">
+                <div class="field row-layout">
+                  <div class="field-label">Chuyên môn nghiệp vụ:</div>
+                  <dx-text-box class="field-value w-100" [(value)]="leaguer.specializeMajor"
+                               [valueChangeEvent]="'keyup'"></dx-text-box>
+                </div>
+              </div>
+              <!--phone-->
+              <div class="col-12 col-lg-6">
+                <div class="field row-layout">
+                  <div class="field-label">Điện thoại:</div>
+                  <dx-number-box class="field-value w-100" [(value)]="leaguer.phone"
+                                 [valueChangeEvent]="'keyup'"></dx-number-box>
+                </div>
+              </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!--Leaguer infor-->
+        <div class="form-group mt-2">
+          <div class="group-title">Thông tin Đảng:</div>
+          <div class="row">
+            <!--beforeEnteringCareer-->
+            <div class="col-12 col-lg-4">
+              <div class="field row-layout">
+                <div class="field-label">Nghề nghiệp trước khi vào Đảng:</div>
+                <dx-text-box class="field-value w-100" [(value)]="leaguer.beforeEnteringCareer"
+                             [valueChangeEvent]="'keyup'">
+                </dx-text-box>
+              </div>
+            </div>
+            <!--currentCareer-->
+            <div class="col-12 col-lg-4">
+              <div class="field row-layout">
+                <div class="field-label">Nghề nghiệp hiện nay:</div>
+                <dx-text-box class="field-value w-100" [(value)]="leaguer.currentCareer"
+                             [valueChangeEvent]="'keyup'">
+                </dx-text-box>
+              </div>
+            </div>
+            <!--position-->
+            <div class="col-12 col-lg-4">
+              <div class="field row-layout">
+                <div class="field-label">Chức vụ:</div>
+                <dx-text-box class="field-value w-100" [(value)]="leaguer.position"
+                             [valueChangeEvent]="'keyup'"></dx-text-box>
+              </div>
+            </div>
+            <!--unit-->
+            <div class="col-12 col-lg-4">
+              <div class="field row-layout">
+                <div class="field-label">Đơn vị công tác:</div>
+                <dx-select-box [dataSource]="units" class="field-value w-100"
+                               displayExpr="value"
+                               valueExpr="key"
+                               placeholder="Ông/Bà"
+                               noDataText=""
+                               [(value)]="leaguer.unitId"
+                               [valueChangeEvent]="'input'">
+                </dx-select-box>
+              </div>
+            </div>
+            <!--preliminaryApplyDate-->
+            <div class="col-12 col-lg-4">
+              <div class="field row-layout">
+                <div class="field-label">Ngày vào Đảng (Dự bị):</div>
+                <dx-date-box class="field-value w-100"
+                             [displayFormat]="'dd/MM/yyy'"
+                             [showClearButton]="true"
+                             [(max)]="now"
+                             [(value)]="leaguer.preliminaryApplyDate"
+                             type="date"></dx-date-box>
+              </div>
+            </div>
+            <!--officialApplyDate-->
+            <div class="col-12 col-lg-4">
+              <div class="field row-layout">
+                <div class="field-label">Ngày vào Đảng (Chính thức):</div>
+                <dx-date-box class="field-value w-100"
+                             [displayFormat]="'dd/MM/yyy'" [(max)]="now"
+                             [(value)]="leaguer.officialApplyDate"
+                             type="date"></dx-date-box>
+              </div>
+            </div>
+            <!--cardNumber-->
+            <div class="col-12 col-lg-4">
+              <div class="field row-layout">
+                <div class="field-label">Số thẻ Đảng viên:</div>
+                <dx-text-box class="field-value w-100" [(value)]="leaguer.cardNumber"
+                             [valueChangeEvent]="'keyup'"></dx-text-box>
+              </div>
+            </div>
+            <!--backgroundNumber-->
+            <div class="col-12 col-lg-4">
+              <div class="field row-layout">
+                <div class="field-label">Số lý lịch Đảng viên:</div>
+                <dx-text-box class="field-value w-100" [(value)]="leaguer.backgroundNumber"
+                             [valueChangeEvent]="'keyup'"></dx-text-box>
+              </div>
+            </div>
+            <!--badgeNumber-->
+            <div class="col-12 col-lg-4">
+              <div class="field row-layout">
+                <div class="field-label">Số thẻ Đảng viên:</div>
+                <dx-text-box class="field-value w-100" [(value)]="leaguer.badgeNumber"
+                             [valueChangeEvent]="'keyup'" (onValueChanged)="checkExistData()">
+                </dx-text-box>
+              </div>
+            </div>
+          </div>
+          <!--move out-->
+          <div class="form-group mt-2">
+            <div class="group-title">Thông tin chuyển đi:</div>
+            <div class="row">
+              <div class="col-12 col-lg-4">
+                <div class="field row-layout">
+                  <div class="field-label">Ngày chuyển đi:</div>
+                  <dx-date-box class="field-value w-100"
+                               [displayFormat]="'dd/MM/yyy'" [(max)]="now"
+                               [(value)]="leaguer.moveOutDated"
+                               type="date"></dx-date-box>
+                </div>
+              </div>
+              <div class="col-12 col-lg-5">
+                <div class="field row-layout">
+                  <div class="field-label">Đến Đảng bộ cơ sở:</div>
+                  <dx-text-box class="field-value w-100" [(value)]="leaguer.officeComing"
+                               [valueChangeEvent]="'keyup'"></dx-text-box>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!--move in-->
+          <div class="form-group mt-2">
+            <div class="group-title">Thông tin chuyển đến:</div>
+            <div class="row">
+              <div class="col-12 col-lg-4">
+                <div class="field row-layout">
+                  <div class="field-label">Ngày chuyển đến:</div>
+                  <dx-date-box class="field-value w-100"
+                               [displayFormat]="'dd/MM/yyy'" [(max)]="now"
+                               [(value)]="leaguer.moveInDated"
+                               type="date"></dx-date-box>
+                </div>
+              </div>
+              <div class="col-12 col-lg-5">
+                <div class="field row-layout">
+                  <div class="field-label">Từ Đảng bộ cơ sở:</div>
+                  <dx-text-box class="field-value w-100" [(value)]="leaguer.atOffice"
+                               [valueChangeEvent]="'keyup'"></dx-text-box>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!--dead date/reason-->
+          <div class="form-group mt-2">
+            <div class="group-title">Thông tin từ trần:</div>
+            <div class="row">
+              <div class="col-12 col-lg-4">
+                <div class="field row-layout">
+                  <div class="field-label">Ngày từ trần - lý do:</div>
+                  <dx-date-box class="field-value w-100"
+                               [displayFormat]="'dd/MM/yyy'" [(max)]="now"
+                               [(value)]="leaguer.deadDate"
+                               type="date"></dx-date-box>
+                </div>
+              </div>
+              <div class="col-12 col-lg-5">
+                <div class="field row-layout">
+                  <div class="field-label">Lý do từ trần:</div>
+                  <dx-text-box class="field-value w-100" [(value)]="leaguer.deathReason"
+                               [valueChangeEvent]="'keyup'"></dx-text-box>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!--get out-->
+          <div class="form-group mt-2">
+            <div class="group-title">Thông tin ra khỏi Đảng:</div>
+            <div class="row">
+              <div class="col-12 col-lg-4">
+                <div class="field row-layout">
+                  <div class="field-label">Ngày ra khỏi Đảng:</div>
+                  <dx-date-box class="field-value w-100"
+                               [displayFormat]="'dd/MM/yyy'" [(max)]="now"
+                               [(value)]="leaguer.getOutDate"
+                               type="date"></dx-date-box>
+                </div>
+              </div>
+              <div class="col-12 col-lg-5">
+                <div class="field row-layout">
+                  <div class="field-label">Hình thức ra khỏi Đảng:</div>
+                  <dx-text-box class="field-value w-100" [(value)]="leaguer.formOut"
+                               [valueChangeEvent]="'keyup'"></dx-text-box>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!--notes-->
+          <div class="row">
+            <div class="col-12 col-lg-10">
+              <div class="field row-layout label-small">
+                <div class="field-label">Ghi chú:</div>
+                <dx-text-area class="field-value w-100" [(value)]="leaguer.formOut"
+                              [height]="80" [valueChangeEvent]="'keyup'"></dx-text-area>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!--attachment-->
+        <div class="form-group mt-2" *ngIf="leaguer && leaguer.id">
+          <div class="group-title">Hồ sơ liên quan:</div>
+          <app-upload-attachments [leaguerId]="leaguerId"
+                                  (onAttachmentChanged)="getLeaguer()"
+                                  [data]="data">
+          </app-upload-attachments>
+
+          <div class="d-flex align-items-center">
+            <a class="upload mt-3" (click)="addAttachment(fileInput)">
+              <i class="fas fa-paperclip"></i>
+              Tải lên
+            </a>
+            <input #fileInput type="file" multiple="multiple" style="display: none;"
+                   [accept]="ALLOWED_FILE_TYPES"
+                   (change)="uploadLeaguerAttachment($event)">
+          </div>
+
+        </div>
         <div class="row">
-          <div class="col-12 col-lg-6">
-            <div class="field row-layout enter">
-              <div class="field-label">Họ và tên:</div>
-              <dx-text-box class="field-value w-100" [(value)]="leaguer.name" [valueChangeEvent]="'keyup'">
-                <dx-validator>
-                  <dxi-validation-rule type="required"
-                                       [message]="GENERAL_MESSAGE.TheFieldIsRequired.format('Họ và tên')"></dxi-validation-rule>
-                </dx-validator>
-              </dx-text-box>
-            </div>
-            <div class="field row-layout enter">
-              <dx-select-box [dataSource]="units" class="field-value w-100"
-                             displayExpr="value"
-                             valueExpr="key"
-                             placeholder="Ông/Bà"
-                             noDataText=""
-                             [(value)]="leaguer.unitId"
-                             [valueChangeEvent]="'input'">
-                <dx-validator>
-                  <dxi-validation-rule type="required"
-                                       [message]="GENERAL_MESSAGE.TheFieldIsRequired.format('Chi bộ')"></dxi-validation-rule>
-                </dx-validator>
-              </dx-select-box>
-            </div>
-          </div>
-          <!--year of birth-->
-          <div class="col-12 col-lg-6">
-            <div class="field row-layout enter">
-              <div class="field-label">Năm sinh:</div>
-              <dx-number-box class="field-value w-100" [(value)]="leaguer.bornYear"
-                             [valueChangeEvent]="'keyup'"></dx-number-box>
-            </div>
-          </div>
-          <!--gender-->
-          <div class="col-12 col-lg-4">
-            <div class="field row-layout enter">
-              <div class="field-label">Giới tính:</div>
-              <dx-select-box [dataSource]="GENDER_ITEMS" class="field-label"
-                             valueExpr="value" displayExpr="text" placeholder="Chọn..."
-                             [(value)]="leaguer.gender"></dx-select-box>
-            </div>
-          </div>
-          <!--religion-->
-          <div class="col-12 col-lg-4">
-            <div class="field row-layout">
-              <div class="field-label">Tôn giáo:</div>
-              <dx-text-box class="field-value w-100" [(value)]="leaguer.religion"
-                           [valueChangeEvent]="'keyup'"></dx-text-box>
-            </div>
-          </div>
-          <div class="col-12 col-lg-4">
-            <div class="field row-layout">
-              <div class="field-label">Dân tộc:</div>
-              <dx-text-box class="field-value w-100" [(value)]="leaguer.folk"
-                           [valueChangeEvent]="'keyup'"></dx-text-box>
-            </div>
-          </div>
-          <!--phone-->
-          <div class="col-12 col-lg-6">
-            <div class="field row-layout enter">
-              <div class="field-label">Điện thoại:</div>
-              <dx-number-box class="field-value w-100" [(value)]="leaguer.phone"
-                           [tabIndex]="18" [valueChangeEvent]="'keyup'"></dx-number-box>
-            </div>
-          </div>
           <div class="col-12 d-flex justify-content-end align-items-center">
-            <dx-button class="mr-2" type="default" [tabIndex]="25"
-                       [text]="isProcessing ? '' : 'Lưu'"
+            <dx-button class="mr-2" type="default" [text]="isProcessing ? '' : 'Lưu'"
                        icon="{{isProcessing?'fas fa-spinner fa-spin':''}}"
                        (onClick)="save(validationGroup)" [disabled]="isProcessing"></dx-button>
             <dx-button text="Hủy" (onClick)="refresh()"></dx-button>
