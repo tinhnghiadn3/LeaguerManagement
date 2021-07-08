@@ -54,6 +54,18 @@ export class LeaguerService {
     return this.baseService.get(`${API_ENDPOINT.Leaguers}/${leagerId}/official-documents`);
   }
 
+  changeToOfficial(leaguerId: number): Observable<boolean> {
+    return this.baseService.get(`${API_ENDPOINT.Leaguers}/${leaguerId}/change/official`);
+  }
+
+  changeToOut(leaguerId: number): Observable<boolean> {
+    return this.baseService.get(`${API_ENDPOINT.Leaguers}/${leaguerId}/change/out`);
+  }
+
+  changeToDead(leaguerId: number): Observable<boolean> {
+    return this.baseService.get(`${API_ENDPOINT.Leaguers}/${leaguerId}/change/dead`);
+  }
+
   /**
    * Attachment
    */
@@ -95,6 +107,11 @@ export class LeaguerService {
 
   uploadAvatar(files: File[], uploading: ReferenceWithAttachmentModel<LeaguerModel>): Promise<AttachmentModel[]> {
     const url = `${API_ENDPOINT.Leaguers}/${uploading.reference.id}/avatars`;
+    return this.uploadAttachment(files, uploading, url);
+  }
+
+  uploadOfficialAttachment(files: File[], uploading: ReferenceWithAttachmentModel<AppliedDocumentModel>): Promise<AttachmentModel[]> {
+    const url = `${API_ENDPOINT.Leaguers}/${uploading.reference.id}/officials`;
     return this.uploadAttachment(files, uploading, url);
   }
 }

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using LeaguerManagement.Entities.Contexts;
 using LeaguerManagement.Entities.Entities;
 using LeaguerManagement.Entities.Infrastructures;
 using LeaguerManagement.Entities.Utilities.Helper;
@@ -67,7 +68,12 @@ namespace LeaguerManagement.Repositories
         public static async Task<int> GetCurrentAvatarId(this IRepository<LeaguerAttachment> repository, int leaguerId)
         {
             var avatar = await repository.Entities.FirstOrDefaultAsync(_ => _.LeaguerId == leaguerId && _.IsAvatar);
-            return avatar?.Id ?? 0; 
+            return avatar?.Id ?? 0;
+        }
+
+        public static async Task<List<LeaguerAttachment>> GetCurrentAttachments(this IRepository<LeaguerAttachment> repository, int leaguerId)
+        {
+            return await repository.Entities.Where(_ => _.LeaguerId == leaguerId).ToListAsync();
         }
 
         public static async Task<List<AppliedDocument>> GetMores(this IRepository<AppliedDocument> repository, IEnumerable<int> ids)
@@ -75,7 +81,27 @@ namespace LeaguerManagement.Repositories
             return await repository.Entities.Where(_ => ids.Contains(_.Id)).ToListAsync();
         }
 
-        public static async Task<IList<ReferenceWithAttachmentModel<AppliedDocumentModel>>> GetOfficialDocuments(this IRepository<AppliedDocument> repository, int leaguerId)
+        public static async Task<List<AppliedDocument>> GetAppliedDocuments(this IRepository<AppliedDocument> repository, int leaguerId)
+        {
+            var db = (LeaguerManagementContext)repository.DbContext;
+
+            return await (from a in db.AppliedDocuments
+                join cod in db.ChangeOfficialDocuments on a.OfficialDocumentId equals cod.Id
+                where a.LeaguerId == leaguerId && cod.ChangeOfficialDocumentTypeId != 3
+                select a).ToListAsync();
+        }
+
+        public static async Task<List<AppliedDocumentAttachment>> GetAppliedOfficialAttachments(this IRepository<AppliedDocumentAttachment> repository, int leaguerId)
+        {
+            var db = (LeaguerManagementContext)repository.DbContext;
+
+            return await (from a in db.AppliedDocuments
+                          join aa in db.AppliedDocumentAttachments on a.Id equals aa.AppliedDocumentId
+                          where a.LeaguerId == leaguerId
+                          select aa).ToListAsync();
+        }
+
+        public static async Task<IList<ReferenceWithAttachmentModel<AppliedDocumentModel>>> GetAppliedOfficialDocuments(this IRepository<AppliedDocument> repository, int leaguerId)
         {
             var source = new List<ReferenceWithAttachmentModel<AppliedDocumentModel>>();
             await repository.LoadStoredProc("spGetOfficialDocuments")
@@ -85,16 +111,17 @@ namespace LeaguerManagement.Repositories
                     var appliedDocuments = result.ReadNextListOrEmpty<AppliedDocumentModel>().ToList();
 
                     if (!appliedDocuments.Any()) return;
-                    
+
                     var attachments = result.ReadNextListOrEmpty<AttachmentModel>().ToList();
 
                     source.AddRange(from appliedDocument in appliedDocuments
-                        let modelAttachments = attachments.Where(_ => _.ReferenceId == appliedDocument.Id).ToList()
-                        select new ReferenceWithAttachmentModel<AppliedDocumentModel>
-                        {
-                            Reference = appliedDocument, Attachments = modelAttachments,
-                            TotalAttachments = modelAttachments.Count
-                        });
+                                    let modelAttachments = attachments.Where(_ => _.ReferenceId == appliedDocument.Id).ToList()
+                                    select new ReferenceWithAttachmentModel<AppliedDocumentModel>
+                                    {
+                                        Reference = appliedDocument,
+                                        Attachments = modelAttachments,
+                                        TotalAttachments = modelAttachments.Count
+                                    });
                 });
 
             return source;

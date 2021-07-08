@@ -19,13 +19,33 @@ namespace LeaguerManagement.Services
         protected readonly Func<IUnitOfWork> UnitOfWorkFactory;
         protected static GlobalSettings Settings;
 
-        private static readonly string[] AllowedFileTypes = { ".jpg", ".jpeg", ".png", ".gif" };
+        private static readonly string[] AllowedImageTypes = { ".jpg", ".jpeg", ".png", ".gif" };
+        private static readonly string[] AllowedFileTypes = { ".jpg", ".jpeg", ".png", ".gif", ".doc", ".docx", ".xls", ".xlsx", ".ppt", ".pptx", ".pdf", ".rtf", ".txt" };
 
 
         public BaseService(Func<IUnitOfWork> unitOfWorkFactory, IOptionsSnapshot<GlobalSettings> settings)
         {
             Settings = settings.Value;
             UnitOfWorkFactory = unitOfWorkFactory;
+        }
+
+        public static void ValidateImage(string fullFileName, long? fileSize = null)
+        {
+            if (fullFileName.IsBlank())
+                throw new AppException(AppMessages.FileNameNotFound);
+
+            var lastDotPosition = fullFileName.LastIndexOf(".", StringComparison.Ordinal);
+
+            var fileName = fullFileName.Substring(0, lastDotPosition);
+            if (fileName.Length > Settings.MaxFileNameLength)
+                throw new AppException(string.Format(AppMessages.FileNameTooLong, Settings.MaxFileNameLength));
+
+            var fileType = Path.GetExtension(fullFileName);
+            if (fileType.IsBlank() || !AllowedImageTypes.Contains(fileType.ToLower()))
+                throw new AppException(AppMessages.FileTypeNotSupported);
+
+            if (fileSize.GetValueOrDefault() > Settings.MaxFileSize)
+                throw new AppException(string.Format(AppMessages.FileTooLarge, Math.Round((decimal)Settings.MaxFileSize / 1024 / 1024, 2)));
         }
 
         public static void ValidateFile(string fullFileName, long? fileSize = null)
@@ -47,9 +67,9 @@ namespace LeaguerManagement.Services
                 throw new AppException(string.Format(AppMessages.FileTooLarge, Math.Round((decimal)Settings.MaxFileSize / 1024 / 1024, 2)));
         }
 
-        protected string GetOrCreateLeaguerFolder(string childPath, int fileId)
+        protected string GetOrCreateLeaguerFolder(string childPath, int leaguerId)
         {
-            var folderPath = Path.Combine("Contents", "Uploads", fileId.ToString(), childPath);
+            var folderPath = Path.Combine("Contents", "Uploads", leaguerId.ToString(), childPath);
             if (Directory.Exists(folderPath))
                 return folderPath;
             Directory.CreateDirectory(folderPath);

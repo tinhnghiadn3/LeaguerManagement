@@ -6,6 +6,6 @@
         public int LeaguerId { get; set; }
         public string Name { get; set; }
         public int OfficialDocumentId { get; set; }
-        public int OfficialDocumentTypeId { get; set; }
+        public int ChangeOfficialDocumentTypeId { get; set; }
     }
 }

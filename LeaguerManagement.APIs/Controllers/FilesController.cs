@@ -43,11 +43,23 @@ namespace LeaguerManagement.Api.Controllers
             return GetServerFile(leaId, attId, "Information");
         }
 
+        [HttpGet("official/image")]
+        public IActionResult GetOfficialImage([FromQuery] int leaId, [FromQuery] int attId)
+        {
+            return GetServerFile(leaId, attId, "Official");
+        }
+
+        [HttpGet("official/download")]
+        public IActionResult DownloadOfficialFile([FromQuery] int leaId, [FromQuery] int attId)
+        {
+            return GetServerFile(leaId, attId, "Official");
+        }
+
         #region Private Method
 
-        private IActionResult GetServerFile(int constructionId, int attachmentId, string pathType)
+        private IActionResult GetServerFile(int leaguerId, int attachmentId, string pathType)
         {
-            var bytes = _fileService.GetFile(constructionId, attachmentId, pathType, out var fileName);
+            var bytes = _fileService.GetFile(leaguerId, attachmentId, pathType, out var fileName);
             if (bytes == null)
                 return null;
 

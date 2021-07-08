@@ -104,6 +104,15 @@
 
     <dxi-column dataField="badgeNumber" caption="Số huy hiệu Đảng" [width]="135"></dxi-column>
 
+    <dxi-column dataField="statusId" caption="Tình trạng" alignment="center"
+                [minWidth]="120" [width]="120">
+      <dxo-lookup
+        [dataSource]="statuses"
+        displayExpr="value"
+        valueExpr="key">
+      </dxo-lookup>
+    </dxi-column>
+
     <dxi-column caption="Thao tác"
                 type="'buttons'"
                 alignment="center"
@@ -117,7 +126,15 @@
                 cellTemplate="actionsCellTemplate">
       <div *dxTemplate="let cell of 'actionsCellTemplate'">
         <div class="action-inline text-center">
-          <i class="fas fa-sort-amount-up" title="Công nhận chính thức" (click)="onShowTransferPopup(cell.data)"></i>
+          <i class="fas fa-sort-amount-up" title="Công nhận chính thức"
+             *ngIf="cell.data.statusId === AppLeaguerStatus.Preliminary"
+             (click)="onShowTransferPopup(cell.data)"></i>
+          <i class="fas fa-sign-out-alt" title="Ra khỏi Đảng"
+             *ngIf="cell.data.statusId !== AppLeaguerStatus.GetOut"
+             (click)="showConfirmOutPopup(cell.data)"></i>
+          <i class="fas fa-user-alt-slash" title="Từ trần"
+             *ngIf="cell.data.statusId !== AppLeaguerStatus.Dead"
+             (click)="showConfirmDeadPopup(cell.data)"></i>
           <i class="fas fa-pencil-alt" title="Sửa" (click)="goToDetail(cell.data)"></i>
           <i class="far fa-trash-alt" title="Xóa" (click)="openDeletingConfirmPopup(cell.data, $event)"></i>
         </div>
@@ -172,6 +189,11 @@
   </dx-data-grid>
 </div>
 
+<app-popover-confirm-box #deletingConfirmBox
+                         [message]="GENERAL_MESSAGE.DeleteRecordConfirmQuestion.format('Đảng viên', selectedLeaguer.name)"
+                         (onConfirm)="onDelete()">
+</app-popover-confirm-box>
+
 <app-popup-container *ngIf="isShowEditingPopup"
                      title="Thêm mới Đảng viên"
                      [width]="550"
@@ -191,7 +213,31 @@
                      [height]="'auto'"
                      [(visible)]="isShowTransferringPopup">
   <app-leaguer-transfer-offical [(visible)]="isShowTransferringPopup"
-                      [selectedLeaguer]="selectedLeaguer"
-                      (onHidden)="onCancelTransferring()">
+                                [selectedLeaguer]="selectedLeaguer"
+                                (onHidden)="onCancelTransferring()">
   </app-leaguer-transfer-offical>
+</app-popup-container>
+
+<app-popup-container *ngIf="isShowOutConfirmPopup"
+                     title="Xác nhận Ra khỏi Đảng?"
+                     [width]="450"
+                     [height]="'auto'"
+                     [(visible)]="isShowOutConfirmPopup">
+  <app-yes-no-confirm (onConfirmed)="changeToOut()"
+                      (onCanceled)="isShowOutConfirmPopup = false"
+                      [modelName]="'Đảng viên' + selectedLeaguer.name"
+                      [question]="'Chắc chắn chuyển Ra khỏi Đảng'"
+  ></app-yes-no-confirm>
+</app-popup-container>
+
+<app-popup-container *ngIf="isShowDeadConfirmPopup"
+                     title="Xác nhận Từ trần?"
+                     [width]="450"
+                     [height]="'auto'"
+                     [(visible)]="isShowDeadConfirmPopup">
+  <app-yes-no-confirm (onConfirmed)="changeToDead()"
+                      (onCanceled)="isShowDeadConfirmPopup = false"
+                      [modelName]="'Đảng viên' + selectedLeaguer.name"
+                      [question]="'Chắc chắn chuyển Từ trần'"
+  ></app-yes-no-confirm>
 </app-popup-container>

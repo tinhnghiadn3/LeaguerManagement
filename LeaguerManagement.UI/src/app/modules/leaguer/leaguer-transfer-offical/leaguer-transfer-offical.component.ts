@@ -1,5 +1,11 @@
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
-import {AppliedDocumentModel, ChangeOfficialDocumentModel, DropDownModel, LeaguerModel, ReferenceWithAttachmentModel} from '@app/models';
+import {
+  AppliedDocumentModel,
+  ChangeOfficialDocumentModel,
+  DropDownModel,
+  LeaguerModel,
+  ReferenceWithAttachmentModel
+} from '@app/models';
 import {LookupService} from '@app/services/shared';
 import {Subscription} from 'rxjs';
 import {LeaguerService} from '@app/services/features/leaguer.service';
@@ -34,6 +40,7 @@ export class LeaguerTransferOfficalComponent implements OnInit, OnDestroy {
   appliedDocuments: ReferenceWithAttachmentModel<AppliedDocumentModel>[] = [];
 
   isLoading: boolean = false;
+  isProcessing: boolean = false;
   subscription: Subscription = new Subscription();
 
   ALLOWED_FILE_TYPES = ALLOWED_FILE_TYPES;
@@ -62,24 +69,6 @@ export class LeaguerTransferOfficalComponent implements OnInit, OnDestroy {
     });
   }
 
-  generateData() {
-    this.officialDocumentTypes.forEach(type => {
-      const documents = this.officialDocuments.filter(_ => _.changeOfficialDocumentTypeId === type.key);
-      documents.forEach(document => {
-        this.appliedDocuments.push(new ReferenceWithAttachmentModel<AppliedDocumentModel>({
-          reference: new AppliedDocumentModel({
-            leaguerId: this.selectedLeaguer.id,
-            officialDocumentId: document.id,
-            officialDocumentName: document.name,
-            officialDocumentTypeId: type.key
-          }),
-          attachments: [],
-          totalAttachments: 0,
-        }));
-      });
-    });
-  }
-
   addAttachment(fileInput: HTMLInputElement, data) {
     if (!data || !data.reference || !data.reference.id) {
       AppNotify.warning('Lưu mới danh sách trước khi tải tệp đính kèm');
@@ -88,13 +77,51 @@ export class LeaguerTransferOfficalComponent implements OnInit, OnDestroy {
     fileInput.click();
   }
 
-  uploadLeaguerAttachment(e, data) {
+  uploadOfficialAttachment(e, data) {
     if (!e || !e.target || !e.target.files || !e.target.files.length || !data || !data.reference.id) {
       return;
     }
-    this.leaguerService.uploadLeaguerAttachment(e.target.files, data).then();
+    this.leaguerService.uploadOfficialAttachment(e.target.files, data).then();
     // Clear file selection
     e.target.value = null;
+  }
+
+  validateBeforeChanging(): boolean {
+    return this.appliedDocuments.some(_ => _.reference.changeOfficialDocumentTypeId !== 3 && !_.attachments.length);
+  }
+
+  changeOfficial() {
+    if (this.validateBeforeChanging()) {
+      AppNotify.warning('Chưa cung cấp đủ Giấy tờ/Biểu mẫu');
+      return;
+    }
+    this.showProcessing();
+    this.leaguerService.changeToOfficial(this.selectedLeaguer.id).subscribe(() => {
+      AppNotify.success(`Công nhận đồng chí ${this.selectedLeaguer.name} là Đảng viên chính thức thành công`);
+      this.hideProcessing();
+    }, () => {
+      this.hideProcessing();
+    });
+  }
+
+  cancel() {
+    this.visible = false;
+  }
+
+  /**
+   * Utilities
+   */
+
+  showProcessing() {
+    setTimeout(() => {
+      this.isProcessing = true;
+    });
+  }
+
+  hideProcessing() {
+    setTimeout(() => {
+      this.isProcessing = false;
+    });
   }
 
   ngOnDestroy() {

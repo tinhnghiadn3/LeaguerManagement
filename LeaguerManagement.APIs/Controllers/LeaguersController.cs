@@ -64,40 +64,38 @@ namespace LeaguerManagement.APIs.Controllers
             return await _leaguerService.UpdateLeaguer(input);
         }
 
+        [HttpDelete("{id:int}")]
+        public async Task<bool> DeleteLeaguer(int id)
+        {
+            return await _leaguerService.DeleteLeaguer(id);
+        }
+
         [HttpGet("{id:int}/official-documents")]
         public async Task<IList<ReferenceWithAttachmentModel<AppliedDocumentModel>>> GetOfficialDocuments([FromRoute] int id)
         {
             return await _leaguerService.GetOfficialDocuments(id);
         }
 
-        [HttpPost("{leaguerId:int}/attachments")]
-        public async Task<IList<AttachmentModel>> PostFileAsync([FromRoute] int leaguerId)
+
+        [HttpGet("{id:int}/change/official")]
+        public async Task<bool> ChangeToOfficial([FromRoute] int id)
         {
-            var files = Request.Form.Files;
-
-            if (files == null || !files.Any())
-                throw new AppException(AppMessages.NoFildeToUpload);
-
-            if (files.Count > _settings.MaxFilesPerRequest)
-                throw new AppException(AppMessages.TooManyFilesToUpload);
-
-            var attachments = new List<AttachmentModel>();
-
-            foreach (var file in files)
-            {
-                // Format file name
-                var fileName = file.Name.RemoveVietnameseSigns();
-
-                // Save file
-                var savedFile = await _leaguerService.SaveAttachment(leaguerId, fileName, file, false);
-                attachments.Add(savedFile);
-            }
-
-            attachments.Reverse();
-
-            return attachments;
+            return await _leaguerService.ChangeToOfficial(id);
         }
 
+        [HttpGet("{id:int}/change/out")]
+        public async Task<bool> ChangeToOut([FromRoute] int id)
+        {
+            return await _leaguerService.ChangeToOut(id);
+        }
+
+        [HttpGet("{id:int}/change/dead")]
+        public async Task<bool> ChangeToDead([FromRoute] int id)
+        {
+            return await _leaguerService.ChangeToDead(id);
+        }
+
+        // avatar
 
         [HttpPost("{leaguerId:int}/avatars")]
         public async Task<IList<AttachmentModel>> PostAvatarAsync([FromRoute] int leaguerId)
@@ -127,16 +125,88 @@ namespace LeaguerManagement.APIs.Controllers
             return attachments;
         }
 
+        // attachments
+
+        [HttpPost("{leaguerId:int}/attachments")]
+        public async Task<IList<AttachmentModel>> PostFileAsync([FromRoute] int leaguerId)
+        {
+            var files = Request.Form.Files;
+
+            if (files == null || !files.Any())
+                throw new AppException(AppMessages.NoFildeToUpload);
+
+            if (files.Count > _settings.MaxFilesPerRequest)
+                throw new AppException(AppMessages.TooManyFilesToUpload);
+
+            var attachments = new List<AttachmentModel>();
+
+            foreach (var file in files)
+            {
+                // Format file name
+                var fileName = file.Name.RemoveVietnameseSigns();
+
+                // Save file
+                var savedFile = await _leaguerService.SaveAttachment(leaguerId, fileName, file, false);
+                attachments.Add(savedFile);
+            }
+
+            attachments.Reverse();
+
+            return attachments;
+        }
+
         [HttpPost("general/attachments/rename")]
         public async Task<AttachmentModel> RenameAttachmentAsync([FromBody] RenameAttachmentModel input)
         {
             return await _leaguerService.RenameAttachment(input.AttachmentId, input.NewName, input.ReferenceId);
         }
 
-        [HttpDelete("general/{constructionId:int}/attachments/{attachmentId}")]
-        public async Task<bool> DeleteAttachmentAsync([FromRoute] int constructionId, [FromRoute] int attachmentId)
+        [HttpDelete("general/{leaguerId:int}/attachments/{attachmentId}")]
+        public async Task<bool> DeleteAttachmentAsync([FromRoute] int leaguerId, [FromRoute] int attachmentId)
         {
-            return await _leaguerService.DeleteAttachmentAsync(constructionId, attachmentId);
+            return await _leaguerService.DeleteAttachmentAsync(leaguerId, attachmentId);
+        }
+
+        // officials
+
+        [HttpPost("{appliedId:int}/officials")]
+        public async Task<IList<AttachmentModel>> PostDocumentAsync([FromRoute] int appliedId)
+        {
+            var files = Request.Form.Files;
+
+            if (files == null || !files.Any())
+                throw new AppException(AppMessages.NoFildeToUpload);
+
+            if (files.Count > _settings.MaxFilesPerRequest)
+                throw new AppException(AppMessages.TooManyFilesToUpload);
+
+            var attachments = new List<AttachmentModel>();
+
+            foreach (var file in files)
+            {
+                // Format file name
+                var fileName = file.Name.RemoveVietnameseSigns();
+
+                // Save file
+                var savedFile = await _leaguerService.SaveAppliedAttachment(appliedId, fileName, file);
+                attachments.Add(savedFile);
+            }
+
+            attachments.Reverse();
+
+            return attachments;
+        }
+
+        [HttpPost("official/attachments/rename")]
+        public async Task<AttachmentModel> RenameOfficialAttachment([FromBody] RenameAttachmentModel input)
+        {
+            return await _leaguerService.RenameOfficialAttachment(input.AttachmentId, input.NewName, input.ReferenceId);
+        }
+
+        [HttpDelete("official/{appliedId:int}/attachments/{attachmentId}")]
+        public async Task<bool> DeleteOfficialAttachmentAsync([FromRoute] int appliedId, [FromRoute] int attachmentId)
+        {
+            return await _leaguerService.DeleteOfficialAttachmentAsync(appliedId, attachmentId);
         }
     }
 }

@@ -18,8 +18,9 @@ export enum LookupDataType {
 }
 
 export enum AppLeaguerStatus {
-  Handling = 1,
-  Returning = 2,
-  Finished = 3
+  Official = 1,
+  Preliminary = 2,
+  GetOut = 3,
+  Dead = 4
 }
 

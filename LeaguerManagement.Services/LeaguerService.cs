@@ -28,6 +28,7 @@ namespace LeaguerManagement.Services
         private IRepository<Leaguer> _leaguerRepository;
         private IRepository<LeaguerAttachment> _leaguerAttachmentRepository;
         private IRepository<AppliedDocument> _appliedDocumentRepository;
+        private IRepository<AppliedDocumentAttachment> _appliedDocumentAttachmentRepository;
         private IRepository<ChangeOfficialDocumentType> _changeOfficialDocumentTypeRepository;
         private IRepository<ChangeOfficialDocument> _changeOfficialDocumentRepository;
 
@@ -124,11 +125,49 @@ namespace LeaguerManagement.Services
                 if (input.AvatarId == 0)
                 {
                     var avatarId = await _leaguerAttachmentRepository.GetCurrentAvatarId(leaguer.Id);
-                    if (avatarId != 0) await DeleteAttachment(leaguer.Id, avatarId);
+                    if (avatarId != 0) await DeleteLeaguerAttachment(leaguer.Id, avatarId);
                 }
                 // updating
                 _mapper.Map(input, leaguer);
                 await unitOfWork.SaveChangesAsync();
+                unitOfWork.CommitTransaction();
+
+                return true;
+            }
+            catch (Exception e)
+            {
+                unitOfWork.RollbackTransaction();
+                _logger.Error(e, e.Message);
+                throw new AppException(e.Message);
+            }
+        }
+
+        public async Task<bool> DeleteLeaguer(int id)
+        {
+            using var unitOfWork = UnitOfWorkFactory.Invoke();
+            _leaguerRepository = unitOfWork.Repository<Leaguer>();
+            _leaguerAttachmentRepository = unitOfWork.Repository<LeaguerAttachment>();
+
+            try
+            {
+                //
+                // check exist leaguer
+                var leaguer = await GetOrThrow(_leaguerRepository, id,
+                    string.Format(AppMessages.ThisObjectNotFound, "Đảng viên"));
+
+                var attachments = await _leaguerAttachmentRepository.GetCurrentAttachments(leaguer.Id);
+                //
+                //
+                unitOfWork.BeginTransaction();
+                //
+                // remove current attachments
+                if (attachments.Any())
+                {
+                    await _leaguerAttachmentRepository.DeleteRangeAsync(attachments);
+                }
+                // delete leaguer
+                await _leaguerRepository.DeleteAsync(leaguer);
+                
                 unitOfWork.CommitTransaction();
 
                 return true;
@@ -149,7 +188,9 @@ namespace LeaguerManagement.Services
 
             try
             {
-                ValidateFile(fileName, formFile.Length);
+                if (isAvatar)
+                    ValidateImage(fileName, formFile.Length);
+                else ValidateFile(fileName, formFile.Length);
 
                 var leaguer = await GetOrThrow(_leaguerRepository, leaguerId,
                     string.Format(AppMessages.ThisObjectNotFound, "Đảng viên"));
@@ -160,7 +201,7 @@ namespace LeaguerManagement.Services
                 if (isAvatar)
                 {
                     var avatarId = await _leaguerAttachmentRepository.GetCurrentAvatarId(leaguerId);
-                    if (avatarId != 0) await DeleteAttachment(leaguerId, avatarId);
+                    if (avatarId != 0) await DeleteLeaguerAttachment(leaguerId, avatarId);
                 }
                 //
                 // Create task folder if not exist
@@ -213,7 +254,7 @@ namespace LeaguerManagement.Services
 
             var officialDocumentTypes = await _changeOfficialDocumentTypeRepository.GetAllAsync();
             var officialDocuments = await _changeOfficialDocumentRepository.GetAllAsync();
-            var result = await _appliedDocumentRepository.GetOfficialDocuments(leaguerId);
+            var result = await _appliedDocumentRepository.GetAppliedOfficialDocuments(leaguerId);
             try
             {
                 // if have
@@ -222,58 +263,125 @@ namespace LeaguerManagement.Services
                     // if same
                     if (result.Count == officialDocuments.Count()) return result;
                     //
-                    unitOfWork.BeginTransaction();
-                    //
                     // if not same
-                    //
-                    // if missing
+                    unitOfWork.BeginTransaction();
+                    // 
+                    // for missing
                     var misses = officialDocuments.Where(_ =>
                         !result.Select(r => r.Reference).Select(x => x.OfficialDocumentId).Contains(_.Id));
                     var newDocuments = new List<AppliedDocument>();
                     if (misses.Any())
                     {
                         newDocuments.AddRange(misses.Select(miss => new AppliedDocument
-                            {LeaguerId = leaguerId, Name = miss.Name, OfficialDocumentId = miss.Id}));
+                        { LeaguerId = leaguerId, Name = miss.Name, OfficialDocumentId = miss.Id }));
                         await _appliedDocumentRepository.InsertRangeAsync(newDocuments);
                     }
-
-                    // if more than
-                    var moreIds = result.Select(r => r.Reference).Select(r => r.Id)
-                        .Where(_ => !officialDocuments.Select(o => o.Id).Contains(_));
-                    if (moreIds.Any())
+                    // for more
+                    if (result.Count > officialDocuments.Count())
                     {
-                        var mores = await _appliedDocumentRepository.GetMores(moreIds);
-                        if (mores.Any()) await _appliedDocumentRepository.DeleteRangeAsync(mores);
+                        var moreIds = result.Select(r => r.Reference).Select(r => r.Id)
+                            .Where(_ => !officialDocuments.Select(o => o.Id).Contains(_));
+
+                        if (moreIds.Any())
+                        {
+                            var mores = await _appliedDocumentRepository.GetMores(moreIds);
+                            if (mores.Any()) await _appliedDocumentRepository.DeleteRangeAsync(mores);
+                        }
                     }
+                    //
+                    unitOfWork.CommitTransaction();
+                    return await _appliedDocumentRepository.GetAppliedOfficialDocuments(leaguerId);
                 }
                 //
                 // if not have
-                else
-                
+                var appliedDocuments = new List<AppliedDocument>();
+                foreach (var type in officialDocumentTypes)
                 {
-                    var appliedDocuments = new List<AppliedDocument>();
-                    foreach (var type in officialDocumentTypes)
-                    {
-                        var documents = officialDocuments.Where(_ => _.ChangeOfficialDocumentTypeId == type.Id);
-                        appliedDocuments.AddRange(documents.Select(document => new AppliedDocument { LeaguerId = leaguerId, Name = document.Name, OfficialDocumentId = document.Id }));
-                    }
-
-                    await _appliedDocumentRepository.InsertRangeAsync(appliedDocuments);
+                    var documents = officialDocuments.Where(_ => _.ChangeOfficialDocumentTypeId == type.Id);
+                    appliedDocuments.AddRange(documents.Select(document => new AppliedDocument { LeaguerId = leaguerId, Name = document.Name, OfficialDocumentId = document.Id }));
                 }
-                //
-                unitOfWork.CommitTransaction();
-                //
-                return await _appliedDocumentRepository.GetOfficialDocuments(leaguerId);
+
+                await _appliedDocumentRepository.InsertRangeAsync(appliedDocuments);
+                return await _appliedDocumentRepository.GetAppliedOfficialDocuments(leaguerId);
             }
             catch (Exception e)
             {
-                if (!result.Any() || result.Count != officialDocuments.Count()) unitOfWork.RollbackTransaction();
+                if (result.Any() && result.Count != officialDocuments.Count()) unitOfWork.RollbackTransaction();
                 _logger.Error(e, e.Message);
                 throw new AppException(e.Message);
             }
         }
 
-        public async Task<AttachmentModel> RenameAttachment(int attachmentId, string newName, int constructionId)
+        public async Task<bool> ChangeToOfficial(int leaguerId)
+        {
+            using var unitOfWork = UnitOfWorkFactory.Invoke();
+            _leaguerRepository = unitOfWork.Repository<Leaguer>();
+            _appliedDocumentRepository = unitOfWork.Repository<AppliedDocument>();
+            _appliedDocumentAttachmentRepository = unitOfWork.Repository<AppliedDocumentAttachment>();
+
+            try
+            {
+                //
+                // check exist leaguer
+                var leaguer = await GetOrThrow(_leaguerRepository, leaguerId, string.Format(AppMessages.ThisObjectNotFound, "Đảng viên"));
+                //
+                var appliedDocuments = await _appliedDocumentRepository.GetAppliedDocuments(leaguer.Id);
+                var attachments = await _appliedDocumentAttachmentRepository.GetAppliedOfficialAttachments(leaguer.Id);
+                if (!attachments.Any() || attachments.Count >= appliedDocuments.Count) return false;
+                leaguer.StatusId = AppLeaguerStatus.Official.ToInt();
+                await unitOfWork.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception e)
+            {
+                _logger.Error(e, e.Message);
+                throw new AppException(e.Message);
+            }
+        }
+
+        public async Task<bool> ChangeToOut(int leaguerId)
+        {
+            using var unitOfWork = UnitOfWorkFactory.Invoke();
+            _leaguerRepository = unitOfWork.Repository<Leaguer>();
+
+            try
+            {
+                //
+                // check exist leaguer
+                var leaguer = await GetOrThrow(_leaguerRepository, leaguerId, string.Format(AppMessages.ThisObjectNotFound, "Đảng viên"));
+                leaguer.StatusId = AppLeaguerStatus.GetOut.ToInt();
+                await unitOfWork.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception e)
+            {
+                _logger.Error(e, e.Message);
+                throw new AppException(e.Message);
+            }
+        }
+
+        public async Task<bool> ChangeToDead(int leaguerId)
+        {
+            using var unitOfWork = UnitOfWorkFactory.Invoke();
+            _leaguerRepository = unitOfWork.Repository<Leaguer>();
+
+            try
+            {
+                //
+                // check exist leaguer
+                var leaguer = await GetOrThrow(_leaguerRepository, leaguerId, string.Format(AppMessages.ThisObjectNotFound, "Đảng viên"));
+                leaguer.StatusId = AppLeaguerStatus.Dead.ToInt();
+                await unitOfWork.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception e)
+            {
+                _logger.Error(e, e.Message);
+                throw new AppException(e.Message);
+            }
+        }
+
+        public async Task<AttachmentModel> RenameAttachment(int attachmentId, string newName, int leaguerId)
         {
             using var unitOfWork = UnitOfWorkFactory.Invoke();
             _leaguerRepository = unitOfWork.Repository<Leaguer>();
@@ -283,7 +391,7 @@ namespace LeaguerManagement.Services
             {
                 ValidateFile(newName);
 
-                var leaguer = await GetOrThrow(_leaguerRepository, constructionId,
+                var leaguer = await GetOrThrow(_leaguerRepository, leaguerId,
                     string.Format(AppMessages.ThisObjectNotFound, "Đảng viên"));
                 //
                 // Get file
@@ -332,7 +440,7 @@ namespace LeaguerManagement.Services
                 _leaguerRepository = unitOfWork.Repository<Leaguer>();
                 _leaguerAttachmentRepository = unitOfWork.Repository<LeaguerAttachment>();
 
-                await DeleteAttachment(leaguerId, attachmentId);
+                await DeleteLeaguerAttachment(leaguerId, attachmentId);
 
                 return true;
             }
@@ -343,7 +451,136 @@ namespace LeaguerManagement.Services
             }
         }
 
-        private async Task DeleteAttachment(int leaguerId, int attachmentId)
+        #region Applied Attachment
+
+        public async Task<AttachmentModel> SaveAppliedAttachment(int appliedId, string fileName, IFormFile formFile)
+        {
+            using var unitOfWork = UnitOfWorkFactory.Invoke();
+            _appliedDocumentRepository = unitOfWork.Repository<AppliedDocument>();
+            _appliedDocumentAttachmentRepository = unitOfWork.Repository<AppliedDocumentAttachment>();
+
+            try
+            {
+                ValidateFile(fileName, formFile.Length);
+
+                var applied = await GetOrThrow(_appliedDocumentRepository, appliedId,
+                    string.Format(AppMessages.ThisObjectNotFound, "Giấy tờ/biểu mẫu"));
+                //
+                // Create task folder if not exist
+                var folderPath = GetOrCreateLeaguerFolder("Official", applied.LeaguerId);
+                //
+                // Attachment
+                var attachedFile = new AppliedDocumentAttachment
+                {
+                    CreatedDate = DateTime.Now,
+                    CreatedByUserId = unitOfWork.CurrentUser.UserId.Value,
+                    FileName = fileName,
+                    FilePath = string.Empty,
+                    FileUrl = string.Empty,
+                    FileExtension = Path.GetExtension(fileName),
+                    FileSize = formFile.Length,
+                    AppliedDocumentId = applied.Id,
+                };
+                await _appliedDocumentAttachmentRepository.InsertAsync(attachedFile);
+
+                var fullName = $"{attachedFile.Id}_{fileName}";
+                attachedFile.FileUrl = FileHelper.UploadFile(folderPath, formFile, fullName, out var filePath);
+                attachedFile.FilePath = filePath;
+                await unitOfWork.SaveChangesAsync();
+
+                var result = _mapper.Map<AttachmentModel>(attachedFile);
+                result.ReferenceId = applied.Id;
+                result.ReferenceName = "official";
+
+                return result;
+            }
+            catch (Exception e)
+            {
+                _logger.Error(e, e.Message);
+                throw new AppException(e.Message);
+            }
+        }
+
+        public async Task<AttachmentModel> RenameOfficialAttachment(int attachmentId, string newName, int appliedId)
+        {
+            using var unitOfWork = UnitOfWorkFactory.Invoke();
+            _appliedDocumentRepository = unitOfWork.Repository<AppliedDocument>();
+            _appliedDocumentAttachmentRepository = unitOfWork.Repository<AppliedDocumentAttachment>();
+
+            try
+            {
+                ValidateFile(newName);
+
+                var applied = await GetOrThrow(_appliedDocumentRepository, appliedId,
+                    string.Format(AppMessages.ThisObjectNotFound, "Giấy tờ/biểu mẫu"));
+                //
+                // Get file
+                var oldFile = await GetOrThrow(_appliedDocumentAttachmentRepository, attachmentId, string.Format(AppMessages.FileNotFound));
+                //
+                // File is deleted?
+                if (!File.Exists(oldFile.FilePath))
+                    throw new AppException(AppMessages.FileIsDeleted);
+                //
+                // File is not belong to the construction.
+                if (oldFile.AppliedDocumentId != applied.Id)
+                    throw new AppException(AppMessages.FileNotBelongToLeaguer);
+                //
+                // Get new path
+                var pathLength = oldFile.FilePath.Length;
+                var oldFileNameLength = oldFile.FileName.Length;
+                var newFileName = newName.RemoveVietnameseSigns();
+                var newPath = oldFile.FilePath.Substring(0, pathLength - oldFileNameLength) + newFileName;
+                //
+                // Rename in Folder
+                File.Move(oldFile.FilePath, newPath);
+                //
+                // Rename and Change path in DB
+                oldFile.FileName = newFileName;
+                oldFile.FilePath = newPath;
+                await unitOfWork.SaveChangesAsync();
+
+                var result = _mapper.Map<AttachmentModel>(oldFile);
+                result.ReferenceId = oldFile.AppliedDocumentId;
+                result.ReferenceName = "official";
+
+                return result;
+            }
+            catch (Exception e)
+            {
+                _logger.Error(e, e.Message);
+                throw new AppException(e.Message);
+            }
+        }
+
+        public async Task<bool> DeleteOfficialAttachmentAsync(int appliedId, int attachmentId)
+        {
+            try
+            {
+                using var unitOfWork = UnitOfWorkFactory.Invoke();
+                _appliedDocumentRepository = unitOfWork.Repository<AppliedDocument>();
+                _appliedDocumentAttachmentRepository = unitOfWork.Repository<AppliedDocumentAttachment>();
+
+                await GetOrThrow(_appliedDocumentRepository, appliedId, string.Format(AppMessages.ThisObjectNotFound, "Giấy tờ/biểu mẫu"));
+                var attachment = await GetOrThrow(_appliedDocumentAttachmentRepository, attachmentId, string.Format(AppMessages.FileNotFound));
+                // Delete from DB
+                await _appliedDocumentAttachmentRepository.DeleteAsync(attachment);
+                // Delete from folder
+                FileHelper.DeleteFile(attachment.FilePath);
+
+                return true;
+            }
+            catch (Exception e)
+            {
+                _logger.Error(e, e.Message);
+                throw new AppException(e.Message);
+            }
+        }
+
+
+        #endregion
+
+        #region Private Method
+        private async Task DeleteLeaguerAttachment(int leaguerId, int attachmentId)
         {
             await GetOrThrow(_leaguerRepository, leaguerId, string.Format(AppMessages.ThisObjectNotFound, "Đảng viên"));
             var attachment = await GetOrThrow(_leaguerAttachmentRepository, attachmentId, string.Format(AppMessages.FileNotFound));
@@ -352,5 +589,7 @@ namespace LeaguerManagement.Services
             // Delete from folder
             FileHelper.DeleteFile(attachment.FilePath);
         }
+
+        #endregion
     }
 }

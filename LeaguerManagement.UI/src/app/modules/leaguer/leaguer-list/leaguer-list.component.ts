@@ -9,6 +9,7 @@ import {LookupService} from '@app/services/shared';
 import {GENERAL_MESSAGE} from '@app/shared/messages';
 import {PopoverConfirmBoxComponent} from '@app/shared/base-components';
 import {AppNotify} from '@app/shared/utilities/notification-helper';
+import {AppLeaguerStatus, LookupDataType} from '@app/shared/enums';
 
 @Component({
   selector: 'app-leaguer-list',
@@ -24,16 +25,20 @@ export class LeaguerListComponent implements OnInit, OnDestroy {
   dataSource: DataSource;
 
   units: DropDownModel[] = [];
+  statuses: DropDownModel[] = [];
   leaguers: LeaguerModel[] = [];
   selectedLeaguer: LeaguerModel = new LeaguerModel();
 
   isShowEditingPopup: boolean = false;
   isShowTransferringPopup: boolean = false;
+  isShowDeadConfirmPopup: boolean = false;
+  isShowOutConfirmPopup: boolean = false;
   isLoading: boolean = false;
   isProcessing: boolean = false;
 
   genderItems = GENDER_ITEMS;
   GENERAL_MESSAGE = GENERAL_MESSAGE;
+  AppLeaguerStatus = AppLeaguerStatus;
   subscription: Subscription = new Subscription();
 
   constructor(private leaguerService: LeaguerService,
@@ -42,6 +47,7 @@ export class LeaguerListComponent implements OnInit, OnDestroy {
     this.subscription.add(
       this.lookupService.lookup.subscribe(lookup => {
         this.units = lookup.units;
+        this.statuses = lookup.statuses;
       }));
   }
 
@@ -101,13 +107,60 @@ export class LeaguerListComponent implements OnInit, OnDestroy {
     }
   }
 
+  onDelete() {
+    if (!this.selectedLeaguer) {
+      return;
+    }
+    this.showProcessing();
+    this.leaguerService.deleteLeaguer(this.selectedLeaguer.id).subscribe(() => {
+      this.hideProcessing();
+      AppNotify.success(GENERAL_MESSAGE.DELETE_SUCCESS.format('Đảng viên', this.selectedLeaguer.name));
+    }, () => {
+      this.hideProcessing();
+    });
+  }
+
   onShowTransferPopup(leaguer) {
     this.selectedLeaguer = leaguer;
     this.isShowTransferringPopup = true;
   }
 
+  showConfirmOutPopup(leaguer) {
+    this.selectedLeaguer = leaguer;
+    this.isShowOutConfirmPopup = true;
+  }
+
+  showConfirmDeadPopup(leaguer) {
+    this.selectedLeaguer = leaguer;
+    this.isShowDeadConfirmPopup = true;
+  }
+
   onCancelTransferring() {
     this.isShowTransferringPopup = true;
+  }
+
+  changeToOut() {
+    this.showProcessing();
+    this.leaguerService.changeToOut(this.selectedLeaguer.id).subscribe(() => {
+      AppNotify.success(`Chuyển Ra khỏi Đảng đồng chí ${this.selectedLeaguer.name} thành công`);
+      this.isShowOutConfirmPopup = false;
+      this.hideProcessing();
+    }, () => {
+      this.isShowOutConfirmPopup = false;
+      this.hideProcessing();
+    });
+  }
+
+  changeToDead() {
+    this.showProcessing();
+    this.leaguerService.changeToDead(this.selectedLeaguer.id).subscribe(() => {
+      AppNotify.success(`Chuyển trạng thái qua đời của đồng chí ${this.selectedLeaguer.name} thành công`);
+      this.isShowDeadConfirmPopup = false;
+      this.hideProcessing();
+    }, () => {
+      this.isShowDeadConfirmPopup = false;
+      this.hideProcessing();
+    });
   }
 
   /**
