@@ -1,95 +1,121 @@
-<div class="form-request">
-  <div class="part">
-    <div class="part-title">Quyển hồ sơ công nhận đảng viên chính thức</div>
-    <!--1-->
-    <div class="row">
-      <div class="col-12 col-lg-6 part-child-title">Bản tự kiểm điểm của đảng viên dự bị:</div>
-      <div class="col-12 col-lg-6">
+<div class="form-request" *ngIf="!isLoading">
+  <div class="part" *ngFor="let type of officialDocumentTypes">
+    <div class="part-title">{{type.value}}:</div>
+    <div class="row align-items-center" *ngFor="let item of appliedDocuments; let i = index">
+      <ng-container *ngIf="item.reference.officialDocumentTypeId === type.key">
+        <div class="col-12 col-lg-6 part-child-title">{{item.reference.officialDocumentName}}:</div>
+        <div class="col-12 col-lg-6">
+          <app-upload-attachments [leaguerId]="item.reference.leaguerId"
+                                  (onAttachmentChanged)="getAppliedDocuments()"
+                                  [data]="item">
+          </app-upload-attachments>
 
-      </div>
-    </div>
-    <!--2-->
-    <div class="row">
-      <div class="col-12 col-lg-6 part-child-title">Bản nhận xét về đảng viên dự bị của đảng viên chính thức được phân
-        công giúp đỡ của đảng viên chính thức thứ 1:
-      </div>
-      <div class="col-12 col-lg-6">
-
-      </div>
-    </div>
-    <!--3-->
-    <div class="row">
-      <div class="col-12 col-lg-6 part-child-title">Bản nhận xét về đảng viên dự bị của đảng viên chính thức được phân
-        công giúp đỡ của đảng viên chính thức thứ 2:
-      </div>
-      <div class="col-12 col-lg-6">
-
-      </div>
-    </div>
-    <!--4-->
-    <div class="row">
-      <div class="col-12 col-lg-6 part-child-title">Bản Tổng hợp ý kiến nhận xét của tổ chức chính trị - xã hội nơi làm
-        việc và chi ủy nơi cư trú:
-      </div>
-      <div class="col-12 col-lg-6">
-
-      </div>
-    </div>
-    <!--5-->
-    <div class="row">
-      <div class="col-12 col-lg-6 part-child-title">Nghị quyết xét, đề nghị công nhận đảng viên chính thức của chi bộ:
-      </div>
-      <div class="col-12 col-lg-6">
-
-      </div>
-    </div>
-    <!--6-->
-    <div class="row">
-      <div class="col-12 col-lg-6 part-child-title">Báo cáo thẩm định của đảng ủy bộ phận (nếu có):</div>
-      <div class="col-12 col-lg-6">
-
-      </div>
-    </div>
-    <!--7-->
-    <div class="row">
-      <div class="col-12 col-lg-6 part-child-title">Nghị quyết xét, đề nghị công nhận đảng viên chính thức của đảng ủy
-        cơ sở:
-      </div>
-      <div class="col-12 col-lg-6">
-
-      </div>
-    </div>
-  </div>
-  <div class="part">
-    <div class="part-title">Giấy chứng nhận học lớp bồi dưỡng đảng viên mới (bản chính):</div>
-    <div class="row">
-      <div class="col-12 col-lg-6">
-
-      </div>
-    </div>
-  </div>
-  <div class="part">
-    <div class="part-title">Các loại giấy tờ khác:</div>
-    <!--1-->
-    <div class="row">
-      <div class="col-12 col-lg-6 part-child-title">Biên bản họp nhận xét của Công đoàn + Đoàn Thanh niên:</div>
-      <div class="col-12 col-lg-6">
-
-      </div>
-    </div>
-    <!--2-->
-    <div class="row">
-      <div class="col-12 col-lg-6 part-child-title">Phiếu Đảng viên:</div>
-      <div class="col-12 col-lg-6">
-
-      </div>
-    </div>
-    <!--3-->
-    <div class="row">
-      <div class="col-12 col-lg-6 part-child-title">Biên bản họp chi bộ tháng thông qua nghị quyết kết nạp:</div>
-      <div class="col-12 col-lg-6">
-
-      </div>
+          <div class="d-flex align-items-center">
+            <a class="upload mt-3" (click)="addAttachment(fileInput, item)">
+              <i class="fas fa-paperclip"></i>
+              Tải lên
+            </a>
+            <input #fileInput type="file" multiple="multiple" style="display: none;"
+                   [accept]="ALLOWED_FILE_TYPES"
+                   (change)="uploadLeaguerAttachment($event, item)">
+          </div>
+        </div>
+      </ng-container>
     </div>
   </div>
 </div>
+<!--<div class="form-request">-->
+<!--  <div class="part">-->
+<!--    <div class="part-title">Quyển hồ sơ công nhận đảng viên chính thức</div>-->
+<!--    &lt;!&ndash;1&ndash;&gt;-->
+<!--    <div class="row">-->
+<!--      <div class="col-12 col-lg-6 part-child-title">Bản tự kiểm điểm của đảng viên dự bị:</div>-->
+<!--      <div class="col-12 col-lg-6">-->
+
+<!--      </div>-->
+<!--    </div>-->
+<!--    &lt;!&ndash;2&ndash;&gt;-->
+<!--    <div class="row">-->
+<!--      <div class="col-12 col-lg-6 part-child-title">Bản nhận xét về đảng viên dự bị của đảng viên chính thức được phân-->
+<!--        công giúp đỡ của đảng viên chính thức thứ 1:-->
+<!--      </div>-->
+<!--      <div class="col-12 col-lg-6">-->
+
+<!--      </div>-->
+<!--    </div>-->
+<!--    &lt;!&ndash;3&ndash;&gt;-->
+<!--    <div class="row">-->
+<!--      <div class="col-12 col-lg-6 part-child-title">Bản nhận xét về đảng viên dự bị của đảng viên chính thức được phân-->
+<!--        công giúp đỡ của đảng viên chính thức thứ 2:-->
+<!--      </div>-->
+<!--      <div class="col-12 col-lg-6">-->
+
+<!--      </div>-->
+<!--    </div>-->
+<!--    &lt;!&ndash;4&ndash;&gt;-->
+<!--    <div class="row">-->
+<!--      <div class="col-12 col-lg-6 part-child-title">Bản Tổng hợp ý kiến nhận xét của tổ chức chính trị - xã hội nơi làm-->
+<!--        việc và chi ủy nơi cư trú:-->
+<!--      </div>-->
+<!--      <div class="col-12 col-lg-6">-->
+
+<!--      </div>-->
+<!--    </div>-->
+<!--    &lt;!&ndash;5&ndash;&gt;-->
+<!--    <div class="row">-->
+<!--      <div class="col-12 col-lg-6 part-child-title">Nghị quyết xét, đề nghị công nhận đảng viên chính thức của chi bộ:-->
+<!--      </div>-->
+<!--      <div class="col-12 col-lg-6">-->
+
+<!--      </div>-->
+<!--    </div>-->
+<!--    &lt;!&ndash;6&ndash;&gt;-->
+<!--    <div class="row">-->
+<!--      <div class="col-12 col-lg-6 part-child-title">Báo cáo thẩm định của đảng ủy bộ phận (nếu có):</div>-->
+<!--      <div class="col-12 col-lg-6">-->
+
+<!--      </div>-->
+<!--    </div>-->
+<!--    &lt;!&ndash;7&ndash;&gt;-->
+<!--    <div class="row">-->
+<!--      <div class="col-12 col-lg-6 part-child-title">Nghị quyết xét, đề nghị công nhận đảng viên chính thức của đảng ủy-->
+<!--        cơ sở:-->
+<!--      </div>-->
+<!--      <div class="col-12 col-lg-6">-->
+
+<!--      </div>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--  <div class="part">-->
+<!--    <div class="part-title">Giấy chứng nhận học lớp bồi dưỡng đảng viên mới (bản chính):</div>-->
+<!--    <div class="row">-->
+<!--      <div class="col-12 col-lg-6">-->
+
+<!--      </div>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--  <div class="part">-->
+<!--    <div class="part-title">Các loại giấy tờ khác:</div>-->
+<!--    &lt;!&ndash;1&ndash;&gt;-->
+<!--    <div class="row">-->
+<!--      <div class="col-12 col-lg-6 part-child-title">Biên bản họp nhận xét của Công đoàn + Đoàn Thanh niên:</div>-->
+<!--      <div class="col-12 col-lg-6">-->
+
+<!--      </div>-->
+<!--    </div>-->
+<!--    &lt;!&ndash;2&ndash;&gt;-->
+<!--    <div class="row">-->
+<!--      <div class="col-12 col-lg-6 part-child-title">Phiếu Đảng viên:</div>-->
+<!--      <div class="col-12 col-lg-6">-->
+
+<!--      </div>-->
+<!--    </div>-->
+<!--    &lt;!&ndash;3&ndash;&gt;-->
+<!--    <div class="row">-->
+<!--      <div class="col-12 col-lg-6 part-child-title">Biên bản họp chi bộ tháng thông qua nghị quyết kết nạp:</div>-->
+<!--      <div class="col-12 col-lg-6">-->
+
+<!--      </div>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--</div>-->

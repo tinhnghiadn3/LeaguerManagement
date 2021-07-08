@@ -61,5 +61,19 @@ namespace LeaguerManagement.Repositories
         }
 
         #endregion
+
+        #region Change Official Document/Type
+
+        public static async Task<bool> IsDuplicated(this IRepository<ChangeOfficialDocumentType> repository, int id, string name)
+        {
+            return await repository.Entities.AnyAsync(_ => _.Id != id && _.Name.ToLower() == name.ToLower());
+        }
+
+        public static async Task<bool> IsDuplicated(this IRepository<ChangeOfficialDocument> repository, int id, string name)
+        {
+            return await repository.Entities.AnyAsync(_ => _.Id != id && _.Name.ToLower() == name.ToLower());
+        }
+
+        #endregion
     }
 }

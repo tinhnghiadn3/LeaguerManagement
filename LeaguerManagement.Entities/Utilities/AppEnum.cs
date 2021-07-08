@@ -12,6 +12,8 @@ namespace LeaguerManagement.Entities.Utilities
         Roles = 1,
         Units = 2,
         Statuses = 3,
+        ChangeOfficialDocumentTypes = 4,
+        ChangeOfficialDocuments = 5
     }
 
     public enum AppLeaguerStatus

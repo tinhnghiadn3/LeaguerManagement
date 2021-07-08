@@ -1,5 +1,5 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {AttachmentModel, DropDownModel, LeaguerModel, ReferenceWithAttachmentModel} from '@app/models';
+import {AttachmentModel, CheckExistDataModel, DropDownModel, LeaguerModel, ReferenceWithAttachmentModel} from '@app/models';
 import {Subscription} from 'rxjs';
 import {GENERAL_MESSAGE} from '@app/shared/messages';
 import {LookupService} from '@app/services/shared';
@@ -7,7 +7,6 @@ import {LeaguerService} from '@app/services/features/leaguer.service';
 import {ActivatedRoute} from '@angular/router';
 import {AppNotify} from '@app/shared/utilities/notification-helper';
 import {ALLOWED_AVATAR_TYPES, ALLOWED_FILE_TYPES, GENDER_ITEMS} from '@app/shared/constants';
-import {CheckExistDataModel} from '@app/models/leaguers/check-exist-data.model';
 import {isEqual, clone} from 'lodash';
 
 @Component({

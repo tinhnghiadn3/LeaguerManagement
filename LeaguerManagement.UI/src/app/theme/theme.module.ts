@@ -10,7 +10,6 @@ import {
   ForbiddenComponent,
   HeaderComponent,
   PopupContainerComponent,
-  SideNavigationMenuComponent,
   UserPanelComponent
 } from './components';
 import {DefaultLayoutComponent, SingleCardLayoutComponent} from './layouts';
@@ -89,7 +88,6 @@ const COMPONENTS = [
   DefaultLayoutComponent,
   PopupContainerComponent,
   UserPanelComponent,
-  SideNavigationMenuComponent,
   HeaderComponent,
   ChangePasswordComponent
 ];

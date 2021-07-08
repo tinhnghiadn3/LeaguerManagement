@@ -22,6 +22,8 @@ namespace LeaguerManagement.Entities.Contexts
         public virtual DbSet<AccessOfRole> AccessOfRoles { get; set; }
         public virtual DbSet<AppliedDocument> AppliedDocuments { get; set; }
         public virtual DbSet<AppliedDocumentAttachment> AppliedDocumentAttachments { get; set; }
+        public virtual DbSet<ChangeOfficialDocument> ChangeOfficialDocuments { get; set; }
+        public virtual DbSet<ChangeOfficialDocumentType> ChangeOfficialDocumentTypes { get; set; }
         public virtual DbSet<Leaguer> Leaguers { get; set; }
         public virtual DbSet<LeaguerAttachment> LeaguerAttachments { get; set; }
         public virtual DbSet<Pronoun> Pronouns { get; set; }
@@ -62,7 +64,7 @@ namespace LeaguerManagement.Entities.Contexts
                     .WithMany(p => p.AppliedDocuments)
                     .HasForeignKey(d => d.LeaguerId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__AppliedDo__Leagu__33D4B598");
+                    .HasConstraintName("FK__AppliedDo__Leagu__03F0984C");
             });
 
             modelBuilder.Entity<AppliedDocumentAttachment>(entity =>
@@ -81,7 +83,24 @@ namespace LeaguerManagement.Entities.Contexts
                     .WithMany(p => p.AppliedDocumentAttachments)
                     .HasForeignKey(d => d.AppliedDocumentId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__AppliedDo__Appli__36B12243");
+                    .HasConstraintName("FK__AppliedDo__Appli__06CD04F7");
+            });
+
+            modelBuilder.Entity<ChangeOfficialDocument>(entity =>
+            {
+                entity.ToTable("ChangeOfficialDocument");
+
+                entity.Property(e => e.Name).IsRequired();
+
+                entity.HasOne(d => d.ChangeOfficialDocumentType)
+                    .WithMany(p => p.ChangeOfficialDocuments)
+                    .HasForeignKey(d => d.ChangeOfficialDocumentTypeId)
+                    .HasConstraintName("FK__ChangeOff__Chang__01142BA1");
+            });
+
+            modelBuilder.Entity<ChangeOfficialDocumentType>(entity =>
+            {
+                entity.ToTable("ChangeOfficialDocumentType");
             });
 
             modelBuilder.Entity<Leaguer>(entity =>

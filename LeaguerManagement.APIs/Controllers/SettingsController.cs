@@ -63,13 +63,13 @@ namespace LeaguerManagement.APIs.Controllers
         }
 
         [HttpPost("access-controls")]
-        public async Task<bool> AddAccessControl([FromBody] AccessControlModel input)
+        public async Task<bool> AddAccessControl([FromBody] BaseSettingModel input)
         {
             return await _settingService.AddAccessControl(input);
         }
 
         [HttpPut("access-controls")]
-        public async Task<bool> UpdateDepartment([FromBody] AccessControlModel input)
+        public async Task<bool> UpdateDepartment([FromBody] BaseSettingModel input)
         {
             return await _settingService.UpdateAccessControl(input);
         }
@@ -119,5 +119,62 @@ namespace LeaguerManagement.APIs.Controllers
         }
 
         #endregion
+
+        #region ChangeOfficialDocumentType
+
+        [HttpPost("official-document-types/search")]
+        public async Task<LoadResult> GetChangeOfficialDocumentTypes(DataSourceLoadOptionsBase loadOptions)
+        {
+            return await _settingService.GetChangeOfficialDocumentTypes(loadOptions);
+        }
+
+        [HttpPost("official-document-types")]
+        public async Task<bool> AddChangeOfficialDocumentType([FromBody] BaseSettingModel input)
+        {
+            return await _settingService.AddChangeOfficialDocumentType(input);
+        }
+
+        [HttpPut("official-document-types")]
+        public async Task<bool> UpdateChangeOfficialDocumentType([FromBody] BaseSettingModel input)
+        {
+            return await _settingService.UpdateChangeOfficialDocumentType(input);
+        }
+
+        [HttpDelete("official-document-types/{id:int}")]
+        public async Task<bool> DeleteChangeOfficialDocumentType([FromRoute] int id)
+        {
+            return await _settingService.DeleteChangeOfficialDocumentType(id);
+        }
+
+        #endregion
+
+        #region ChangeOfficialDocument
+
+        [HttpPost("official-documents/search")]
+        public async Task<LoadResult> GetChangeOfficialDocuments(DataSourceLoadOptionsBase loadOptions)
+        {
+            return await _settingService.GetChangeOfficialDocuments(loadOptions);
+        }
+
+        [HttpPost("official-documents")]
+        public async Task<bool> AddChangeOfficialDocument([FromBody] ChangeOfficialDocumentModel input)
+        {
+            return await _settingService.AddChangeOfficialDocument(input);
+        }
+
+        [HttpPut("official-documents")]
+        public async Task<bool> UpdateChangeOfficialDocument([FromBody] ChangeOfficialDocumentModel input)
+        {
+            return await _settingService.UpdateChangeOfficialDocument(input);
+        }
+
+        [HttpDelete("official-documents/{id:int}")]
+        public async Task<bool> DeleteChangeOfficialDocument([FromRoute] int id)
+        {
+            return await _settingService.DeleteChangeOfficialDocument(id);
+        }
+
+        #endregion
+
     }
 }

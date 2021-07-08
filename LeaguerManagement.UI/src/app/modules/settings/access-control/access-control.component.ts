@@ -216,7 +216,7 @@ export class AccessControlComponent implements OnInit, OnDestroy {
     const updating: AccessControlModel = e;
     updating.name = updating.name.trim();
     if (isEqual(updating, this.selectedAccessControl)) {
-      this.isShowEditingPopup = false;
+      this.isShowEditingAccessControlPopup = false;
       return;
     }
     this.showProcessing();

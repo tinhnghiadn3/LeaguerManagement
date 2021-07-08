@@ -14,6 +14,8 @@
       <app-access-control *ngIf="selectedTab.value === settingValue.RoleAndAccessControl"></app-access-control>
 
       <app-user *ngIf="selectedTab.value === settingValue.User"></app-user>
+
+      <app-change-official-document *ngIf="selectedTab.value === settingValue.OfficialDocument"></app-change-official-document>
     </div>
   </div>
 </app-layout-default>

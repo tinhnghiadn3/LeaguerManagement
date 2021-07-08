@@ -74,11 +74,13 @@ export const ResultStatusItems = [
 export const SETTING_VALUE = {
   RoleAndAccessControl: 0,
   User: 1,
+  OfficialDocument: 2
 };
 
 export const SETTING_ITEMS = [
   {value: SETTING_VALUE.RoleAndAccessControl, text: 'Quyền'},
   {value: SETTING_VALUE.User, text: 'Người dùng'},
+  {value: SETTING_VALUE.OfficialDocument, text: 'Loai giấy tờ/biểu mẫu'},
 ];
 
 /**
