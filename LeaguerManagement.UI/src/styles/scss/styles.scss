@@ -110,7 +110,7 @@ i.fas, i.far {
  * Form
  */
 .form-wrapper {
-  padding: 10px;
+  //padding: 10px;
   //border: 2px solid $base-accent;
 
   .form-group {
@@ -177,7 +177,7 @@ i.fas, i.far {
     .field-label {
       text-align: left;
       margin-bottom: 0.15rem;
-      max-width: 30%;
+      min-width: 30%;
 
       .lbl-required {
         color: red;

@@ -13,6 +13,8 @@ export enum LookupDataType {
   Roles = 'Roles',
   Units = 'Units',
   Statuses = 'Statuses',
+  ChangeOfficialDocumentTypes = 'ChangeOfficialDocumentTypes',
+  ChangeOfficialDocuments = 'ChangeOfficialDocuments',
 }
 
 export enum AppLeaguerStatus {

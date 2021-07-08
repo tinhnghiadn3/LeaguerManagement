@@ -7,6 +7,8 @@ namespace LeaguerManagement.Entities.ViewModels
         public IList<DropDownModel<int>> Roles { get; set; }
         public IList<DropDownModel<int>> Units { get; set; }
         public IList<DropDownModel<int>> Statuses { get; set; }
+        public IList<DropDownModel<int>> ChangeOfficialDocumentTypes { get; set; }
+        public IList<ChangeOfficialDocumentModel> ChangeOfficialDocuments { get; set; }
 
         public LookupModel()
         {

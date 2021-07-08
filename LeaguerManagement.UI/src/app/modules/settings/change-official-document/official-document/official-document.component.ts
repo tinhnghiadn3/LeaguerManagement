@@ -1,19 +1,20 @@
 import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {DxValidationGroupComponent} from 'devextreme-angular';
-import {BaseSettingModel} from '@app/models';
+import {ChangeOfficialDocumentModel, DropDownModel} from '@app/models';
 import {GENERAL_MESSAGE} from '@app/shared/messages';
 import {cloneDeep} from 'lodash';
+
 @Component({
-  selector: 'app-base-setting-editing',
-  templateUrl: './base-setting-editing.component.html',
-  styleUrls: ['./base-setting-editing.component.scss']
+  selector: 'app-official-document',
+  templateUrl: './official-document.component.html',
+  styleUrls: ['./official-document.component.scss']
 })
-export class BaseSettingEditingComponent implements OnInit {
+export class OfficialDocumentComponent implements OnInit {
   @ViewChild('validationGroup', {static: false}) validationGroup: DxValidationGroupComponent;
 
-  @Input() fieldLabel: string = 'Tên';
   @Input() isProcessing: boolean = false;
-  @Input() selectedModel: BaseSettingModel = new BaseSettingModel();
+  @Input() selectedDocument: ChangeOfficialDocumentModel = new ChangeOfficialDocumentModel();
+  @Input() types: DropDownModel[] = [];
 
   private _visible: boolean = false;
   @Input()
@@ -27,9 +28,9 @@ export class BaseSettingEditingComponent implements OnInit {
   }
 
   @Output() visibleChange = new EventEmitter();
-  @Output() onEditingModelChange: EventEmitter<BaseSettingModel> = new EventEmitter<BaseSettingModel>();
+  @Output() onSaveDocument: EventEmitter<ChangeOfficialDocumentModel> = new EventEmitter<ChangeOfficialDocumentModel>();
 
-  model: BaseSettingModel = new BaseSettingModel();
+  document: ChangeOfficialDocumentModel = new ChangeOfficialDocumentModel();
 
   GENERAL_MESSAGE = GENERAL_MESSAGE;
 
@@ -37,12 +38,12 @@ export class BaseSettingEditingComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.model = cloneDeep(this.selectedModel);
+    this.document = cloneDeep(this.selectedDocument);
   }
 
   onSave() {
     if (this.validationGroup.instance.validate().isValid) {
-      this.onEditingModelChange.emit(this.model);
+      this.onSaveDocument.emit(this.document);
     }
   }
 

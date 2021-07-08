@@ -29,12 +29,11 @@ export * from './shared/statistics.model';
 export * from './settings/access-control.model';
 export * from './settings/user-role.model';
 export * from './settings/base-setting.model';
-export * from './settings/apartment.model';
-export * from './settings/notification.model';
-export * from './settings/ward.model';
-export * from './settings/holiday.model';
+export * from './settings/change-official-document.model';
 
 /**
  * Staffs
  */
 export * from './leaguers/leaguer.model';
+export * from './leaguers/applied-document.model';
+export * from './leaguers/check-exist-data.model';

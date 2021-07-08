@@ -69,5 +69,35 @@ namespace LeaguerManagement.Repositories
             var avatar = await repository.Entities.FirstOrDefaultAsync(_ => _.LeaguerId == leaguerId && _.IsAvatar);
             return avatar?.Id ?? 0; 
         }
+
+        public static async Task<List<AppliedDocument>> GetMores(this IRepository<AppliedDocument> repository, IEnumerable<int> ids)
+        {
+            return await repository.Entities.Where(_ => ids.Contains(_.Id)).ToListAsync();
+        }
+
+        public static async Task<IList<ReferenceWithAttachmentModel<AppliedDocumentModel>>> GetOfficialDocuments(this IRepository<AppliedDocument> repository, int leaguerId)
+        {
+            var source = new List<ReferenceWithAttachmentModel<AppliedDocumentModel>>();
+            await repository.LoadStoredProc("spGetOfficialDocuments")
+                .WithSqlParam("@LeaguerId", leaguerId)
+                .ExecuteStoredProcAsync((result) =>
+                {
+                    var appliedDocuments = result.ReadNextListOrEmpty<AppliedDocumentModel>().ToList();
+
+                    if (!appliedDocuments.Any()) return;
+                    
+                    var attachments = result.ReadNextListOrEmpty<AttachmentModel>().ToList();
+
+                    source.AddRange(from appliedDocument in appliedDocuments
+                        let modelAttachments = attachments.Where(_ => _.ReferenceId == appliedDocument.Id).ToList()
+                        select new ReferenceWithAttachmentModel<AppliedDocumentModel>
+                        {
+                            Reference = appliedDocument, Attachments = modelAttachments,
+                            TotalAttachments = modelAttachments.Count
+                        });
+                });
+
+            return source;
+        }
     }
 }

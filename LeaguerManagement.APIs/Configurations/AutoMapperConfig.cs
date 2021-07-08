@@ -15,11 +15,12 @@ namespace LeaguerManagement.APIs.Configurations
             CreateMap<UserTokenModel, UserToken>().ReverseMap();
             // Settings
             CreateMap<User, UserModel>().ReverseMap();
-            CreateMap<AccessControl, AccessControlModel>().ReverseMap();
+            CreateMap<AccessControl, BaseSettingModel>().ReverseMap();
             CreateMap<Role, RoleModel>().ReverseMap();
             // Leaguer
             CreateMap<Leaguer, LeaguerModel>().ReverseMap();
             CreateMap<LeaguerAttachment, AttachmentModel>().ReverseMap();
+            CreateMap<ChangeOfficialDocument, ChangeOfficialDocumentModel>().ReverseMap();
         }
     }
 }

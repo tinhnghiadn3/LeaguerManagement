@@ -8,6 +8,8 @@ import {ThemeModule} from '@app/theme/theme.module';
 import {AccessControlEditComponent} from './access-control/access-control-edit/access-control-edit.component';
 import {UserEditingComponent} from '@app/modules/settings/user/user-editing/user-editing.component';
 import { RoleEditComponent } from './access-control/role-edit/role-edit.component';
+import { ChangeOfficialDocumentComponent } from './change-official-document/change-official-document.component';
+import { OfficialDocumentComponent } from './change-official-document/official-document/official-document.component';
 
 @NgModule({
   declarations: [
@@ -17,6 +19,8 @@ import { RoleEditComponent } from './access-control/role-edit/role-edit.componen
     AccessControlComponent,
     AccessControlEditComponent,
     RoleEditComponent,
+    ChangeOfficialDocumentComponent,
+    OfficialDocumentComponent,
   ],
   imports: [
     ThemeModule,

@@ -1,0 +1,217 @@
+<dx-load-panel *ngIf="isProcessing"
+               [visible]="true" [showPane]="false"
+               [message]="'Processing'">
+</dx-load-panel>
+
+<ng-container>
+  <div class="row">
+    <div class="col-12 mb-2 settings-title">Quản lý loại giấy tờ/biểu mẫu công nhận Đảng viên chính thức</div>
+    <div class="col-lg-6">
+      <dx-data-grid
+        class="settings-grid"
+        keyExpr="id"
+        [class.loading]="!typeDataSource.isLoaded()"
+        [dataSource]="typeDataSource"
+        [showRowLines]="true"
+        [showColumnLines]="true"
+        [showBorders]="true"
+        [hoverStateEnabled]="true"
+        [columnResizingMode]="'widget'"
+        [allowColumnResizing]="true"
+        [rowAlternationEnabled]="true">
+        <dxo-filter-row [visible]="true" [showOperationChooser]="true"></dxo-filter-row>
+        <dxo-remote-operations [filtering]="true" [sorting]="true" [paging]="true"></dxo-remote-operations>
+        <dxo-paging [pageSize]="pageSize"></dxo-paging>
+        <dxo-pager [showInfo]="true"
+                   [showPageSizeSelector]="false"
+                   [visible]="true"
+                   [showNavigationButtons]="true">
+        </dxo-pager>
+        <dxo-editing mode="form">
+          <dxo-texts saveRowChanges="Save"
+                     editRow="Edit"
+                     deleteRow="Delete"
+                     cancelRowChanges="Cancel">
+          </dxo-texts>
+        </dxo-editing>
+        <dxo-load-panel [showPane]="false"></dxo-load-panel>
+
+        <dxi-column caption="STT"
+                    alignment="center"
+                    [allowFiltering]="false"
+                    [allowEditing]="false"
+                    [allowSorting]="false"
+                    [allowResizing]="false"
+                    [formItem]="{visible: false}"
+                    [width]="80"
+                    [fixed]="true"
+                    headerCellTemplate="indexHeaderCellTemplate"
+                    cellTemplate="indexCellTemplate">
+          <div *dxTemplate="let row of 'indexHeaderCellTemplate'">
+            <dx-button type="default" icon="plus" class="btn-add-row-circle"
+                       [stylingMode]="'outlined'"
+                       hint="Add Row"
+                       (onClick)="onShowEditingPopup(row.data)">
+            </dx-button>
+          </div>
+          <div *dxTemplate="let cell of 'indexCellTemplate'">
+            <ng-container>
+              {{cell.rowIndex + 1}}
+            </ng-container>
+          </div>
+        </dxi-column>
+
+        <dxi-column dataField="name" caption="Loại giấy tờ/biểu mẫu"
+                    [minWidth]="200">
+        </dxi-column>
+
+        <dxi-column caption="Thao tác"
+                    type="'buttons'"
+                    alignment="center"
+                    [fixed]="true"
+                    fixedPosition="right"
+                    [width]="80"
+                    [allowFiltering]="false"
+                    [allowSorting]="false"
+                    [allowResizing]="false"
+                    [allowEditing]="false"
+                    cellTemplate="actionsCellTemplate">
+          <div *dxTemplate="let cell of 'actionsCellTemplate'">
+            <div class="action-inline text-center">
+              <i class="fas fa-pencil-alt" title="Sửa"
+                 (click)="onShowEditingPopup(cell.data)"></i>
+              <i class="far fa-trash-alt" title="Xóa"
+                 (click)="openDeletingConfirmPopup(cell.data, $event)"></i>
+            </div>
+          </div>
+        </dxi-column>
+      </dx-data-grid>
+    </div>
+    <div class="col-lg-6">
+      <dx-data-grid
+        class="settings-grid"
+        keyExpr="id"
+        [class.loading]="!documentDataSource.isLoaded()"
+        [dataSource]="documentDataSource"
+        [showRowLines]="true"
+        [showColumnLines]="true"
+        [showBorders]="true"
+        [hoverStateEnabled]="true"
+        [columnResizingMode]="'widget'"
+        [allowColumnResizing]="true"
+        [rowAlternationEnabled]="true">
+        <dxo-filter-row [visible]="true" [showOperationChooser]="true"></dxo-filter-row>
+        <dxo-remote-operations [filtering]="true" [sorting]="true" [paging]="true"></dxo-remote-operations>
+        <dxo-paging [pageSize]="pageSize"></dxo-paging>
+        <dxo-pager [showInfo]="true"
+                   [showPageSizeSelector]="false"
+                   [visible]="true"
+                   [showNavigationButtons]="true">
+        </dxo-pager>
+        <dxo-editing mode="form">
+          <dxo-texts saveRowChanges="Save"
+                     editRow="Edit"
+                     deleteRow="Delete"
+                     cancelRowChanges="Cancel">
+          </dxo-texts>
+        </dxo-editing>
+        <dxo-load-panel [showPane]="false"></dxo-load-panel>
+
+        <dxi-column caption="STT"
+                    alignment="center"
+                    [allowFiltering]="false"
+                    [allowEditing]="false"
+                    [allowSorting]="false"
+                    [allowResizing]="false"
+                    [formItem]="{visible: false}"
+                    [width]="80"
+                    [fixed]="true"
+                    headerCellTemplate="indexHeaderCellTemplate"
+                    cellTemplate="indexCellTemplate">
+          <div *dxTemplate="let row of 'indexHeaderCellTemplate'">
+            <dx-button type="default" icon="plus" class="btn-add-row-circle"
+                       [stylingMode]="'outlined'"
+                       hint="Add Row"
+                       (onClick)="onShowEditingDocumentPopup(row.data)">
+            </dx-button>
+          </div>
+          <div *dxTemplate="let cell of 'indexCellTemplate'">
+            <ng-container>
+              {{cell.rowIndex + 1}}
+            </ng-container>
+          </div>
+        </dxi-column>
+
+        <dxi-column dataField="name" caption="Giấy tờ/biểu mẫu"
+                    [minWidth]="200">
+        </dxi-column>
+
+        <dxi-column dataField="changeOfficialDocumentTypeId" caption="Thuộc loại"
+                    [minWidth]="200">
+          <dxo-lookup
+            [dataSource]="types"
+            displayExpr="value"
+            valueExpr="key">
+          </dxo-lookup>
+        </dxi-column>
+
+        <dxi-column caption="Thao tác"
+                    type="'buttons'"
+                    alignment="center"
+                    [fixed]="true"
+                    fixedPosition="right"
+                    [width]="80"
+                    [allowFiltering]="false"
+                    [allowSorting]="false"
+                    [allowResizing]="false"
+                    [allowEditing]="false"
+                    cellTemplate="actionsCellTemplate">
+          <div *dxTemplate="let cell of 'actionsCellTemplate'">
+            <div class="action-inline text-center">
+              <i class="fas fa-pencil-alt" title="Sửa"
+                 (click)="onShowEditingDocumentPopup(cell.data)"></i>
+              <i class="far fa-trash-alt" title="Xóa"
+                 (click)="openDeletingDocumentConfirmPopup(cell.data, $event)"></i>
+            </div>
+          </div>
+        </dxi-column>
+      </dx-data-grid>
+    </div>
+  </div>
+</ng-container>
+
+<app-popover-confirm-box #deletingConfirmBox
+                         [message]="GENERAL_MESSAGE.DeleteRecordConfirmQuestion.format('Loại giấy tờ/biểu mẫu', selectedType.name)"
+                         (onConfirm)="deleteChangeOfficialDocumentType()">
+</app-popover-confirm-box>
+
+<app-popover-confirm-box #deletingAccessControlConfirmBox
+                         [message]="GENERAL_MESSAGE.DeleteRecordConfirmQuestion.format('Giấy tờ/biểu mẫu', selectedDocument.name)"
+                         (onConfirm)="deleteChangeOfficialDocument()">
+</app-popover-confirm-box>
+
+<app-popup-container *ngIf="isShowEditingPopup"
+                     [title]="!selectedType.id ? 'Tạo mới Loại giấy tờ/biểu mẫu' : 'Cập nhật Loại giấy tờ/biểu mẫu'"
+                     [width]="550"
+                     [height]="'100%'"
+                     [position]="'right'"
+                     [(visible)]="isShowEditingPopup">
+  <app-base-setting-editing [selectedModel]="selectedType"
+                            [(visible)]="isShowEditingPopup"
+                            [isProcessing]="isProcessing"
+                            (onEditingModelChange)="onSaveType($event)"
+                            [fieldLabel]="'Tên Loại giấy tờ/biểu mẫu'"
+  ></app-base-setting-editing>
+</app-popup-container>
+
+<app-popup-container *ngIf="isShowEditingDocumentPopup"
+                     [title]="!selectedDocument.id ? 'Tạo Giấy tờ/biểu mẫu' : 'Cập Giấy tờ/biểu mẫu'"
+                     [width]="550"
+                     [height]="'100%'"
+                     [position]="'right'"
+                     [(visible)]="isShowEditingDocumentPopup">
+  <app-official-document [(visible)]="isShowEditingDocumentPopup"
+                         [selectedDocument]="selectedDocument" [types]="types"
+                         (onSaveDocument)="onSaveDocument($event)"
+  ></app-official-document>
+</app-popup-container>

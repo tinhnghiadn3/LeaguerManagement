@@ -59,6 +59,12 @@ export class LookupService {
           case LookupDataType.Statuses:
             currentLookup.statuses = data.statuses;
             break;
+          case LookupDataType.ChangeOfficialDocumentTypes:
+            currentLookup.changeOfficialDocumentTypes = data.changeOfficialDocumentTypes;
+            break;
+          case LookupDataType.ChangeOfficialDocuments:
+            currentLookup.changeOfficialDocuments = data.changeOfficialDocuments;
+            break;
           default:
             break;
         }

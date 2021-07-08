@@ -64,6 +64,11 @@ namespace LeaguerManagement.APIs.Controllers
             return await _leaguerService.UpdateLeaguer(input);
         }
 
+        [HttpGet("{id:int}/official-documents")]
+        public async Task<IList<ReferenceWithAttachmentModel<AppliedDocumentModel>>> GetOfficialDocuments([FromRoute] int id)
+        {
+            return await _leaguerService.GetOfficialDocuments(id);
+        }
 
         [HttpPost("{leaguerId:int}/attachments")]
         public async Task<IList<AttachmentModel>> PostFileAsync([FromRoute] int leaguerId)

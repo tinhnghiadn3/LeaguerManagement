@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -25,6 +26,8 @@ namespace LeaguerManagement.Services
         private IRepository<AccessOfRole> _accessOfRoleRepository;
         private IRepository<User> _userRepository;
         private IRepository<UserRole> _userRoleRepository;
+        private IRepository<ChangeOfficialDocumentType> _changeOfficialDocumentType;
+        private IRepository<ChangeOfficialDocument> _changeOfficialDocument;
 
         public SettingService(Func<IUnitOfWork> unitOfWorkFactory, IMapper mapper,
             ILogger logger, IOptionsSnapshot<GlobalSettings> settings) : base(unitOfWorkFactory, settings)
@@ -52,6 +55,11 @@ namespace LeaguerManagement.Services
                     //
                     Statuses = (await unitOfWork.Repository<Status>().GetAllAsync()).Select(_ =>
                         new DropDownModel<int> { Key = _.Id, Value = _.Name }).ToList(),
+                    //
+                    ChangeOfficialDocumentTypes = (await unitOfWork.Repository<ChangeOfficialDocumentType>().GetAllAsync()).Select(_ =>
+                        new DropDownModel<int> { Key = _.Id, Value = _.Name }).ToList(),
+                    //
+                    ChangeOfficialDocuments = _mapper.Map<IList<ChangeOfficialDocumentModel>>(await unitOfWork.Repository<ChangeOfficialDocument>().GetAllAsync()).ToList(),
                 };
             }
 
@@ -74,6 +82,19 @@ namespace LeaguerManagement.Services
             {
                 result.Statuses = (await unitOfWork.Repository<Status>().GetAllAsync()).Select(_ =>
                     new DropDownModel<int> { Key = _.Id, Value = _.Name }).ToList();
+            }
+
+            if (string.IsNullOrEmpty(keys) ||
+                keyArray.Any(_ => _ == AppDropdownDataType.ChangeOfficialDocumentTypes.ToString()))
+            {
+                result.ChangeOfficialDocumentTypes = (await unitOfWork.Repository<ChangeOfficialDocumentType>().GetAllAsync()).Select(_ =>
+                    new DropDownModel<int> { Key = _.Id, Value = _.Name }).ToList();
+            }
+
+            if (string.IsNullOrEmpty(keys) ||
+                keyArray.Any(_ => _ == AppDropdownDataType.ChangeOfficialDocuments.ToString()))
+            {
+                result.ChangeOfficialDocuments = _mapper.Map<IList<ChangeOfficialDocumentModel>>(await unitOfWork.Repository<ChangeOfficialDocument>().GetAllAsync()).ToList();
             }
 
             return result;
@@ -217,7 +238,7 @@ namespace LeaguerManagement.Services
             return LoadCustom(source, loadOptions);
         }
 
-        public async Task<bool> AddAccessControl(AccessControlModel input)
+        public async Task<bool> AddAccessControl(BaseSettingModel input)
         {
             using var unitOfWork = UnitOfWorkFactory.Invoke();
             _accessControlRepository = unitOfWork.Repository<AccessControl>();
@@ -233,7 +254,7 @@ namespace LeaguerManagement.Services
             return true;
         }
 
-        public async Task<bool> UpdateAccessControl(AccessControlModel input)
+        public async Task<bool> UpdateAccessControl(BaseSettingModel input)
         {
             using var unitOfWork = UnitOfWorkFactory.Invoke();
             _accessControlRepository = unitOfWork.Repository<AccessControl>();
@@ -435,6 +456,175 @@ namespace LeaguerManagement.Services
             catch (Exception e)
             {
                 unitOfWork.RollbackTransaction();
+                _logger.Error(e, e.Message);
+                throw new AppException(e.Message);
+            }
+        }
+
+        #endregion
+
+        #region ChangeOfficialDocumentType
+
+        public async Task<LoadResult> GetChangeOfficialDocumentTypes(DataSourceLoadOptionsBase loadOptions)
+        {
+            using var unitOfWork = UnitOfWorkFactory.Invoke();
+            _changeOfficialDocumentType = unitOfWork.Repository<ChangeOfficialDocumentType>();
+
+            var types = (await _changeOfficialDocumentType.GetAllAsync()).ToList();
+            return LoadCustom(types, loadOptions);
+        }
+
+        public async Task<bool> AddChangeOfficialDocumentType(BaseSettingModel input)
+        {
+            using var unitOfWork = UnitOfWorkFactory.Invoke();
+            _changeOfficialDocumentType = unitOfWork.Repository<ChangeOfficialDocumentType>();
+
+            try
+            {
+                if (await _changeOfficialDocumentType.IsDuplicated(0, input.Name))
+                    throw new AppException(string.Format(AppMessages.ThisObjectIsExist, "Loại giấy tờ/biểu mẫu"));
+
+                // ADD
+                var type = new ChangeOfficialDocumentType { Name = input.Name.Trim() };
+                await _changeOfficialDocumentType.InsertAsync(type);
+                return true;
+            }
+            catch (Exception e)
+            {
+                _logger.Error(e, e.Message);
+                throw new AppException(e.Message);
+            }
+        }
+
+        public async Task<bool> UpdateChangeOfficialDocumentType(BaseSettingModel input)
+        {
+            using var unitOfWork = UnitOfWorkFactory.Invoke();
+            _changeOfficialDocumentType = unitOfWork.Repository<ChangeOfficialDocumentType>();
+
+            try
+            {
+                if (await _changeOfficialDocumentType.IsDuplicated(input.Id, input.Name))
+                    throw new AppException(string.Format(AppMessages.ThisObjectIsExist, "Loại giấy tờ/biểu mẫu"));
+
+                // UPDATE
+                var type = await GetOrThrow(_changeOfficialDocumentType, input.Id, string.Format(AppMessages.ThisObjectNotFound, "Loại giấy tờ/biểu mẫu"));
+                type.Name = input.Name.Trim();
+                await unitOfWork.SaveChangesAsync();
+
+                return true;
+            }
+            catch (Exception e)
+            {
+                _logger.Error(e, e.Message);
+                throw new AppException(e.Message);
+            }
+        }
+
+        public async Task<bool> DeleteChangeOfficialDocumentType(int id)
+        {
+            using var unitOfWork = UnitOfWorkFactory.Invoke();
+            _changeOfficialDocumentType = unitOfWork.Repository<ChangeOfficialDocumentType>();
+
+            try
+            {
+                var type = await GetOrThrow(_changeOfficialDocumentType, id, string.Format(AppMessages.ThisObjectNotFound, "Loại giấy tờ/biểu mẫu"));
+                //
+                // DELETE
+                await _changeOfficialDocumentType.DeleteAsync(type);
+
+                return true;
+            }
+            catch (Exception e)
+            {
+                _logger.Error(e, e.Message);
+                throw new AppException(e.Message);
+            }
+        }
+
+        #endregion
+
+        #region ChangeOfficialDocument
+
+        public async Task<LoadResult> GetChangeOfficialDocuments(DataSourceLoadOptionsBase loadOptions)
+        {
+            using var unitOfWork = UnitOfWorkFactory.Invoke();
+            _changeOfficialDocument = unitOfWork.Repository<ChangeOfficialDocument>();
+
+            var source = (await _changeOfficialDocument.GetAllAsync()).ToList();
+            return LoadCustom(source, loadOptions);
+        }
+
+        public async Task<bool> AddChangeOfficialDocument(ChangeOfficialDocumentModel input)
+        {
+            using var unitOfWork = UnitOfWorkFactory.Invoke();
+            _changeOfficialDocument = unitOfWork.Repository<ChangeOfficialDocument>();
+            _changeOfficialDocumentType = unitOfWork.Repository<ChangeOfficialDocumentType>();
+
+            try
+            {
+                if (await _changeOfficialDocument.IsDuplicated(0, input.Name))
+                    throw new AppException(string.Format(AppMessages.ThisObjectIsExist, "Giấy tờ/biểu mẫu"));
+
+                var type = await GetOrThrow(_changeOfficialDocumentType, input.ChangeOfficialDocumentTypeId,
+                    string.Format(AppMessages.ThisObjectNotFound, "Loại giấy tờ/biểu mẫu"));
+
+                // ADD
+                var changeOfficialDocument = new ChangeOfficialDocument { Name = input.Name.Trim(), ChangeOfficialDocumentTypeId = type.Id };
+                await _changeOfficialDocument.InsertAsync(changeOfficialDocument);
+                return true;
+            }
+            catch (Exception e)
+            {
+                _logger.Error(e, e.Message);
+                throw new AppException(e.Message);
+            }
+        }
+
+        public async Task<bool> UpdateChangeOfficialDocument(ChangeOfficialDocumentModel input)
+        {
+            using var unitOfWork = UnitOfWorkFactory.Invoke();
+            _changeOfficialDocument = unitOfWork.Repository<ChangeOfficialDocument>();
+            _changeOfficialDocumentType = unitOfWork.Repository<ChangeOfficialDocumentType>();
+
+            try
+            {
+                if (await _changeOfficialDocument.IsDuplicated(0, input.Name))
+                    throw new AppException(string.Format(AppMessages.ThisObjectIsExist, "Giấy tờ/biểu mẫu"));
+
+                var type = await GetOrThrow(_changeOfficialDocumentType, input.ChangeOfficialDocumentTypeId,
+                    string.Format(AppMessages.ThisObjectNotFound, "Loại giấy tờ/biểu mẫu"));
+                //
+                // UPDATE
+                var changeOfficialDocument = await GetOrThrow(_changeOfficialDocument, input.Id, string.Format(AppMessages.ThisObjectNotFound, "Giấy tờ/biểu mẫu"));
+                changeOfficialDocument.Name = input.Name.Trim();
+                changeOfficialDocument.ChangeOfficialDocumentTypeId = type.Id;
+                await unitOfWork.SaveChangesAsync();
+
+                return true;
+            }
+            catch (Exception e)
+            {
+                _logger.Error(e, e.Message);
+                throw new AppException(e.Message);
+            }
+        }
+
+        public async Task<bool> DeleteChangeOfficialDocument(int id)
+        {
+            using var unitOfWork = UnitOfWorkFactory.Invoke();
+            _changeOfficialDocument = unitOfWork.Repository<ChangeOfficialDocument>();
+
+            try
+            {
+                var changeOfficialDocument = await GetOrThrow(_changeOfficialDocument, id, string.Format(AppMessages.ThisObjectNotFound, "Giấy tờ/biểu mẫu"));
+                //
+                // DELETE
+                await _changeOfficialDocument.DeleteAsync(changeOfficialDocument);
+
+                return true;
+            }
+            catch (Exception e)
+            {
                 _logger.Error(e, e.Message);
                 throw new AppException(e.Message);
             }

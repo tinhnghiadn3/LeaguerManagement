@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using DevExtreme.AspNet.Data;
@@ -25,6 +27,9 @@ namespace LeaguerManagement.Services
 
         private IRepository<Leaguer> _leaguerRepository;
         private IRepository<LeaguerAttachment> _leaguerAttachmentRepository;
+        private IRepository<AppliedDocument> _appliedDocumentRepository;
+        private IRepository<ChangeOfficialDocumentType> _changeOfficialDocumentTypeRepository;
+        private IRepository<ChangeOfficialDocument> _changeOfficialDocumentRepository;
 
 
         public LeaguerService(Func<IUnitOfWork> unitOfWorkFactory, IMapper mapper,
@@ -198,6 +203,75 @@ namespace LeaguerManagement.Services
             }
         }
 
+        public async Task<IList<ReferenceWithAttachmentModel<AppliedDocumentModel>>> GetOfficialDocuments(int leaguerId)
+        {
+            using var unitOfWork = UnitOfWorkFactory.Invoke();
+            _appliedDocumentRepository = unitOfWork.Repository<AppliedDocument>();
+            _changeOfficialDocumentTypeRepository = unitOfWork.Repository<ChangeOfficialDocumentType>();
+            _changeOfficialDocumentRepository = unitOfWork.Repository<ChangeOfficialDocument>();
+
+
+            var officialDocumentTypes = await _changeOfficialDocumentTypeRepository.GetAllAsync();
+            var officialDocuments = await _changeOfficialDocumentRepository.GetAllAsync();
+            var result = await _appliedDocumentRepository.GetOfficialDocuments(leaguerId);
+            try
+            {
+                // if have
+                if (result.Any())
+                {
+                    // if same
+                    if (result.Count == officialDocuments.Count()) return result;
+                    //
+                    unitOfWork.BeginTransaction();
+                    //
+                    // if not same
+                    //
+                    // if missing
+                    var misses = officialDocuments.Where(_ =>
+                        !result.Select(r => r.Reference).Select(x => x.OfficialDocumentId).Contains(_.Id));
+                    var newDocuments = new List<AppliedDocument>();
+                    if (misses.Any())
+                    {
+                        newDocuments.AddRange(misses.Select(miss => new AppliedDocument
+                            {LeaguerId = leaguerId, Name = miss.Name, OfficialDocumentId = miss.Id}));
+                        await _appliedDocumentRepository.InsertRangeAsync(newDocuments);
+                    }
+
+                    // if more than
+                    var moreIds = result.Select(r => r.Reference).Select(r => r.Id)
+                        .Where(_ => !officialDocuments.Select(o => o.Id).Contains(_));
+                    if (moreIds.Any())
+                    {
+                        var mores = await _appliedDocumentRepository.GetMores(moreIds);
+                        if (mores.Any()) await _appliedDocumentRepository.DeleteRangeAsync(mores);
+                    }
+                }
+                //
+                // if not have
+                else
+                
+                {
+                    var appliedDocuments = new List<AppliedDocument>();
+                    foreach (var type in officialDocumentTypes)
+                    {
+                        var documents = officialDocuments.Where(_ => _.ChangeOfficialDocumentTypeId == type.Id);
+                        appliedDocuments.AddRange(documents.Select(document => new AppliedDocument { LeaguerId = leaguerId, Name = document.Name, OfficialDocumentId = document.Id }));
+                    }
+
+                    await _appliedDocumentRepository.InsertRangeAsync(appliedDocuments);
+                }
+                //
+                unitOfWork.CommitTransaction();
+                //
+                return await _appliedDocumentRepository.GetOfficialDocuments(leaguerId);
+            }
+            catch (Exception e)
+            {
+                if (!result.Any() || result.Count != officialDocuments.Count()) unitOfWork.RollbackTransaction();
+                _logger.Error(e, e.Message);
+                throw new AppException(e.Message);
+            }
+        }
 
         public async Task<AttachmentModel> RenameAttachment(int attachmentId, string newName, int constructionId)
         {

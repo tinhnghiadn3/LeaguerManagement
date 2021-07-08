@@ -3,12 +3,12 @@ import {ApiService} from '@app/services/shared';
 import {Observable} from 'rxjs';
 import {API_ENDPOINT} from '@app/services/endpoints';
 import {
-  SearchResultBaseModel, LeaguerModel, ReferenceWithAttachmentModel, AttachmentModel
+  SearchResultBaseModel, LeaguerModel,
+  ReferenceWithAttachmentModel, AttachmentModel, CheckExistDataModel, ChangeOfficialDocumentModel, AppliedDocumentModel
 } from '@app/models';
 import {LoadOptions} from 'devextreme/data/load_options';
 import {HttpEventType, HttpResponse} from '@angular/common/http';
 import {AppNotify} from '@app/shared/utilities/notification-helper';
-import {CheckExistDataModel} from '@app/models/leaguers/check-exist-data.model';
 
 @Injectable({
   providedIn: 'root'
@@ -42,8 +42,16 @@ export class LeaguerService {
     return this.baseService.update(`${API_ENDPOINT.Leaguers}`, updating);
   }
 
-  deleteCartography(fileId: number) {
-    return this.baseService.delete(`${API_ENDPOINT.Leaguers}/cartography/${fileId}`);
+  deleteLeaguer(leagerId: number) {
+    return this.baseService.delete(`${API_ENDPOINT.Leaguers}/${leagerId}`);
+  }
+
+  /**
+   * Applied Official Document
+   */
+
+  getOfficialDocuments(leagerId: number): Observable<ReferenceWithAttachmentModel<AppliedDocumentModel>[]> {
+    return this.baseService.get(`${API_ENDPOINT.Leaguers}/${leagerId}/official-documents`);
   }
 
   /**

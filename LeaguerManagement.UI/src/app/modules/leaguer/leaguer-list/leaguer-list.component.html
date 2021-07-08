@@ -186,13 +186,12 @@
 </app-popup-container>
 
 <app-popup-container *ngIf="isShowTransferringPopup"
-                     title="Thêm mới Đảng viên"
+                     title="Hồ sơ đề nghị công nhận Đảng viên chính thức"
                      [width]="'80%'"
                      [height]="'auto'"
                      [(visible)]="isShowTransferringPopup">
   <app-leaguer-transfer-offical [(visible)]="isShowTransferringPopup"
                       [selectedLeaguer]="selectedLeaguer"
-                      [isProcessing]="isProcessing"
                       (onHidden)="onCancelTransferring()">
   </app-leaguer-transfer-offical>
 </app-popup-container>

@@ -1,0 +1,38 @@
+<div class="form-wrapper">
+  <dx-validation-group #validationGroup>
+    <div class="field">
+      <span class="field-label">Tên Biểu mẫu/giấy tờ <span class="lbl-required">*</span></span>
+      <div class="field-value">
+        <dx-text-box [(value)]="document.name" [maxLength]="255">
+          <dx-validator>
+            <dxi-validation-rule type="required"
+                                 [message]="GENERAL_MESSAGE.TheFieldIsRequired.format('Tên Biểu mẫu/giấy tờ')"></dxi-validation-rule>
+          </dx-validator>
+        </dx-text-box>
+      </div>
+    </div>
+    <div class="field">
+      <span class="field-label">Loại Biểu mẫu/giấy tờ <span class="lbl-required">*</span></span>
+      <div class="field-value">
+        <dx-select-box [dataSource]="types" class="field-value w-100"
+                       displayExpr="value"
+                       valueExpr="key"
+                       placeholder="Chọn..."
+                       [(value)]="document.changeOfficialDocumentTypeId"
+                       [valueChangeEvent]="'input'">
+          <dx-validator>
+            <dxi-validation-rule type="required"
+                                 [message]="GENERAL_MESSAGE.TheFieldIsRequired.format('Loại Biểu mẫu/giấy tờ')"></dxi-validation-rule>
+          </dx-validator>
+        </dx-select-box>
+      </div>
+    </div>
+    <div class="field-action">
+      <dx-button class="mr-2" type="default"
+                 [text]="isProcessing ? '' : 'Lưu'"
+                 icon="{{isProcessing?'fas fa-spinner fa-spin':''}}"
+                 (onClick)="onSave()" [disabled]="isProcessing"></dx-button>
+      <dx-button text="Hủy" (onClick)="onCancel()"></dx-button>
+    </div>
+  </dx-validation-group>
+</div>
