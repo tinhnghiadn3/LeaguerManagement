@@ -27,6 +27,7 @@ export class UserComponent implements OnInit, OnDestroy {
   userDataSource: DataSource;
   users: UserModel[] = [];
   roles: DropDownModel[] = [];
+  units: DropDownModel[] = [];
 
   currentUser: LoggedUserModel = new LoggedUserModel();
   selectedUser: UserModel = new UserModel();
@@ -46,6 +47,7 @@ export class UserComponent implements OnInit, OnDestroy {
     this.subscription.add(
       this.lookupService.lookup.subscribe(lookup => {
         this.roles = lookup.roles;
+        this.units = lookup.units;
       }));
   }
 

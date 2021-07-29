@@ -30,14 +30,17 @@ export const ALLOWED_AVATAR_TYPES = ['.JPG', '.jpg', '.jpeg', '.png', '.gif'];
 
 export const AppRoleValue = {
   Admin: 1,
+  Manager: 2,
 };
 
 export const AccessControlValue = {
   Settings: 1,
+  Users: 2,
 };
 
 export const AccessControls = [
   {id: AccessControlValue.Settings, name: 'Cài đặt hệ thống', symbol: 'Settings'},
+  {id: AccessControlValue.Users, name: 'Quản trị người dùng', symbol: 'Users'},
 ];
 
 export const ADDING_USER_TYPE_VALUE = {

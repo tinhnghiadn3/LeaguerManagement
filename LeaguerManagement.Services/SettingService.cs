@@ -39,7 +39,7 @@ namespace LeaguerManagement.Services
 
         public async Task<LookupModel> GetLookup(string keys)
         {
-            using var unitOfWork = UnitOfWorkFactory.Invoke();
+            using var unitOfWork = UnitOfWorkFactory();
             var keyArray = keys?.Split(',');
             var result = new LookupModel();
 
@@ -104,7 +104,7 @@ namespace LeaguerManagement.Services
 
         public async Task<LoadResult> GetRoles(DataSourceLoadOptionsBase loadOptions)
         {
-            using var unitOfWork = UnitOfWorkFactory.Invoke();
+            using var unitOfWork = UnitOfWorkFactory();
             _roleRepository = unitOfWork.Repository<Role>();
 
             var owners = await _roleRepository.GetRoles();
@@ -113,7 +113,7 @@ namespace LeaguerManagement.Services
 
         public async Task<bool> AddRole(RoleModel input)
         {
-            using var unitOfWork = UnitOfWorkFactory.Invoke();
+            using var unitOfWork = UnitOfWorkFactory();
             _roleRepository = unitOfWork.Repository<Role>();
             _accessOfRoleRepository = unitOfWork.Repository<AccessOfRole>();
 
@@ -150,7 +150,7 @@ namespace LeaguerManagement.Services
 
         public async Task<bool> UpdateRole(RoleModel input)
         {
-            using var unitOfWork = UnitOfWorkFactory.Invoke();
+            using var unitOfWork = UnitOfWorkFactory();
             _roleRepository = unitOfWork.Repository<Role>();
             _accessOfRoleRepository = unitOfWork.Repository<AccessOfRole>();
             try
@@ -199,7 +199,7 @@ namespace LeaguerManagement.Services
 
         public async Task<bool> DeleteRole(int id)
         {
-            using var unitOfWork = UnitOfWorkFactory.Invoke();
+            using var unitOfWork = UnitOfWorkFactory();
             _roleRepository = unitOfWork.Repository<Role>();
             _accessOfRoleRepository = unitOfWork.Repository<AccessOfRole>();
             try
@@ -231,7 +231,7 @@ namespace LeaguerManagement.Services
 
         public async Task<LoadResult> GetAccessControls(DataSourceLoadOptionsBase loadOptions)
         {
-            using var unitOfWork = UnitOfWorkFactory.Invoke();
+            using var unitOfWork = UnitOfWorkFactory();
             _accessControlRepository = unitOfWork.Repository<AccessControl>();
 
             var source = (await _accessControlRepository.GetAllAsync()).ToList();
@@ -240,7 +240,7 @@ namespace LeaguerManagement.Services
 
         public async Task<bool> AddAccessControl(BaseSettingModel input)
         {
-            using var unitOfWork = UnitOfWorkFactory.Invoke();
+            using var unitOfWork = UnitOfWorkFactory();
             _accessControlRepository = unitOfWork.Repository<AccessControl>();
 
             if (await _accessControlRepository.IsDuplicated(0, input.Name))
@@ -256,7 +256,7 @@ namespace LeaguerManagement.Services
 
         public async Task<bool> UpdateAccessControl(BaseSettingModel input)
         {
-            using var unitOfWork = UnitOfWorkFactory.Invoke();
+            using var unitOfWork = UnitOfWorkFactory();
             _accessControlRepository = unitOfWork.Repository<AccessControl>();
 
             if (await _accessControlRepository.IsDuplicated(input.Id, input.Name))
@@ -273,7 +273,7 @@ namespace LeaguerManagement.Services
 
         public async Task<bool> DeleteAccessControl(int id)
         {
-            using var unitOfWork = UnitOfWorkFactory.Invoke();
+            using var unitOfWork = UnitOfWorkFactory();
             _accessControlRepository = unitOfWork.Repository<AccessControl>();
 
             var accessControl = await GetOrThrow(_accessControlRepository, id, string.Format(AppMessages.ThisObjectNotFound, "Quyền"));
@@ -288,7 +288,7 @@ namespace LeaguerManagement.Services
 
         public async Task<bool> UpdateAccessOfRole(AccessOfRoleModel input)
         {
-            using var unitOfWork = UnitOfWorkFactory.Invoke();
+            using var unitOfWork = UnitOfWorkFactory();
             _roleRepository = unitOfWork.Repository<Role>();
             _accessControlRepository = unitOfWork.Repository<AccessControl>();
             _accessOfRoleRepository = unitOfWork.Repository<AccessOfRole>();
@@ -321,7 +321,7 @@ namespace LeaguerManagement.Services
 
         public async Task<LoadResult> GetUsers(DataSourceLoadOptionsBase loadOptions)
         {
-            using var unitOfWork = UnitOfWorkFactory.Invoke();
+            using var unitOfWork = UnitOfWorkFactory();
             try
             {
                 _userRepository = unitOfWork.Repository<User>();
@@ -338,7 +338,7 @@ namespace LeaguerManagement.Services
 
         public async Task<bool> AddUser(UserModel input)
         {
-            using var unitOfWork = UnitOfWorkFactory.Invoke();
+            using var unitOfWork = UnitOfWorkFactory();
             _userRepository = unitOfWork.Repository<User>();
             _userRoleRepository = unitOfWork.Repository<UserRole>();
 
@@ -357,7 +357,7 @@ namespace LeaguerManagement.Services
                     Name = input.Name.Trim(),
                     Password = PasswordHash.GetHash(string.Concat(input.Password, salt)),
                     Salt = salt,
-                    JobPosition = input.JobPosition
+                    UnitId = input.UnitId,
                 };
                 await _userRepository.InsertAsync(user);
                 //
@@ -382,7 +382,7 @@ namespace LeaguerManagement.Services
 
         public async Task<bool> UpdateUser(UserModel input)
         {
-            using var unitOfWork = UnitOfWorkFactory.Invoke();
+            using var unitOfWork = UnitOfWorkFactory();
             _userRepository = unitOfWork.Repository<User>();
             _userRoleRepository = unitOfWork.Repository<UserRole>();
 
@@ -396,7 +396,7 @@ namespace LeaguerManagement.Services
                 var user = await GetOrThrow(_userRepository, input.Id, string.Format(AppMessages.ThisObjectNotFound, "Người dùng"));
                 user.Email = input.Email.Trim();
                 user.Name = input.Name.Trim();
-
+                user.UnitId = input.UnitId;
                 //
                 // UPDATE USER ROLE
                 var userRole = await _userRoleRepository.GetActivatedUserRole(user.Id) ??
@@ -433,7 +433,7 @@ namespace LeaguerManagement.Services
 
         public async Task<bool> DeleteUser(int id)
         {
-            using var unitOfWork = UnitOfWorkFactory.Invoke();
+            using var unitOfWork = UnitOfWorkFactory();
             _userRepository = unitOfWork.Repository<User>();
             _userRoleRepository = unitOfWork.Repository<UserRole>();
 
@@ -467,7 +467,7 @@ namespace LeaguerManagement.Services
 
         public async Task<LoadResult> GetChangeOfficialDocumentTypes(DataSourceLoadOptionsBase loadOptions)
         {
-            using var unitOfWork = UnitOfWorkFactory.Invoke();
+            using var unitOfWork = UnitOfWorkFactory();
             _changeOfficialDocumentType = unitOfWork.Repository<ChangeOfficialDocumentType>();
 
             var types = (await _changeOfficialDocumentType.GetAllAsync()).ToList();
@@ -476,7 +476,7 @@ namespace LeaguerManagement.Services
 
         public async Task<bool> AddChangeOfficialDocumentType(BaseSettingModel input)
         {
-            using var unitOfWork = UnitOfWorkFactory.Invoke();
+            using var unitOfWork = UnitOfWorkFactory();
             _changeOfficialDocumentType = unitOfWork.Repository<ChangeOfficialDocumentType>();
 
             try
@@ -498,7 +498,7 @@ namespace LeaguerManagement.Services
 
         public async Task<bool> UpdateChangeOfficialDocumentType(BaseSettingModel input)
         {
-            using var unitOfWork = UnitOfWorkFactory.Invoke();
+            using var unitOfWork = UnitOfWorkFactory();
             _changeOfficialDocumentType = unitOfWork.Repository<ChangeOfficialDocumentType>();
 
             try
@@ -522,7 +522,7 @@ namespace LeaguerManagement.Services
 
         public async Task<bool> DeleteChangeOfficialDocumentType(int id)
         {
-            using var unitOfWork = UnitOfWorkFactory.Invoke();
+            using var unitOfWork = UnitOfWorkFactory();
             _changeOfficialDocumentType = unitOfWork.Repository<ChangeOfficialDocumentType>();
 
             try
@@ -547,7 +547,7 @@ namespace LeaguerManagement.Services
 
         public async Task<LoadResult> GetChangeOfficialDocuments(DataSourceLoadOptionsBase loadOptions)
         {
-            using var unitOfWork = UnitOfWorkFactory.Invoke();
+            using var unitOfWork = UnitOfWorkFactory();
             _changeOfficialDocument = unitOfWork.Repository<ChangeOfficialDocument>();
 
             var source = (await _changeOfficialDocument.GetAllAsync()).ToList();
@@ -556,7 +556,7 @@ namespace LeaguerManagement.Services
 
         public async Task<bool> AddChangeOfficialDocument(ChangeOfficialDocumentModel input)
         {
-            using var unitOfWork = UnitOfWorkFactory.Invoke();
+            using var unitOfWork = UnitOfWorkFactory();
             _changeOfficialDocument = unitOfWork.Repository<ChangeOfficialDocument>();
             _changeOfficialDocumentType = unitOfWork.Repository<ChangeOfficialDocumentType>();
 
@@ -582,7 +582,7 @@ namespace LeaguerManagement.Services
 
         public async Task<bool> UpdateChangeOfficialDocument(ChangeOfficialDocumentModel input)
         {
-            using var unitOfWork = UnitOfWorkFactory.Invoke();
+            using var unitOfWork = UnitOfWorkFactory();
             _changeOfficialDocument = unitOfWork.Repository<ChangeOfficialDocument>();
             _changeOfficialDocumentType = unitOfWork.Repository<ChangeOfficialDocumentType>();
 
@@ -611,7 +611,7 @@ namespace LeaguerManagement.Services
 
         public async Task<bool> DeleteChangeOfficialDocument(int id)
         {
-            using var unitOfWork = UnitOfWorkFactory.Invoke();
+            using var unitOfWork = UnitOfWorkFactory();
             _changeOfficialDocument = unitOfWork.Repository<ChangeOfficialDocument>();
 
             try

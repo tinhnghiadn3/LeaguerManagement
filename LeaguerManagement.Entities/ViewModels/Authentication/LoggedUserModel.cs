@@ -8,6 +8,7 @@ namespace LeaguerManagement.Entities.ViewModels
         public string Name { get; set; }
         public string Email { get; set; }
         public int RoleId { get; set; }
+        public int? UnitId { get; set; }
         public IList<int> AccessControlIds { get; set; }
 
         public LoggedUserModel()

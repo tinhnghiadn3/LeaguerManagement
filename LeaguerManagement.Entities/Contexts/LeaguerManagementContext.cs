@@ -64,7 +64,7 @@ namespace LeaguerManagement.Entities.Contexts
                     .WithMany(p => p.AppliedDocuments)
                     .HasForeignKey(d => d.LeaguerId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__AppliedDo__Leagu__03F0984C");
+                    .HasConstraintName("FK__AppliedDo__Leagu__3F466844");
             });
 
             modelBuilder.Entity<AppliedDocumentAttachment>(entity =>
@@ -83,7 +83,7 @@ namespace LeaguerManagement.Entities.Contexts
                     .WithMany(p => p.AppliedDocumentAttachments)
                     .HasForeignKey(d => d.AppliedDocumentId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__AppliedDo__Appli__06CD04F7");
+                    .HasConstraintName("FK__AppliedDo__Appli__403A8C7D");
             });
 
             modelBuilder.Entity<ChangeOfficialDocument>(entity =>
@@ -95,7 +95,7 @@ namespace LeaguerManagement.Entities.Contexts
                 entity.HasOne(d => d.ChangeOfficialDocumentType)
                     .WithMany(p => p.ChangeOfficialDocuments)
                     .HasForeignKey(d => d.ChangeOfficialDocumentTypeId)
-                    .HasConstraintName("FK__ChangeOff__Chang__01142BA1");
+                    .HasConstraintName("FK__ChangeOff__Chang__412EB0B6");
             });
 
             modelBuilder.Entity<ChangeOfficialDocumentType>(entity =>
@@ -138,13 +138,13 @@ namespace LeaguerManagement.Entities.Contexts
                     .WithMany(p => p.Leaguers)
                     .HasForeignKey(d => d.StatusId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Leaguer__StatusI__30F848ED");
+                    .HasConstraintName("FK__Leaguer__StatusI__4222D4EF");
 
                 entity.HasOne(d => d.Unit)
                     .WithMany(p => p.Leaguers)
                     .HasForeignKey(d => d.UnitId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Leaguer__UnitId__300424B4");
+                    .HasConstraintName("FK__Leaguer__UnitId__4316F928");
             });
 
             modelBuilder.Entity<LeaguerAttachment>(entity =>
@@ -163,13 +163,13 @@ namespace LeaguerManagement.Entities.Contexts
                     .WithMany(p => p.LeaguerAttachments)
                     .HasForeignKey(d => d.CreatedByUserId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__LeaguerAt__Creat__5DCAEF64");
+                    .HasConstraintName("FK__LeaguerAt__Creat__440B1D61");
 
                 entity.HasOne(d => d.Leaguer)
                     .WithMany(p => p.LeaguerAttachments)
                     .HasForeignKey(d => d.LeaguerId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__LeaguerAt__Leagu__5CD6CB2B");
+                    .HasConstraintName("FK__LeaguerAt__Leagu__44FF419A");
             });
 
             modelBuilder.Entity<Role>(entity =>
@@ -209,6 +209,11 @@ namespace LeaguerManagement.Entities.Contexts
                 entity.Property(e => e.Password).IsRequired();
 
                 entity.Property(e => e.Salt).IsRequired();
+
+                entity.HasOne(d => d.Unit)
+                    .WithMany(p => p.Users)
+                    .HasForeignKey(d => d.UnitId)
+                    .HasConstraintName("FK__User__UnitId__5AEE82B9");
             });
 
             modelBuilder.Entity<UserRole>(entity =>

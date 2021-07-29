@@ -66,14 +66,19 @@
                 [minWidth]="200">
     </dxi-column>
 
-    <dxi-column dataField="jobPosition" caption="Chức vụ"
-                [minWidth]="200">
-    </dxi-column>
-
     <dxi-column [minWidth]="150" dataField="roleId" [filterOperations]="['=']"
                 alignment="center" caption="Vai trò">
       <dxo-lookup
         [dataSource]="roles"
+        displayExpr="value"
+        valueExpr="key">
+      </dxo-lookup>
+    </dxi-column>
+
+    <dxi-column [minWidth]="150" dataField="unitId" [filterOperations]="['=']"
+                alignment="center" caption="Chi bộ">
+      <dxo-lookup
+        [dataSource]="units"
         displayExpr="value"
         valueExpr="key">
       </dxo-lookup>
@@ -92,9 +97,9 @@
                 cellTemplate="actionsCellTemplate">
       <div *dxTemplate="let cell of 'actionsCellTemplate'">
         <div class="action-inline text-center">
-          <i class="fas fa-pencil-alt" title="Sửa" *ngIf="cell.data.roleId === AppRoleValue.Admin"
+          <i class="fas fa-pencil-alt" title="Sửa" *ngIf="cell.data.roleId !== AppRoleValue.Admin"
              (click)="onShowEditingPopup(cell.data)"></i>
-          <i class="far fa-trash-alt" title="Xóa" *ngIf="cell.data.roleId === AppRoleValue.Admin"
+          <i class="far fa-trash-alt" title="Xóa" *ngIf="cell.data.roleId !== AppRoleValue.Admin"
              (click)="openDeletingConfirmPopup(cell.data, $event)"></i>
         </div>
       </div>
@@ -116,7 +121,7 @@
   <app-user-editing #editingComponent
                     [(visible)]="isShowEditingPopup"
                     [selectedUser]="selectedUser"
-                    [roles]="roles"
+                    [roles]="roles" [units]="units"
                     [isProcessing]="isProcessing"
                     (onEditingLocationChange)="onSave($event)">
   </app-user-editing>

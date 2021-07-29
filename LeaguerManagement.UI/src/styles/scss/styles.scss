@@ -13,6 +13,24 @@ html, body {
   box-sizing: border-box;
 }
 
+::-webkit-scrollbar {
+  width: 7px;
+}
+
+::-webkit-scrollbar-track {
+  box-shadow: $card-shadow;
+  background: linear-gradient(#164f40, #3d9f84);
+}
+
+::-webkit-scrollbar-thumb {
+  background: $main-dark-color;
+
+  &:hover {
+    cursor: pointer;
+    background: rgba(95, 21, 242, 1) 60%;
+  }
+}
+
 a:active,
 a:hover {
   outline: 0;

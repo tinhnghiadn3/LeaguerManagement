@@ -7,6 +7,6 @@
         public string Email { get; set; }
         public string Password { get; set; }
         public int RoleId { get; set; }
-        public string JobPosition { get; set; }
+        public int? UnitId { get; set; }
     }
 }

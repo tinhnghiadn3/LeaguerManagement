@@ -30,7 +30,8 @@ namespace LeaguerManagement.Repositories
                     Id = u.Id,
                     Name = u.Name,
                     Email = u.Email,
-                    RoleId = ur.RoleId
+                    RoleId = ur.RoleId,
+                    UnitId = u.UnitId
                 };
         }
 

@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {LoggedUserModel} from '@app/models';
-import {SETTING_ITEMS, SETTING_VALUE} from '@app/shared/constants';
+import {AccessControlValue, AppRoleValue, SETTING_ITEMS, SETTING_VALUE} from '@app/shared/constants';
 import {Router} from '@angular/router';
 import {LoggedUserService} from '@app/services/auth';
 import {LookupService} from '@app/services/shared';
@@ -40,6 +40,10 @@ export class SettingsComponent implements OnInit{
   private getTabItemsToShow() {
     if (this.tabs.length === 0) {
       this.router.navigate(['/forbidden']).then();
+    }
+    if (this.loggedUser.roleId === AppRoleValue.Manager) {
+      this.tabs = SETTING_ITEMS.filter(_ => _.value !== SETTING_VALUE.User && _.value !== SETTING_VALUE.RoleAndAccessControl);
+      this.selectedTab = this.tabs[0];
     }
   }
 }

@@ -4,7 +4,7 @@ export class UserModel {
   email: string;
   password?: string;
   roleId: number;
-  jobPosition: string;
+  unitId: number;
 
   public constructor(init?: Partial<UserModel>) {
     Object.assign(this, init);

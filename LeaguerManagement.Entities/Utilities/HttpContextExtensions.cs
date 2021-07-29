@@ -26,16 +26,6 @@ namespace LeaguerManagement.Entities.Utilities
             return GetClaimValue(context, "UnitId").ToInt();
         }
 
-        public static int DepartmentId(this HttpContext context)
-        {
-            return GetClaimValue(context, "DepartmentId").ToInt();
-        }
-
-        public static int DepartmentTypeId(this HttpContext context)
-        {
-            return GetClaimValue(context, "DepartmentTypeId").ToInt();
-        }
-
         public static string AccessToken(this HttpContext context)
         {
             return GetToken(context?.Request?.Headers?["Authorization"]);

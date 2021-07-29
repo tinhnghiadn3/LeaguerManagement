@@ -8,6 +8,7 @@ import {ActivatedRoute} from '@angular/router';
 import {AppNotify} from '@app/shared/utilities/notification-helper';
 import {ALLOWED_AVATAR_TYPES, ALLOWED_FILE_TYPES, GENDER_ITEMS} from '@app/shared/constants';
 import {isEqual, clone} from 'lodash';
+import {AppLeaguerStatus} from '@app/shared/enums';
 
 @Component({
   selector: 'app-leaguer-detail',
@@ -36,6 +37,7 @@ export class LeaguerDetailComponent implements OnInit, OnDestroy {
   GENERAL_MESSAGE = GENERAL_MESSAGE;
   ALLOWED_FILE_TYPES = ALLOWED_FILE_TYPES;
   ALLOWED_AVATAR_TYPES = ALLOWED_AVATAR_TYPES;
+  AppLeaguerStatus = AppLeaguerStatus;
 
   constructor(private lookupService: LookupService,
               private leaguerService: LeaguerService,

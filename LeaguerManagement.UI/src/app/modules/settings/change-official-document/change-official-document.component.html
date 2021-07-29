@@ -22,8 +22,9 @@
         <dxo-filter-row [visible]="true" [showOperationChooser]="true"></dxo-filter-row>
         <dxo-remote-operations [filtering]="true" [sorting]="true" [paging]="true"></dxo-remote-operations>
         <dxo-paging [pageSize]="pageSize"></dxo-paging>
-        <dxo-pager [showInfo]="true"
-                   [showPageSizeSelector]="false"
+        <dxo-pager [showInfo]="false"
+                   [allowedPageSizes]="[20, 50]"
+                   [showPageSizeSelector]="true"
                    [visible]="true"
                    [showNavigationButtons]="true">
         </dxo-pager>
@@ -103,8 +104,9 @@
         <dxo-filter-row [visible]="true" [showOperationChooser]="true"></dxo-filter-row>
         <dxo-remote-operations [filtering]="true" [sorting]="true" [paging]="true"></dxo-remote-operations>
         <dxo-paging [pageSize]="pageSize"></dxo-paging>
-        <dxo-pager [showInfo]="true"
-                   [showPageSizeSelector]="false"
+        <dxo-pager [showInfo]="false"
+                   [allowedPageSizes]="[20, 50]"
+                   [showPageSizeSelector]="true"
                    [visible]="true"
                    [showNavigationButtons]="true">
         </dxo-pager>

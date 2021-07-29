@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using LeaguerManagement.Entities.Contexts;
 using LeaguerManagement.Entities.Entities;
 using LeaguerManagement.Entities.Infrastructures;
+using LeaguerManagement.Entities.Utilities;
 using LeaguerManagement.Entities.Utilities.Helper;
 using LeaguerManagement.Entities.ViewModels;
 using LeaguerManagement.Repositories.Extensions;
@@ -13,10 +14,11 @@ namespace LeaguerManagement.Repositories
 {
     public static class LeaguerRepository
     {
-        public static async Task<List<LeaguerModel>> GetCurrentLeaguers(this IRepository<Leaguer> repository)
+        public static async Task<List<LeaguerModel>> GetCurrentLeaguers(this IRepository<Leaguer> repository, int? unitId)
         {
             var source = new List<LeaguerModel>();
             await repository.LoadStoredProc("spGetCurrentLeaguers")
+                .WithSqlParam("@unitId", unitId)
                 .ExecuteStoredProcAsync((result) =>
                 {
                     source = result.ReadNextListOrEmpty<LeaguerModel>().ToList();
@@ -25,13 +27,23 @@ namespace LeaguerManagement.Repositories
             return source;
         }
 
-        public static async Task<List<LeaguerModel>> GetAllLeaguers(this IRepository<Leaguer> repository)
+        public static async Task<List<LeaguerModel>> GetAllLeaguers(this IRepository<Leaguer> repository, int? unitId)
         {
             var source = new List<LeaguerModel>();
             await repository.LoadStoredProc("spGetAllLeaguers")
+                .WithSqlParam("@unitId", unitId)
                 .ExecuteStoredProcAsync((result) =>
                 {
                     source = result.ReadNextListOrEmpty<LeaguerModel>().ToList();
+
+                    // Id is LeaguerId and Value is AttachmentId
+                    var avatars = result.ReadNextListOrEmpty<SingleFieldModel<int>>().ToList();
+
+                    source.ForEach(leaguer =>
+                    {
+                        var avatar = avatars.FirstOrDefault(_ => _.Id == leaguer.Id);
+                        leaguer.AvatarId = avatar?.Value;
+                    });
                 });
 
             return source;
@@ -60,6 +72,22 @@ namespace LeaguerManagement.Repositories
                     source.Attachments = result.ReadNextListOrEmpty<AttachmentModel>().ToList();
 
                     source.TotalAttachments = source.Attachments.Count;
+
+                    if (source.Reference.StatusId != AppLeaguerStatus.Official.ToInt()) return;
+
+                    var officialDocuments = result.ReadNextListOrEmpty<AppliedDocumentModel>().ToList();
+                    var officialDocumentAttachments = result.ReadNextListOrEmpty<AttachmentModel>().ToList();
+                    if (!officialDocuments.Any()) return;
+                    foreach (var officialDocument in officialDocuments)
+                    {
+                        var attachments = officialDocumentAttachments
+                            .Where(_ => _.ReferenceId == officialDocument.Id).ToList();
+                        source.Reference.OfficialDocuments.Add(new ReferenceWithAttachmentModel<AppliedDocumentModel>{
+                            Reference = officialDocument,
+                            Attachments = attachments,
+                            TotalAttachments = attachments.Count
+                        });
+                    }
                 });
 
             return source;
@@ -122,6 +150,67 @@ namespace LeaguerManagement.Repositories
                                         Attachments = modelAttachments,
                                         TotalAttachments = modelAttachments.Count
                                     });
+                });
+
+            return source;
+        }
+
+        public static async Task<IList<LeaguerBookModel>> ExportAllLeaguerToExcel(this IRepository<Leaguer> repository, int? unitId)
+        {
+            var source = new List<LeaguerBookModel>();
+            await repository.LoadStoredProc("spExportLeaguerToExcel")
+                .WithSqlParam("@unitId", unitId)
+                .ExecuteStoredProcAsync((result) =>
+                {
+                    var units = result.ReadNextListOrEmpty<UnitModel>().ToList();
+
+                    var leaguers = result.ReadNextListOrEmpty<LeaguerModel>().ToList();
+
+                    units.ForEach(unit =>
+                    {
+                        var unitLeaguers = leaguers.Where(_ => _.UnitId == unit.Id).Select(l => new LeaguerExcelModel
+                        {
+                            Name = l.Name,
+                            BornYear = l.BornYear,
+                            Gender = l.Gender ? "Name" : "Nữ",
+                            Religion = l.Religion,
+                            Folk = l.Folk,
+                            HomeTown = l.HomeTown,
+                            EducationalLevel = l.EducationalLevel,
+                            PoliticalTheoryLevel = l.PoliticalTheoryLevel,
+                            ForeignLanguageLevel = l.ForeignLanguageLevel,
+                            SpecializeMajor = l.SpecializeMajor,
+                            BeforeEnteringCareer = l.BeforeEnteringCareer,
+                            CurrentCareer = l.CurrentCareer,
+                            Position = l.Position,
+                            UnitName = unit.Name,
+                            PreliminaryApplyDate = l.PreliminaryApplyDate,
+                            OfficialApplyDate = l.OfficialApplyDate,
+                            CardNumber = l.CardNumber,
+                            BackgroundNumber = l.BackgroundNumber,
+                            BadgeNumber = l.BadgeNumber,
+                            MoveOutDated = l.MoveOutDated,
+                            OfficeComing = l.OfficeComing,
+                            MoveInDated = l.MoveInDated,
+                            AtOffice = l.AtOffice,
+                            GetOutDate = l.GetOutDate,
+                            FormOut = l.FormOut,
+                            Phone = l.Phone,
+                            Notes = l.Notes,
+                        });
+
+                        var book = new LeaguerBookModel
+                        {
+                            Unit = new UnitExcelModel
+                            {
+                                IdentifyNumber = unit.IdentifyNumber,
+                                Name = unit.Name
+                            },
+                            Leaguers = unitLeaguers.ToList()
+                        };
+
+                        source.Add(book);
+                    });
                 });
 
             return source;

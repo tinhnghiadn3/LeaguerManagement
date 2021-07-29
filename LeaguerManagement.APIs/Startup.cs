@@ -29,6 +29,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using NLog;
 using NLog.Web;
+using IConfigurationProvider = AutoMapper.IConfigurationProvider;
 
 namespace LeaguerManagement.APIs
 {
@@ -57,7 +58,7 @@ namespace LeaguerManagement.APIs
 
             //
             // Register db context
-            services.AddDbContext<LeaguerManagementContext>((options) =>
+            services.AddDbContext<LeaguerManagementContext>(options =>
             {
                 // Connection String
                 options.UseSqlServer(_settings.ConnectionStrings)
@@ -127,7 +128,7 @@ namespace LeaguerManagement.APIs
             //
             // Mapper
             services.AddSingleton<IMapper, Mapper>();
-            services.AddSingleton<AutoMapper.IConfigurationProvider>(c => new MapperConfiguration(config => config.AddProfile<AutoMapperConfig>()));
+            services.AddSingleton<IConfigurationProvider>(c => new MapperConfiguration(config => config.AddProfile<AutoMapperConfig>()));
             //
             // Logger
             var logger = NLogBuilder.ConfigureNLog(NLogConfigPath).GetCurrentClassLogger();
@@ -141,8 +142,9 @@ namespace LeaguerManagement.APIs
                 var httpContext = serviceProvider.GetService<IHttpContextAccessor>().HttpContext;
                 var currentUser = new CurrentUserModel
                 {
-                    RoleId = httpContext?.AccessToken() != null ? httpContext.RoleId() : (int?)null,
-                    UserId = httpContext?.AccessToken() != null ? httpContext.UserId() : (int?)null,
+                    RoleId = httpContext?.AccessToken() != null ? httpContext.RoleId() : null,
+                    UserId = httpContext?.AccessToken() != null ? httpContext.UserId() : null,
+                    UnitId = httpContext?.AccessToken() != null ? httpContext.UnitId() : null,
                 };
 
                 return new UnitOfWork(dbContext, currentUser);

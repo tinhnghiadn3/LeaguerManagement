@@ -2,8 +2,6 @@ export class LoggedUserModel {
   id: number;
   name: string;
   email: string;
-  departmentId: number;
-  departmentTypeId: number;
   unitId: number;
   roleId: number;
   accessControlIds: number[] = [];

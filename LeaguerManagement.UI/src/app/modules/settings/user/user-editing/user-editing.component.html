@@ -37,14 +37,14 @@
       </div>
     </div>
     <div class="field">
-      <span class="field-label">Chức vụ <span class="lbl-required">*</span></span>
+      <span class="field-label">Chi bộ <span class="lbl-required">*</span></span>
       <div class="field-value">
-        <dx-text-box [(value)]="user.jobPosition">
-          <dx-validator>
-            <dxi-validation-rule type="required"
-                                 [message]="GENERAL_MESSAGE.TheFieldIsRequired.format('Chức vụ')"></dxi-validation-rule>
-          </dx-validator>
-        </dx-text-box>
+        <dx-select-box [dataSource]="units"
+                       valueExpr="key" displayExpr="value"
+                       [(value)]="user.unitId">
+          <dxi-validation-rule type="required"
+                               [message]="GENERAL_MESSAGE.TheFieldIsRequired.format('Chi bộ')"></dxi-validation-rule>
+        </dx-select-box>
       </div>
     </div>
     <div class="field">

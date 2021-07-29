@@ -13,6 +13,7 @@ import {GENDER_ITEMS} from '@app/shared/constants';
 export class LeaguerAddingComponent implements OnInit {
   @ViewChild('validationGroup', {static: false}) validationGroup: DxValidationGroupComponent;
 
+  @Input() currentUnitId: number;
   @Input() isProcessing = false;
   @Input() selectedLeaguer: LeaguerModel = new LeaguerModel();
   @Input() units: DropDownModel[] = [];
@@ -41,6 +42,7 @@ export class LeaguerAddingComponent implements OnInit {
 
   ngOnInit() {
     this.leaguer = cloneDeep(this.selectedLeaguer);
+    this.leaguer.unitId = this.currentUnitId;
   }
 
   onSave() {

@@ -10,6 +10,7 @@ namespace LeaguerManagement.Entities.Entities
         public Unit()
         {
             Leaguers = new HashSet<Leaguer>();
+            Users = new HashSet<User>();
         }
 
         public int Id { get; set; }
@@ -17,5 +18,6 @@ namespace LeaguerManagement.Entities.Entities
         public string IdentifyNumber { get; set; }
 
         public virtual ICollection<Leaguer> Leaguers { get; set; }
+        public virtual ICollection<User> Users { get; set; }
     }
 }

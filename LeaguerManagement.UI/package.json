@@ -23,6 +23,7 @@
     "bootstrap": "^4.6.0",
     "devextreme": "20.2.5",
     "devextreme-angular": "20.2.5",
+    "file-saver": "^2.0.5",
     "lodash": "^4.17.21",
     "ngx-permissions": "^8.1.1",
     "rxjs": "~6.6.0",

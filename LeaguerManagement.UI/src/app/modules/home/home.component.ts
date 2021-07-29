@@ -1,5 +1,5 @@
 import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {DropDownModel, LeaguerModel} from '@app/models';
+import {DropDownModel, LeaguerModel, StatusStatisticModel} from '@app/models';
 import {Subscription} from 'rxjs';
 import {LookupService} from '@app/services/shared';
 import {GENERAL_MESSAGE} from '@app/shared/messages';
@@ -25,6 +25,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   units: DropDownModel[] = [];
   statuses: DropDownModel[] = [];
   files: LeaguerModel[] = [];
+  statusStatistics: StatusStatisticModel[] = [];
   selectedFile: LeaguerModel = new LeaguerModel();
 
   isShowEditingPopup: boolean = false;
@@ -35,7 +36,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   GENERAL_MESSAGE = GENERAL_MESSAGE;
   subscription: Subscription = new Subscription();
 
-  constructor(private fileService: LeaguerService,
+  constructor(private leaguerService: LeaguerService,
               private router: Router,
               private lookupService: LookupService) {
     this.subscription.add(
@@ -47,6 +48,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.getCurrentStaffs();
+    this.getStatusStatistic();
   }
 
   getCurrentStaffs(statusId = null) {
@@ -56,21 +58,19 @@ export class HomeComponent implements OnInit, OnDestroy {
         if (statusId) {
           loadOptions.filter = ['statusId', '=', statusId];
         }
-        return this.fileService.getCurrentLeaguers(loadOptions).toPromise();
+        return this.leaguerService.getCurrentLeaguers(loadOptions).toPromise();
       }
     });
   }
 
-  contentReady(e) {
-    if (!e.component.getSelectedRowKeys().length) {
-      e.component.selectRowsByIndexes(0);
-    }
-  }
-
-  selectionChanged(e) {
-    e.component.collapseAll(-1);
-    e.component.expandRow(e.currentSelectedRowKeys[0]);
-    this.selectedFile = e.currentSelectedRowKeys[0];
+  getStatusStatistic() {
+    this.isLoading = true;
+    this.leaguerService.getStatusStatistics().subscribe(res => {
+      this.statusStatistics = res;
+      this.isLoading = false;
+    }, () => {
+      this.isLoading = false;
+    });
   }
 
   refresh() {

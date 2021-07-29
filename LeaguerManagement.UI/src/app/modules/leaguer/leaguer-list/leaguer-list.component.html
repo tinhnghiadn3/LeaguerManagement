@@ -7,7 +7,6 @@
 <div class="col-12">
   <dx-data-grid
     width="100%"
-    class="settings-grid"
     keyExpr="id"
     noDataText="Không có dữ liệu"
     [class.loading]="!dataSource.isLoaded()"
@@ -21,12 +20,14 @@
     [rowAlternationEnabled]="true"
     [masterDetail]="{ enabled: false, template: 'detail' }"
     (onContentReady)="contentReady($event)"
-    (onSelectionChanged)="selectionChanged($event)">
+    (onSelectionChanged)="selectionChanged($event)"
+    (onRowDblClick)="goToDetail($event.data)">
     <dxo-filter-row [visible]="true" [showOperationChooser]="true"></dxo-filter-row>
     <dxo-remote-operations [filtering]="true" [sorting]="true" [paging]="true"></dxo-remote-operations>
     <dxo-paging [pageSize]="pageSize"></dxo-paging>
     <dxo-pager [showInfo]="false"
-               [showPageSizeSelector]="false"
+               [allowedPageSizes]="[20, 50]"
+               [showPageSizeSelector]="true"
                [visible]="true"
                [showNavigationButtons]="true">
     </dxo-pager>
@@ -85,6 +86,8 @@
       </dxo-lookup>
     </dxi-column>
 
+    <dxi-column dataField="phone" caption="Điện thoại" [width]="95" alignment="center"></dxi-column>
+
     <dxi-column dataField="religion" caption="Tôn giáo" [width]="90" alignment="center"></dxi-column>
 
     <dxi-column dataField="folk" caption="Dân tộc" [width]="90" alignment="center"></dxi-column>
@@ -118,12 +121,17 @@
                 alignment="center"
                 [fixed]="true"
                 fixedPosition="right"
-                [width]="95"
+                [width]="120"
                 [allowFiltering]="false"
                 [allowSorting]="false"
                 [allowResizing]="false"
                 [allowEditing]="false"
+                headerCellTemplate="headerActionsCellTemplate"
                 cellTemplate="actionsCellTemplate">
+      <div *dxTemplate="let cell of 'headerActionsCellTemplate'">
+        <i class="fas fa-file-download" title="Xuất Excel"
+           (click)="exportExcel()"></i>
+      </div>
       <div *dxTemplate="let cell of 'actionsCellTemplate'">
         <div class="action-inline text-center">
           <i class="fas fa-sort-amount-up" title="Công nhận chính thức"
@@ -132,9 +140,6 @@
           <i class="fas fa-sign-out-alt" title="Ra khỏi Đảng"
              *ngIf="cell.data.statusId !== AppLeaguerStatus.GetOut"
              (click)="showConfirmOutPopup(cell.data)"></i>
-          <i class="fas fa-user-alt-slash" title="Từ trần"
-             *ngIf="cell.data.statusId !== AppLeaguerStatus.Dead"
-             (click)="showConfirmDeadPopup(cell.data)"></i>
           <i class="fas fa-pencil-alt" title="Sửa" (click)="goToDetail(cell.data)"></i>
           <i class="far fa-trash-alt" title="Xóa" (click)="openDeletingConfirmPopup(cell.data, $event)"></i>
         </div>
@@ -144,7 +149,7 @@
     <div *dxTemplate="let item of 'detail'" class="container-fluid form-wrapper">
       <div class="form-group">
         <div class="row">
-          <div class="col-12 col-lg-4 user-avatar-zone">
+          <div class="col-12 col-lg-3 user-avatar-zone">
             <div class="img-circle profile-user-img">
               <img *ngIf="item.data.avatarImg"
                    [src]="item.data.avatarImg"
@@ -154,28 +159,25 @@
                    class="default-img">{{item.data.name}}</div>
             </div>
           </div>
-          <div class="col-12 col-lg-8">
+          <div class="col-12 col-lg-9">
             <div class="row">
               <div class="col-12 col-lg-4">
-                <p>Điện thoại: {{item.data.phone}}</p>
-                <p>Ngày từ trần: {{item.data.deadDate || 'Chưa'}}</p>
-                <p>Lý do từ trần: {{item.data.formOut || 'Chưa'}}</p>
-                <p>Ngày ra khỏi Đảng: {{item.data.getOutDate || 'Chưa'}}</p>
-                <p>Hình thức ra khỏi Đảng: {{item.data.formOut || 'Chưa'}}</p>
+                <p>Trình độ lý luận chính trị: {{item.data.politicalTheoryLevel}}</p>
+                <p>Nghiệp vụ chuyên môn: {{item.data.specializeMajor}}</p>
+                <p>Nghề nghiệp hiện nay: {{item.data.currentCareer}}</p>
+                <p>Nghề nghiệp trước khi vào Đảng: {{item.data.beforeEnteringCareer}}</p>
               </div>
               <div class="col-12 col-lg-4">
                 <p>Ngày chuyển đi: {{item.data.moveOutDated}}</p>
                 <p>Ngày chuyển đến: {{item.data.moveInDated}}</p>
                 <p>Trình độ văn hóa: {{item.data.educationalLevel}}</p>
                 <p>Trình độ ngoại ngữ: {{item.data.foreignLanguageLevel}}</p>
-                <p>Nghề nghiệp trước khi vào Đảng: {{item.data.beforeEnteringCareer}}</p>
               </div>
               <div class="col-12 col-lg-4">
                 <p>Đến Đảng bộ cơ sở: {{item.data.officeBefore}}</p>
                 <p>Ở Đảng bộ cơ sở: {{item.data.officeComing}}</p>
-                <p>Trình độ lý luận chính trị: {{item.data.politicalTheoryLevel}}</p>
-                <p>Nghiệp vụ chuyên môn: {{item.data.specializeMajor}}</p>
-                <p>Nghề nghiệp hiện nay: {{item.data.currentCareer}}</p>
+                <p>Ngày ra khỏi Đảng: {{item.data.getOutDate || 'Chưa'}}</p>
+                <p>Hình thức ra khỏi Đảng: {{item.data.formOut || 'Chưa'}}</p>
               </div>
               <div class="col-12">
                 <p>Ghi chú: {{!item.data.notes ? 'Không có' : item.data.notes}}</p>
@@ -201,7 +203,7 @@
                      [(visible)]="isShowEditingPopup">
   <app-leaguer-adding [(visible)]="isShowEditingPopup"
                       [selectedLeaguer]="selectedLeaguer"
-                      [units]="units"
+                      [units]="units" [currentUnitId]="loggedUser.unitId"
                       [isProcessing]="isProcessing"
                       (onEditingChange)="onSave($event)">
   </app-leaguer-adding>
@@ -225,19 +227,7 @@
                      [(visible)]="isShowOutConfirmPopup">
   <app-yes-no-confirm (onConfirmed)="changeToOut()"
                       (onCanceled)="isShowOutConfirmPopup = false"
-                      [modelName]="'Đảng viên' + selectedLeaguer.name"
+                      [modelName]="'Đảng viên ' + selectedLeaguer.name"
                       [question]="'Chắc chắn chuyển Ra khỏi Đảng'"
-  ></app-yes-no-confirm>
-</app-popup-container>
-
-<app-popup-container *ngIf="isShowDeadConfirmPopup"
-                     title="Xác nhận Từ trần?"
-                     [width]="450"
-                     [height]="'auto'"
-                     [(visible)]="isShowDeadConfirmPopup">
-  <app-yes-no-confirm (onConfirmed)="changeToDead()"
-                      (onCanceled)="isShowDeadConfirmPopup = false"
-                      [modelName]="'Đảng viên' + selectedLeaguer.name"
-                      [question]="'Chắc chắn chuyển Từ trần'"
   ></app-yes-no-confirm>
 </app-popup-container>

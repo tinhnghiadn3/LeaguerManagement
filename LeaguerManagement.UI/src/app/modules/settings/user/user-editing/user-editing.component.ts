@@ -15,6 +15,7 @@ export class UserEditingComponent implements OnInit {
   @Input() isProcessing = false;
   @Input() selectedUser: UserModel = new UserModel();
   @Input() roles: DropDownModel[] = [];
+  @Input() units: DropDownModel[] = [];
 
   private _visible = false;
   @Input()

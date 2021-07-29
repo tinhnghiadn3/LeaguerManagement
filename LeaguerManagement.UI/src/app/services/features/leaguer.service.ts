@@ -3,8 +3,13 @@ import {ApiService} from '@app/services/shared';
 import {Observable} from 'rxjs';
 import {API_ENDPOINT} from '@app/services/endpoints';
 import {
-  SearchResultBaseModel, LeaguerModel,
-  ReferenceWithAttachmentModel, AttachmentModel, CheckExistDataModel, ChangeOfficialDocumentModel, AppliedDocumentModel
+  SearchResultBaseModel,
+  LeaguerModel,
+  ReferenceWithAttachmentModel,
+  AttachmentModel,
+  CheckExistDataModel,
+  AppliedDocumentModel,
+  StatusStatisticModel
 } from '@app/models';
 import {LoadOptions} from 'devextreme/data/load_options';
 import {HttpEventType, HttpResponse} from '@angular/common/http';
@@ -14,12 +19,17 @@ import {AppNotify} from '@app/shared/utilities/notification-helper';
   providedIn: 'root'
 })
 export class LeaguerService {
+  [x: string]: any;
 
   constructor(private baseService: ApiService) {
   }
 
   getCurrentLeaguers(loadOptions: LoadOptions): Observable<SearchResultBaseModel<LeaguerModel[]>> {
     return this.baseService.post(`${API_ENDPOINT.Leaguers}/current`, loadOptions);
+  }
+
+  getStatusStatistics(): Observable<StatusStatisticModel[]> {
+    return this.baseService.get(`${API_ENDPOINT.Leaguers}/statistic`);
   }
 
   getAllLeaguers(loadOptions: LoadOptions): Observable<SearchResultBaseModel<LeaguerModel[]>> {
@@ -44,6 +54,10 @@ export class LeaguerService {
 
   deleteLeaguer(leagerId: number) {
     return this.baseService.delete(`${API_ENDPOINT.Leaguers}/${leagerId}`);
+  }
+
+  exportExcel(): Observable<Blob> {
+    return this.baseService.download(`${API_ENDPOINT.Leaguers}/export`);
   }
 
   /**

@@ -19,7 +19,9 @@ namespace LeaguerManagement.Entities.Entities
         public string Salt { get; set; }
         public bool IsActivated { get; set; }
         public string JobPosition { get; set; }
+        public int? UnitId { get; set; }
 
+        public virtual Unit Unit { get; set; }
         public virtual ICollection<LeaguerAttachment> LeaguerAttachments { get; set; }
     }
 }

@@ -1,51 +1,28 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {PercentPipe} from '@angular/common';
-import {DropDownModel, StatusStatisticsModel} from '@app/models';
+import {StatusStatisticModel} from '@app/models';
+import {LeaguerService} from '@app/services/features/leaguer.service';
 
 @Component({
   selector: 'app-header-dashboard',
   templateUrl: './header-dashboard.component.html',
   styleUrls: ['./header-dashboard.component.scss']
 })
-export class HeaderDashboardComponent implements OnInit {
+export class HeaderDashboardComponent {
 
-  private _statuses: DropDownModel[] = [];
-  @Input()
-  get statuses(): DropDownModel[] {
-    return this._statuses;
-  }
-
-  set statuses(value) {
-    this._statuses = value;
-    this.generateData();
-  }
-
+  @Input() statusStatistics: StatusStatisticModel[] = [];
   @Output() onSelectedStatusChange = new EventEmitter();
 
   pipe: any = new PercentPipe('en-US');
+  isLoading: boolean = false;
 
-  statusStatistics: StatusStatisticsModel[] = [];
-
-  customizeTooltip = (arg: any) => {
+  customizeTooltip(arg: any) {
     return {
       text: arg.valueText + ' - ' + this.pipe.transform(arg.percent, '1.2-2')
     };
-  };
+  }
 
   constructor() {
-  }
-
-  ngOnInit() {
-  }
-
-  generateData() {
-    this.statuses.forEach(status => {
-      this.statusStatistics.push(new StatusStatisticsModel({
-        statusId: status.key,
-        statusName: status.value,
-        amount: this.randomNumber(10, 50)
-      }));
-    });
   }
 
   pointClickHandler(e) {

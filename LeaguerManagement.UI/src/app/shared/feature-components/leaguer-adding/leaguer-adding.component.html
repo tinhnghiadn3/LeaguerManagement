@@ -1,6 +1,6 @@
 <div class="form-wrapper">
   <dx-validation-group #validationGroup>
-    <div class="field">
+    <div class="field" *ngIf="!currentUnitId">
       <span class="field-label">Chi bộ <span class="lbl-required">*</span></span>
       <div class="field-value">
         <dx-select-box [dataSource]="units"

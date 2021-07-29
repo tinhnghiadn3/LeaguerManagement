@@ -40,6 +40,12 @@ namespace LeaguerManagement.APIs.Controllers
             return await _leaguerService.GetAllLeaguers(loadOptions);
         }
 
+        [HttpGet("statistic")]
+        public async Task<IList<StatusStatisticModel>> GetStatusStatistics()
+        {
+            return await _leaguerService.GetStatusStatistics();
+        }
+
         [HttpGet("{id:int}/detail")]
         public async Task<ReferenceWithAttachmentModel<LeaguerModel>> GetLeaguerDetail([FromRoute] int id)
         {
@@ -70,12 +76,17 @@ namespace LeaguerManagement.APIs.Controllers
             return await _leaguerService.DeleteLeaguer(id);
         }
 
-        [HttpGet("{id:int}/official-documents")]
-        public async Task<IList<ReferenceWithAttachmentModel<AppliedDocumentModel>>> GetOfficialDocuments([FromRoute] int id)
+        // export excel
+
+        [HttpGet("export")]
+        public async Task<IActionResult> ExportCopyReturningPaper()
         {
-            return await _leaguerService.GetOfficialDocuments(id);
+            var stream = await _leaguerService.ExportExcelAllLeager();
+
+            return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
         }
 
+        // change status
 
         [HttpGet("{id:int}/change/official")]
         public async Task<bool> ChangeToOfficial([FromRoute] int id)
@@ -93,6 +104,14 @@ namespace LeaguerManagement.APIs.Controllers
         public async Task<bool> ChangeToDead([FromRoute] int id)
         {
             return await _leaguerService.ChangeToDead(id);
+        }
+
+        // attachment change to official
+
+        [HttpGet("{id:int}/official-documents")]
+        public async Task<IList<ReferenceWithAttachmentModel<AppliedDocumentModel>>> GetOfficialDocuments([FromRoute] int id)
+        {
+            return await _leaguerService.GetOfficialDocuments(id);
         }
 
         // avatar

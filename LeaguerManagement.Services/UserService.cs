@@ -38,7 +38,7 @@ namespace LeaguerManagement.Services
         {
             try
             {
-                using var unitOfWork = UnitOfWorkFactory.Invoke();
+                using var unitOfWork = UnitOfWorkFactory();
                 _userRepository = unitOfWork.Repository<User>();
 
                 var user = await _userRepository.FindUser(input.Username.Trim()) ??
@@ -64,7 +64,7 @@ namespace LeaguerManagement.Services
         {
             try
             {
-                using var unitOfWork = UnitOfWorkFactory.Invoke();
+                using var unitOfWork = UnitOfWorkFactory();
                 _userRepository = unitOfWork.Repository<User>();
 
                 if (model.NewPass != model.ConfirmPass)
@@ -94,13 +94,13 @@ namespace LeaguerManagement.Services
 
         public async Task<bool> IsEmailDuplicated(SingleFieldModel<string> input)
         {
-            using var unitOfWork = UnitOfWorkFactory.Invoke();
+            using var unitOfWork = UnitOfWorkFactory();
             return await unitOfWork.Repository<User>().IsUserEmailDuplicated(input.Id, input.Value);
         }
 
         public async Task<LoggedUserModel> CurrentUser()
         {
-            using var unitOfWork = UnitOfWorkFactory.Invoke();
+            using var unitOfWork = UnitOfWorkFactory();
             var user = await unitOfWork.Repository<User>().GetCurrentUser() ??
                        throw new AppException(AppMessages.Unauthorized);
 
@@ -109,7 +109,7 @@ namespace LeaguerManagement.Services
 
         public void InitUserTokens()
         {
-            using var unitOfWork = UnitOfWorkFactory.Invoke();
+            using var unitOfWork = UnitOfWorkFactory();
             _userTokenRepository = unitOfWork.Repository<UserToken>();
             //
             // Remove Expired Tokens
@@ -125,7 +125,7 @@ namespace LeaguerManagement.Services
 
         public async Task RevokeToken(string accessToken)
         {
-            using var unitOfWork = UnitOfWorkFactory.Invoke();
+            using var unitOfWork = UnitOfWorkFactory();
             var token = UserTokenHelper.GetUserToken(accessToken, TokenType.AccessToken);
             if (token == null)
             {
@@ -153,12 +153,13 @@ namespace LeaguerManagement.Services
 
                 var claims = new List<Claim>
                 {
-                    new Claim(AppClaimType.UserId, user.Id.ToString()),
-                    new Claim(AppClaimType.Username, user.Email),
-                    new Claim(AppClaimType.FullName, user.Name),
-                    new Claim(AppClaimType.RoleId, user.RoleId.ToString()),
-                    new Claim(AppClaimType.TimezoneOffset, timeZoneOffset.ToString(CultureInfo.CurrentCulture)),
+                    new(AppClaimType.UserId, user.Id.ToString()),
+                    new(AppClaimType.Username, user.Email),
+                    new(AppClaimType.FullName, user.Name),
+                    new(AppClaimType.RoleId, user.RoleId.ToString()),
+                    new(AppClaimType.TimezoneOffset, timeZoneOffset.ToString(CultureInfo.CurrentCulture)),
                 };
+                if(user.UnitId != null) claims.Add(new Claim(AppClaimType.UnitId, user.UnitId.ToString()));
 
                 var tokenDescriptor = new SecurityTokenDescriptor
                 {
@@ -199,7 +200,7 @@ namespace LeaguerManagement.Services
 
         private async Task AddUserToken(UserToken userToken)
         {
-            using var unitOfWork = UnitOfWorkFactory.Invoke();
+            using var unitOfWork = UnitOfWorkFactory();
             await unitOfWork.Repository<UserToken>().InsertAsync(userToken);
 
             UserTokenHelper.AddToken(_mapper.Map<UserTokenModel>(userToken));

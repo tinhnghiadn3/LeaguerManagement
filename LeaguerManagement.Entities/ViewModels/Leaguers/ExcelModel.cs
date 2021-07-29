@@ -3,19 +3,10 @@ using System.Collections.Generic;
 
 namespace LeaguerManagement.Entities.ViewModels
 {
-    public class LeaguerModel
-    {
-
-        public LeaguerModel()
-        {
-            OfficialDocuments = new List<ReferenceWithAttachmentModel<AppliedDocumentModel>>();
-        }
-        public int Id { get; set; }
-        public int UnitId { get; set; }
+    public class LeaguerExcelModel {
         public string Name { get; set; }
-        public int? AvatarId { get; set; }
         public int BornYear { get; set; }
-        public bool Gender { get; set; }
+        public string Gender { get; set; }
         public string Religion { get; set; }
         public string Folk { get; set; }
         public string HomeTown { get; set; }
@@ -26,6 +17,7 @@ namespace LeaguerManagement.Entities.ViewModels
         public string BeforeEnteringCareer { get; set; }
         public string CurrentCareer { get; set; }
         public string Position { get; set; }
+        public string UnitName { get; set; }
         public DateTime? PreliminaryApplyDate { get; set; }
         public DateTime? OfficialApplyDate { get; set; }
         public string CardNumber { get; set; }
@@ -41,9 +33,17 @@ namespace LeaguerManagement.Entities.ViewModels
         public string FormOut { get; set; }
         public int? Phone { get; set; }
         public string Notes { get; set; }
-        public int StatusId { get; set; }
-        public bool IsActivated { get; set; }
+    }
 
-        public IList<ReferenceWithAttachmentModel<AppliedDocumentModel>> OfficialDocuments { get; set; }
+    public class UnitExcelModel
+    {
+        public string IdentifyNumber { get; set; }
+        public string Name { get; set; }
+    }
+
+    public class LeaguerBookModel
+    {
+        public UnitExcelModel Unit { get; set; }
+        public List<LeaguerExcelModel> Leaguers { get; set; }
     }
 }

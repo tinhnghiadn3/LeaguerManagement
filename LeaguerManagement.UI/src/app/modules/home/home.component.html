@@ -7,13 +7,12 @@
   </dx-load-panel>
 
   <div class="d-flex align-items-center flex-column">
-    <app-header-dashboard [statuses]="statuses"
-    (onSelectedStatusChange)="getCurrentStaffs($event)"></app-header-dashboard>
+    <app-header-dashboard [statusStatistics]="statusStatistics"
+                          (onSelectedStatusChange)="getCurrentStaffs($event)"></app-header-dashboard>
 
     <div class="col-12 mt-2">
       <dx-data-grid
         width="100%"
-        class="settings-grid"
         keyExpr="id"
         noDataText="Không có dữ liệu"
         [class.loading]="!dataSource.isLoaded()"
@@ -25,13 +24,13 @@
         [columnResizingMode]="'widget'"
         [allowColumnResizing]="true"
         [rowAlternationEnabled]="true"
-        (onContentReady)="contentReady($event)"
-        (onSelectionChanged)="selectionChanged($event)">
+        (onRowDblClick)="goToDetail($event.data)">
         <dxo-filter-row [visible]="true" [showOperationChooser]="true"></dxo-filter-row>
         <dxo-remote-operations [filtering]="true" [sorting]="true" [paging]="true"></dxo-remote-operations>
         <dxo-paging [pageSize]="pageSize"></dxo-paging>
         <dxo-pager [showInfo]="false"
-                   [showPageSizeSelector]="false"
+                   [allowedPageSizes]="[20, 50]"
+                   [showPageSizeSelector]="true"
                    [visible]="true"
                    [showNavigationButtons]="true">
         </dxo-pager>
@@ -102,24 +101,6 @@
           </dxo-lookup>
         </dxi-column>
 
-        <dxi-column caption="Thao tác"
-                    type="'buttons'"
-                    alignment="center"
-                    [fixed]="true"
-                    fixedPosition="right"
-                    [width]="80"
-                    [allowFiltering]="false"
-                    [allowSorting]="false"
-                    [allowResizing]="false"
-                    [allowEditing]="false"
-                    cellTemplate="actionsCellTemplate">
-          <div *dxTemplate="let cell of 'actionsCellTemplate'">
-            <div class="action-inline text-center">
-              <i class="fas fa-info-circle" title="Thông tin"
-                 (click)="goToDetail(cell.data)"></i>
-            </div>
-          </div>
-        </dxi-column>
       </dx-data-grid>
     </div>
   </div>

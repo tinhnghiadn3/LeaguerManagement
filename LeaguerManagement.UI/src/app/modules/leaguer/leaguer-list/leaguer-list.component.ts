@@ -1,6 +1,6 @@
 import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import DataSource from 'devextreme/data/data_source';
-import {AttachmentModel, DropDownModel, LeaguerModel} from '@app/models';
+import {AttachmentModel, DropDownModel, LeaguerModel, LoggedUserModel} from '@app/models';
 import {GENDER_ITEMS} from '@app/shared/constants';
 import {Subscription} from 'rxjs';
 import {LeaguerService} from '@app/services/features/leaguer.service';
@@ -9,7 +9,9 @@ import {LookupService} from '@app/services/shared';
 import {GENERAL_MESSAGE} from '@app/shared/messages';
 import {PopoverConfirmBoxComponent} from '@app/shared/base-components';
 import {AppNotify} from '@app/shared/utilities/notification-helper';
-import {AppLeaguerStatus, LookupDataType} from '@app/shared/enums';
+import {AppLeaguerStatus} from '@app/shared/enums';
+import {saveAs} from 'file-saver';
+import {LoggedUserService} from '@app/services/auth';
 
 @Component({
   selector: 'app-leaguer-list',
@@ -24,6 +26,7 @@ export class LeaguerListComponent implements OnInit, OnDestroy {
   pageSize = 20;
   dataSource: DataSource;
 
+  loggedUser: LoggedUserModel = new LoggedUserModel();
   units: DropDownModel[] = [];
   statuses: DropDownModel[] = [];
   leaguers: LeaguerModel[] = [];
@@ -43,12 +46,14 @@ export class LeaguerListComponent implements OnInit, OnDestroy {
 
   constructor(private leaguerService: LeaguerService,
               private router: Router,
-              private lookupService: LookupService) {
+              private lookupService: LookupService,
+              private loggedUserService: LoggedUserService) {
     this.subscription.add(
       this.lookupService.lookup.subscribe(lookup => {
         this.units = lookup.units;
         this.statuses = lookup.statuses;
       }));
+    this.loggedUser = this.loggedUserService.loggedUser;
   }
 
   ngOnInit() {
@@ -82,6 +87,16 @@ export class LeaguerListComponent implements OnInit, OnDestroy {
 
   goToDetail(data: LeaguerModel) {
     this.router.navigate([`/leaguer/${data.id}/detail`]).then();
+  }
+
+  exportExcel() {
+    this.showProcessing();
+    this.leaguerService.exportExcel().subscribe(blob => {
+      saveAs(blob, `Danh sach Dang Vien So TNMT.xlsx`);
+      this.hideProcessing();
+    }, () => {
+      this.hideProcessing();
+    });
   }
 
   onShowAddingPopup() {

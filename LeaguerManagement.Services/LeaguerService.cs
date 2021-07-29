@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using ClosedXML.Excel;
 using DevExtreme.AspNet.Data;
 using DevExtreme.AspNet.Data.ResponseModel;
 using LeaguerManagement.Entities.Entities;
@@ -43,25 +44,41 @@ namespace LeaguerManagement.Services
 
         public async Task<LoadResult> GetCurrentLeaguers(DataSourceLoadOptionsBase loadOptions)
         {
-            using var unitOfWork = UnitOfWorkFactory.Invoke();
+            using var unitOfWork = UnitOfWorkFactory();
             _leaguerRepository = unitOfWork.Repository<Leaguer>();
 
-            var source = await _leaguerRepository.GetCurrentLeaguers();
+            var source = await _leaguerRepository.GetCurrentLeaguers(unitOfWork.CurrentUser.UnitId);
             return LoadCustom(source, loadOptions);
         }
 
         public async Task<LoadResult> GetAllLeaguers(DataSourceLoadOptionsBase loadOptions)
         {
-            using var unitOfWork = UnitOfWorkFactory.Invoke();
+            using var unitOfWork = UnitOfWorkFactory();
             _leaguerRepository = unitOfWork.Repository<Leaguer>();
 
-            var source = await _leaguerRepository.GetAllLeaguers();
+            var source = await _leaguerRepository.GetAllLeaguers(unitOfWork.CurrentUser.UnitId);
             return LoadCustom(source, loadOptions);
+        }
+        public async Task<IList<StatusStatisticModel>> GetStatusStatistics()
+        {
+            using var unitOfWork = UnitOfWorkFactory();
+            _leaguerRepository = unitOfWork.Repository<Leaguer>();
+
+            var leaguers = await _leaguerRepository.GetCurrentLeaguers(unitOfWork.CurrentUser.UnitId);
+
+            var officials = leaguers.Where(_ => _.StatusId == AppLeaguerStatus.Official.ToInt()).ToList();
+            var preliminary = leaguers.Where(_ => _.StatusId == AppLeaguerStatus.Preliminary.ToInt()).ToList();
+
+            return new List<StatusStatisticModel>
+            {
+                new() {StatusId = AppLeaguerStatus.Official.ToInt(), StatusName = "Chính thức", Amount = officials.Count},
+                new() {StatusId = AppLeaguerStatus.Preliminary.ToInt(), StatusName = "Dự bị", Amount = preliminary.Count},
+            };
         }
 
         public async Task<ReferenceWithAttachmentModel<LeaguerModel>> GetLeaguerDetail(int id)
         {
-            using var unitOfWork = UnitOfWorkFactory.Invoke();
+            using var unitOfWork = UnitOfWorkFactory();
             _leaguerRepository = unitOfWork.Repository<Leaguer>();
 
             return await _leaguerRepository.GetLeaguerDetail(id) ??
@@ -70,7 +87,7 @@ namespace LeaguerManagement.Services
 
         public async Task<bool> CheckExistLeaguer(CheckExistDataModel input)
         {
-            using var unitOfWork = UnitOfWorkFactory.Invoke();
+            using var unitOfWork = UnitOfWorkFactory();
             _leaguerRepository = unitOfWork.Repository<Leaguer>();
 
             return await _leaguerRepository.IsExistingLeaguer(input.LeaguerName, input.CardNumber, input.LeaguerId);
@@ -80,7 +97,7 @@ namespace LeaguerManagement.Services
         {
             try
             {
-                using var unitOfWork = UnitOfWorkFactory.Invoke();
+                using var unitOfWork = UnitOfWorkFactory();
                 _leaguerRepository = unitOfWork.Repository<Leaguer>();
 
                 // check exist with card number
@@ -104,7 +121,7 @@ namespace LeaguerManagement.Services
 
         public async Task<bool> UpdateLeaguer(LeaguerModel input)
         {
-            using var unitOfWork = UnitOfWorkFactory.Invoke();
+            using var unitOfWork = UnitOfWorkFactory();
             _leaguerRepository = unitOfWork.Repository<Leaguer>();
             _leaguerAttachmentRepository = unitOfWork.Repository<LeaguerAttachment>();
 
@@ -144,7 +161,7 @@ namespace LeaguerManagement.Services
 
         public async Task<bool> DeleteLeaguer(int id)
         {
-            using var unitOfWork = UnitOfWorkFactory.Invoke();
+            using var unitOfWork = UnitOfWorkFactory();
             _leaguerRepository = unitOfWork.Repository<Leaguer>();
             _leaguerAttachmentRepository = unitOfWork.Repository<LeaguerAttachment>();
 
@@ -182,7 +199,7 @@ namespace LeaguerManagement.Services
 
         public async Task<AttachmentModel> SaveAttachment(int leaguerId, string fileName, IFormFile formFile, bool isAvatar)
         {
-            using var unitOfWork = UnitOfWorkFactory.Invoke();
+            using var unitOfWork = UnitOfWorkFactory();
             _leaguerRepository = unitOfWork.Repository<Leaguer>();
             _leaguerAttachmentRepository = unitOfWork.Repository<LeaguerAttachment>();
 
@@ -246,7 +263,7 @@ namespace LeaguerManagement.Services
 
         public async Task<IList<ReferenceWithAttachmentModel<AppliedDocumentModel>>> GetOfficialDocuments(int leaguerId)
         {
-            using var unitOfWork = UnitOfWorkFactory.Invoke();
+            using var unitOfWork = UnitOfWorkFactory();
             _appliedDocumentRepository = unitOfWork.Repository<AppliedDocument>();
             _changeOfficialDocumentTypeRepository = unitOfWork.Repository<ChangeOfficialDocumentType>();
             _changeOfficialDocumentRepository = unitOfWork.Repository<ChangeOfficialDocument>();
@@ -314,7 +331,7 @@ namespace LeaguerManagement.Services
 
         public async Task<bool> ChangeToOfficial(int leaguerId)
         {
-            using var unitOfWork = UnitOfWorkFactory.Invoke();
+            using var unitOfWork = UnitOfWorkFactory();
             _leaguerRepository = unitOfWork.Repository<Leaguer>();
             _appliedDocumentRepository = unitOfWork.Repository<AppliedDocument>();
             _appliedDocumentAttachmentRepository = unitOfWork.Repository<AppliedDocumentAttachment>();
@@ -341,7 +358,7 @@ namespace LeaguerManagement.Services
 
         public async Task<bool> ChangeToOut(int leaguerId)
         {
-            using var unitOfWork = UnitOfWorkFactory.Invoke();
+            using var unitOfWork = UnitOfWorkFactory();
             _leaguerRepository = unitOfWork.Repository<Leaguer>();
 
             try
@@ -350,6 +367,7 @@ namespace LeaguerManagement.Services
                 // check exist leaguer
                 var leaguer = await GetOrThrow(_leaguerRepository, leaguerId, string.Format(AppMessages.ThisObjectNotFound, "Đảng viên"));
                 leaguer.StatusId = AppLeaguerStatus.GetOut.ToInt();
+                leaguer.IsActivated = false;
                 await unitOfWork.SaveChangesAsync();
                 return true;
             }
@@ -362,7 +380,7 @@ namespace LeaguerManagement.Services
 
         public async Task<bool> ChangeToDead(int leaguerId)
         {
-            using var unitOfWork = UnitOfWorkFactory.Invoke();
+            using var unitOfWork = UnitOfWorkFactory();
             _leaguerRepository = unitOfWork.Repository<Leaguer>();
 
             try
@@ -371,6 +389,7 @@ namespace LeaguerManagement.Services
                 // check exist leaguer
                 var leaguer = await GetOrThrow(_leaguerRepository, leaguerId, string.Format(AppMessages.ThisObjectNotFound, "Đảng viên"));
                 leaguer.StatusId = AppLeaguerStatus.Dead.ToInt();
+                leaguer.IsActivated = false;
                 await unitOfWork.SaveChangesAsync();
                 return true;
             }
@@ -383,7 +402,7 @@ namespace LeaguerManagement.Services
 
         public async Task<AttachmentModel> RenameAttachment(int attachmentId, string newName, int leaguerId)
         {
-            using var unitOfWork = UnitOfWorkFactory.Invoke();
+            using var unitOfWork = UnitOfWorkFactory();
             _leaguerRepository = unitOfWork.Repository<Leaguer>();
             _leaguerAttachmentRepository = unitOfWork.Repository<LeaguerAttachment>();
 
@@ -436,7 +455,7 @@ namespace LeaguerManagement.Services
         {
             try
             {
-                using var unitOfWork = UnitOfWorkFactory.Invoke();
+                using var unitOfWork = UnitOfWorkFactory();
                 _leaguerRepository = unitOfWork.Repository<Leaguer>();
                 _leaguerAttachmentRepository = unitOfWork.Repository<LeaguerAttachment>();
 
@@ -451,11 +470,34 @@ namespace LeaguerManagement.Services
             }
         }
 
+        #region Export Excel
+
+        public async Task<byte[]> ExportExcelAllLeager()
+        {
+            using var unitOfWork = UnitOfWorkFactory();
+            _leaguerRepository = unitOfWork.Repository<Leaguer>();
+
+            try
+            {
+                //
+                var data = await _leaguerRepository.ExportAllLeaguerToExcel(unitOfWork.CurrentUser.UnitId);
+                // export to excel
+                return GenerateLeaguerExcel(data);
+            }
+            catch (Exception e)
+            {
+                _logger.Error(e, e.Message);
+                throw new AppException(e.Message);
+            }
+        }
+
+        #endregion
+
         #region Applied Attachment
 
         public async Task<AttachmentModel> SaveAppliedAttachment(int appliedId, string fileName, IFormFile formFile)
         {
-            using var unitOfWork = UnitOfWorkFactory.Invoke();
+            using var unitOfWork = UnitOfWorkFactory();
             _appliedDocumentRepository = unitOfWork.Repository<AppliedDocument>();
             _appliedDocumentAttachmentRepository = unitOfWork.Repository<AppliedDocumentAttachment>();
 
@@ -503,7 +545,7 @@ namespace LeaguerManagement.Services
 
         public async Task<AttachmentModel> RenameOfficialAttachment(int attachmentId, string newName, int appliedId)
         {
-            using var unitOfWork = UnitOfWorkFactory.Invoke();
+            using var unitOfWork = UnitOfWorkFactory();
             _appliedDocumentRepository = unitOfWork.Repository<AppliedDocument>();
             _appliedDocumentAttachmentRepository = unitOfWork.Repository<AppliedDocumentAttachment>();
 
@@ -556,7 +598,7 @@ namespace LeaguerManagement.Services
         {
             try
             {
-                using var unitOfWork = UnitOfWorkFactory.Invoke();
+                using var unitOfWork = UnitOfWorkFactory();
                 _appliedDocumentRepository = unitOfWork.Repository<AppliedDocument>();
                 _appliedDocumentAttachmentRepository = unitOfWork.Repository<AppliedDocumentAttachment>();
 
@@ -588,6 +630,36 @@ namespace LeaguerManagement.Services
             await _leaguerAttachmentRepository.DeleteAsync(attachment);
             // Delete from folder
             FileHelper.DeleteFile(attachment.FilePath);
+        }
+
+        private byte[] GenerateLeaguerExcel(IList<LeaguerBookModel> excelData)
+        {
+            //dir path của file template
+            using var workbook = new XLWorkbook(Path.GetFullPath(Directory.GetCurrentDirectory() + "\\Contents\\Templates\\Dang Bo So TNMT DS DANG VIEN.xlsx"));
+            var worksheet = workbook.GetWorkSheet("Sheet1");
+            // declare default variable
+            const int totalColumns = 29;
+            var currentRow = 4;
+            //
+            // Start generate content
+            var index = 1;
+            foreach (var data in excelData)
+            {
+                currentRow++;
+                worksheet.PrintCellsValue(data.Unit, currentRow, totalColumns);
+                foreach (var leaguer in data.Leaguers)
+                {
+                    currentRow++;
+                    worksheet.PrintCellsValue(leaguer, currentRow, totalColumns, index, 3);
+                    index++;
+                }
+            }
+
+            worksheet.Columns().Style.Alignment.WrapText = true;
+            //add to stream return to controller
+            using var stream = new MemoryStream();
+            workbook.SaveAs(stream);
+            return stream.ToArray();
         }
 
         #endregion

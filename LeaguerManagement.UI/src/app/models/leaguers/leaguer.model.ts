@@ -1,3 +1,6 @@
+import {ReferenceWithAttachmentModel} from '@app/models/shared/attachment.model';
+import {AppliedDocumentModel} from '@app/models/leaguers/applied-document.model';
+
 export class LeaguerModel {
   id: number;
   unitId: number;
@@ -34,6 +37,8 @@ export class LeaguerModel {
   //
   avatarId: number;
   avatarImg: string;
+  //
+  officialDocuments: ReferenceWithAttachmentModel<AppliedDocumentModel>[] = [];
 
   constructor(init?: Partial<LeaguerModel>) {
     Object.assign(this, init);
