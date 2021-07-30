@@ -32,8 +32,9 @@ export * from './settings/base-setting.model';
 export * from './settings/change-official-document.model';
 
 /**
- * Staffs
+ * Leaguer
  */
 export * from './leaguers/leaguer.model';
 export * from './leaguers/applied-document.model';
 export * from './leaguers/check-exist-data.model';
+export * from './leaguers/documentation.model';

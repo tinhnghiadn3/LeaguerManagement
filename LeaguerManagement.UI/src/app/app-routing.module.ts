@@ -21,6 +21,11 @@ const routes: Routes = [
     canActivate: [AuthGuard],
   },
   {
+    path: 'documentation',
+    loadChildren: () => import('@app/modules/documentation/documentation.module').then(m => m.DocumentationModule),
+    canActivate: [AuthGuard],
+  },
+  {
     path: 'settings',
     loadChildren: () => import('@app/modules/settings/settings.module').then(m => m.SettingsModule),
     canActivate: [AuthGuard, NgxPermissionsGuard],

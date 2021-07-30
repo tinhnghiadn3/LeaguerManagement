@@ -15,4 +15,7 @@ export const API_ENDPOINT = {
   //
   // Files
   Files: `api/files`,
+  //
+  // Documentations
+  Documentations: `api/documentations`,
 };

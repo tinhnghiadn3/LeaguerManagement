@@ -9,7 +9,7 @@ import {
   AttachmentModel,
   CheckExistDataModel,
   AppliedDocumentModel,
-  StatusStatisticModel
+  StatusStatisticModel,
 } from '@app/models';
 import {LoadOptions} from 'devextreme/data/load_options';
 import {HttpEventType, HttpResponse} from '@angular/common/http';
@@ -19,7 +19,6 @@ import {AppNotify} from '@app/shared/utilities/notification-helper';
   providedIn: 'root'
 })
 export class LeaguerService {
-  [x: string]: any;
 
   constructor(private baseService: ApiService) {
   }

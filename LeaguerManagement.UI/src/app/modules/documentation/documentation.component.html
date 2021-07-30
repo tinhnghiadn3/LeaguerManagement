@@ -1,0 +1,11 @@
+<app-layout-default>
+
+  <dx-load-panel [visible]="true" *ngIf="isLoading" [showPane]="false"></dx-load-panel>
+  <dx-load-panel *ngIf="isProcessing"
+                 [visible]="true" [showPane]="false"
+                 [message]="'Processing'">
+  </dx-load-panel>
+
+
+
+</app-layout-default>

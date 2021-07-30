@@ -1,4 +1,4 @@
-import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {DropDownModel, LeaguerModel, StatusStatisticModel} from '@app/models';
 import {Subscription} from 'rxjs';
 import {LookupService} from '@app/services/shared';
@@ -17,7 +17,6 @@ import {PopoverConfirmBoxComponent} from '@app/shared/base-components/popover-co
 export class HomeComponent implements OnInit, OnDestroy {
   @ViewChild('deletingConfirmBox', {static: true}) deletingConfirmBox: PopoverConfirmBoxComponent;
   @ViewChild('deletingAccessControlConfirmBox', {static: true}) deletingAccessControlConfirmBox: PopoverConfirmBoxComponent;
-  @ViewChild('streaming', {static: false}) streamingCanvas: ElementRef;
 
   pageSize = 20;
   dataSource: DataSource;

@@ -32,6 +32,10 @@ export class HeaderComponent {
         visible: true,
       },
       {
+        text: 'Tài liệu tham khảo', path: '/documentation', expanded: true, selected: false, childrenItem: [],
+        visible: true,
+      },
+      {
         text: 'Cài đặt', path: '/settings', expanded: true, selected: false,
         visible: permissions.includes(AccessControls.find(_ => _.id === AccessControlValue.Settings).symbol),
         childrenItem: [

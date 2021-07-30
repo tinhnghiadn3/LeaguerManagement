@@ -91,13 +91,14 @@ export class LeaguerTransferOfficalComponent implements OnInit, OnDestroy {
   }
 
   changeOfficial() {
-    if (this.validateBeforeChanging()) {
-      AppNotify.warning('Chưa cung cấp đủ Giấy tờ/Biểu mẫu');
-      return;
-    }
+    // if (this.validateBeforeChanging()) {
+    //   AppNotify.warning('Chưa cung cấp đủ Giấy tờ/Biểu mẫu');
+    //   return;
+    // }
     this.showProcessing();
     this.leaguerService.changeToOfficial(this.selectedLeaguer.id).subscribe(() => {
       AppNotify.success(`Công nhận đồng chí ${this.selectedLeaguer.name} là Đảng viên chính thức thành công`);
+      this.visible = false;
       this.hideProcessing();
     }, () => {
       this.hideProcessing();
