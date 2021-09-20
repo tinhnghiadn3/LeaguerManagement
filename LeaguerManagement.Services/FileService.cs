@@ -20,9 +20,10 @@ namespace LeaguerManagement.Services
             _logger = logger;
         }
 
-        public byte[] GetFile(int leaguerId, int attachmentId, string pathType, out string fileName)
+        public byte[] GetFile(int referenceId, int attachmentId, string pathType, bool isDocumentation, out string fileName)
         {
-            var filePath = Path.Combine(Environment.CurrentDirectory, "Contents", "Uploads", leaguerId.ToString(), pathType);
+            var filePath = isDocumentation ? Path.Combine(Environment.CurrentDirectory, "Contents", "Uploads", pathType, referenceId.ToString())
+                : Path.Combine(Environment.CurrentDirectory, "Contents", "Uploads", referenceId.ToString(), pathType);
             //
             // Return when folder is not exist
             if (!Directory.Exists(filePath))

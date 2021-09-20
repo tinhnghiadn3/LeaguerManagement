@@ -55,6 +55,11 @@ namespace LeaguerManagement.Repositories
                 _.Id != id && string.Equals(_.Name, name) && string.Equals(_.CardNumber, cardNumber));
         }
 
+        public static async Task<bool> IsExistingRatingResult(this IRepository<RatingResult> repository, int id, string year)
+        {
+            return await repository.Entities.AnyAsync(_ => _.Id != id && _.Year == year);
+        }
+
         public static async Task<ReferenceWithAttachmentModel<LeaguerModel>> GetLeaguerDetail(this IRepository<Leaguer> repository, int id)
         {
             var source = new ReferenceWithAttachmentModel<LeaguerModel>();
@@ -65,16 +70,16 @@ namespace LeaguerManagement.Repositories
                     source.Reference = result.ReadNextListOrEmpty<LeaguerModel>().FirstOrDefault();
 
                     if (source.Reference == null) return;
-
+                    // avatar
                     var avatar = result.ReadNextListOrEmpty<AttachmentModel>().FirstOrDefault();
                     if (avatar != null) source.Reference.AvatarId = avatar.Id;
-
+                    // attachments
                     source.Attachments = result.ReadNextListOrEmpty<AttachmentModel>().ToList();
-
                     source.TotalAttachments = source.Attachments.Count;
-
+                    //
                     if (source.Reference.StatusId != AppLeaguerStatus.Official.ToInt()) return;
-
+                    //
+                    // official attachments
                     var officialDocuments = result.ReadNextListOrEmpty<AppliedDocumentModel>().ToList();
                     var officialDocumentAttachments = result.ReadNextListOrEmpty<AttachmentModel>().ToList();
                     if (!officialDocuments.Any()) return;
@@ -88,6 +93,8 @@ namespace LeaguerManagement.Repositories
                             TotalAttachments = attachments.Count
                         });
                     }
+                    // rating
+                    source.Reference.RatingResults = result.ReadNextListOrEmpty<RatingResultModel>().ToList();
                 });
 
             return source;

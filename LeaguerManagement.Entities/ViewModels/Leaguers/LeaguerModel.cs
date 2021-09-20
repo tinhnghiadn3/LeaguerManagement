@@ -45,5 +45,6 @@ namespace LeaguerManagement.Entities.ViewModels
         public bool IsActivated { get; set; }
 
         public IList<ReferenceWithAttachmentModel<AppliedDocumentModel>> OfficialDocuments { get; set; }
+        public IList<RatingResultModel> RatingResults { get; set; }
     }
 }

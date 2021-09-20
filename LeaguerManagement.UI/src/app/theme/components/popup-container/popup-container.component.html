@@ -24,7 +24,8 @@
           (onHiding)="onPopupHiding($event)"
           (onHidden)="onPopupHidden($event)"
           (onShowing)="onPopupShowing($event)"
-          (onShown)="onPopupShowed($event)">
+          (onShown)="onPopupShowed($event)"
+          (onContentReady)="onPopupReady($event)">
   <div *dxTemplate="let data of 'content'">
     <div class="popup-container">
       <div class="popup-content-header" *ngIf="headerTemplate">
@@ -36,7 +37,8 @@
                         class="popup-container-scroll-view"
                         direction="vertical"
                         showScrollbar="always">
-          <div class="popup-content-wrapper" [class.p-0]="!paddingContentWrapper" [class.fixed-height]="!autoContentContainerHeight">
+          <div class="popup-content-wrapper" [class.p-0]="!paddingContentWrapper"
+               [class.fixed-height]="!autoContentContainerHeight">
             <ng-content></ng-content>
           </div>
         </dx-scroll-view>

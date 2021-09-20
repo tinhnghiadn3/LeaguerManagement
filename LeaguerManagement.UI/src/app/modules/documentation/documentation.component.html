@@ -7,5 +7,60 @@
   </dx-load-panel>
 
 
+  <div class="form-request" *ngIf="!isLoading">
+    <div class="part">
+      <div class="d-flex justify-content-between align-items-center mb-2">
+        <dx-button type="default" [text]="isProcessing ? '' : 'Thêm mới tài liệu'"
+                   icon="{{isProcessing?'fas fa-spinner fa-spin':''}}" *ngIf="allowEditing"
+                   (onClick)="onShowEditingPopup()" [disabled]="isProcessing"></dx-button>
+      </div>
+      <div class="row part-content" *ngFor="let item of documentations; let i = index">
+        <div class="col-12 col-lg-6 part-child-title">
+          {{i + 1 + '. ' + item.reference.name}}
+          <i class="fas fa-edit ml-2" *ngIf="allowEditing"
+             title="Sửa" (click)="onShowEditingPopup(item.reference)"></i>
+          <i class="fas fa-times ml-2" *ngIf="allowEditing"
+             (click)="openDeletingConfirmPopup(item.reference, $event)" title="Xóa"></i>
+        </div>
+        <div class="col-12 col-lg-6">
+          <app-upload-attachments [referenceId]="item.reference.id"
+                                  [endPoint]="endPoint"
+                                  [allowEditing]="allowEditing"
+                                  (onAttachmentChanged)="getDocumentations()"
+                                  [data]="item" *ngIf="item.totalAttachments">
+          </app-upload-attachments>
+
+          <div class="d-flex align-items-center" *ngIf="!item.totalAttachments">
+            <a class="upload" (click)="addAttachment(fileInput, item)">
+              <i class="fas fa-paperclip"></i>
+              Tải lên
+            </a>
+            <input #fileInput type="file" multiple="multiple" style="display: none;"
+                   [accept]="ALLOWED_FILE_TYPES"
+                   (change)="uploadDocumentationAttachment($event, item)">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
 </app-layout-default>
+
+
+<app-popover-confirm-box #deletingConfirmBox
+                         [message]="GENERAL_MESSAGE.DeleteRecordConfirmQuestion.format('Tài liệu', selectedDocumentation.name)"
+                         (onConfirm)="onDelete()"></app-popover-confirm-box>
+
+<app-popup-container *ngIf="isShowEditingPopup"
+                     [title]="!selectedDocumentation.id ? 'Tạo mới Tài liệu' : 'Cập nhật Tài liệu'"
+                     [width]="550"
+                     [height]="'100%'"
+                     [position]="'right'"
+                     [(visible)]="isShowEditingPopup">
+  <app-base-setting-editing [selectedModel]="selectedDocumentation"
+                            [(visible)]="isShowEditingPopup"
+                            [isProcessing]="isProcessing"
+                            (onEditingModelChange)="onSave($event)"
+                            [fieldLabel]="'Tên Tài liệu'"
+  ></app-base-setting-editing>
+</app-popup-container>

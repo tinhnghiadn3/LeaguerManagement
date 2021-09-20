@@ -1,5 +1,12 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {AttachmentModel, CheckExistDataModel, DropDownModel, LeaguerModel, ReferenceWithAttachmentModel} from '@app/models';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {
+  AttachmentModel,
+  CheckExistDataModel,
+  DropDownModel,
+  LeaguerModel,
+  RatingResultModel,
+  ReferenceWithAttachmentModel
+} from '@app/models';
 import {Subscription} from 'rxjs';
 import {GENERAL_MESSAGE} from '@app/shared/messages';
 import {LookupService} from '@app/services/shared';
@@ -7,8 +14,9 @@ import {LeaguerService} from '@app/services/features/leaguer.service';
 import {ActivatedRoute} from '@angular/router';
 import {AppNotify} from '@app/shared/utilities/notification-helper';
 import {ALLOWED_AVATAR_TYPES, ALLOWED_FILE_TYPES, GENDER_ITEMS} from '@app/shared/constants';
-import {isEqual, clone} from 'lodash';
+import {isEqual, cloneDeep} from 'lodash';
 import {AppLeaguerStatus} from '@app/shared/enums';
+import {PopoverConfirmBoxComponent} from '@app/shared/base-components';
 
 @Component({
   selector: 'app-leaguer-detail',
@@ -16,15 +24,19 @@ import {AppLeaguerStatus} from '@app/shared/enums';
   styleUrls: ['./leaguer-detail.component.scss']
 })
 export class LeaguerDetailComponent implements OnInit, OnDestroy {
-  isLoading: boolean = false;
-  isProcessing: boolean = false;
+  @ViewChild('deletingConfirmBox', {static: true}) deletingConfirmBox: PopoverConfirmBoxComponent;
 
   data: ReferenceWithAttachmentModel<LeaguerModel> = new ReferenceWithAttachmentModel<LeaguerModel>();
   leaguer: LeaguerModel = new LeaguerModel();
+  selectedResult: RatingResultModel = new RatingResultModel();
+
   units: DropDownModel[] = [];
   statuses: DropDownModel[] = [];
+  ratings: DropDownModel[] = [];
 
-  isShowStreetEditingPopup: boolean = false;
+  isLoading: boolean = false;
+  isProcessing: boolean = false;
+  isShowAddingRatingResultPopup: boolean = false;
   isExistData: boolean = false;
   leaguerId: number;
 
@@ -53,6 +65,7 @@ export class LeaguerDetailComponent implements OnInit, OnDestroy {
       this.lookupService.lookup.subscribe(lookup => {
         this.units = lookup.units;
         this.statuses = lookup.statuses;
+        this.ratings = lookup.ratings;
       }));
   }
 
@@ -65,7 +78,7 @@ export class LeaguerDetailComponent implements OnInit, OnDestroy {
     this.isLoading = true;
     this.leaguerService.getLeaguer(this.leaguerId).subscribe(res => {
       this.data = res;
-      this.leaguer = clone(this.data.reference || new LeaguerModel());
+      this.leaguer = cloneDeep(this.data.reference || new LeaguerModel());
       this.setAvatar(this.leaguer.avatarId);
       this.isLoading = false;
     }, () => {
@@ -152,6 +165,73 @@ export class LeaguerDetailComponent implements OnInit, OnDestroy {
   removeImg() {
     this.leaguer.avatarId = 0;
     this.leaguer.avatarImg = '';
+  }
+
+  onShowAddingRatingResultPopup(result = null) {
+    this.isShowAddingRatingResultPopup = true;
+    this.selectedResult = result ?? new RatingResultModel({
+      leaguerId: this.leaguerId
+    });
+  }
+
+  focusFirstBox(yearBox) {
+    setTimeout(() => {
+      yearBox.instance.focus();
+    }, 100);
+  }
+
+  onSaveRatingResult(validationGroup) {
+    if (!validationGroup.instance.validate().isValid) {
+      return;
+    }
+    this.showProcessing();
+    if (this.selectedResult.id) {
+      this.updateRatingResult();
+    } else {
+      this.addRatingResult();
+    }
+  }
+
+  addRatingResult() {
+    this.leaguerService.addRatingResult(this.selectedResult).subscribe((res) => {
+      const result = cloneDeep(this.selectedResult);
+      result.id = res;
+      this.leaguer.ratingResults.push(result);
+      AppNotify.success(GENERAL_MESSAGE.ADD_SUCCESS.format('Xếp loại năm', this.selectedResult.year));
+      this.isShowAddingRatingResultPopup = false;
+      this.hideProcessing();
+      this.refresh();
+    }, () => {
+      this.hideProcessing();
+    });
+  }
+
+  updateRatingResult() {
+    this.leaguerService.updateRatingResult(this.selectedResult).subscribe(() => {
+      AppNotify.success(GENERAL_MESSAGE.ADD_SUCCESS.format('Xếp loại năm', this.selectedResult.year));
+      this.hideProcessing();
+      this.refresh();
+    }, () => {
+      this.hideProcessing();
+    });
+  }
+
+  onConfirmDeleteRatingResult(e, result) {
+    this.selectedResult = result;
+    if (this.deletingConfirmBox) {
+      this.deletingConfirmBox.show(e.currentTarget);
+    }
+  }
+
+  onDeleteRatingResult() {
+    this.showProcessing();
+    this.leaguerService.deleteRatingResult(this.selectedResult.id).subscribe(() => {
+      AppNotify.success(GENERAL_MESSAGE.DELETE_SUCCESS.format('Xếp loại năm', this.selectedResult.year));
+      this.hideProcessing();
+      this.refresh();
+    }, () => {
+      this.hideProcessing();
+    });
   }
 
   /**

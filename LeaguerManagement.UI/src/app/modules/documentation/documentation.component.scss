@@ -1,0 +1,41 @@
+@import "variables";
+
+.form-request {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .part {
+    padding: 15px;
+    border: 1px solid #ccc;
+    border-radius: 0.15rem;
+    width: 100%;
+    margin: 5px;
+
+    .part-title {
+      font-weight: bold;
+      margin-bottom: 10px;
+      border-bottom: 2px solid #00a39c;
+      padding-bottom: 3px;
+      display: inline-block;
+    }
+
+    .part-content {
+      align-items: center;
+      margin: 10px 10px;
+      padding: 7px;
+      border: 1px solid #002e2c;
+
+      &:hover {
+        border: 2px solid $main-dark-color;
+        padding: 6px;
+      }
+    }
+
+    .part-child-title {
+      font-weight: 400;
+      font-style: italic;
+      display: inline-block;
+    }
+  }
+}

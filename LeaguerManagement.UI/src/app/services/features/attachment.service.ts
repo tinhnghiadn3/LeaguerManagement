@@ -64,15 +64,15 @@ export class AttachmentService {
     return this.uploadAttachment(files, uploading, url);
   }
 
-  renameAttachment(attachment: AttachmentModel, pathType: string): Observable<AttachmentModel> {
-    return this.baseService.post(`${API_ENDPOINT.Leaguers}/${pathType}/attachments/rename`, {
+  renameAttachment(endPoint: string, attachment: AttachmentModel, pathType: string): Observable<AttachmentModel> {
+    return this.baseService.post(`${endPoint}/${pathType}/attachments/rename`, {
       attachmentId: attachment.id,
       referenceId: attachment.referenceId,
       newName: attachment.fileName
     });
   }
 
-  deleteAttachment(referenceId: number, attachmentId: number, pathType: string) {
-    return this.baseService.delete(`${API_ENDPOINT.Leaguers}/${pathType}/${referenceId}/attachments/${attachmentId}`);
+  deleteAttachment(endPoint: string, referenceId: number, attachmentId: number, pathType: string) {
+    return this.baseService.delete(`${endPoint}/${pathType}/${referenceId}/attachments/${attachmentId}`);
   }
 }

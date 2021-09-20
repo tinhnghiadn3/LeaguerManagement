@@ -79,6 +79,7 @@ export class PopupContainerComponent implements OnInit {
   @Output() heightChange = new EventEmitter();
   @Output() titleChange = new EventEmitter();
   @Output() onHiding = new EventEmitter();
+  @Output() onReady = new EventEmitter();
 
   private get isAutoHeight(): boolean {
     return this.height === 'auto' || this.height === '100%';
@@ -185,5 +186,9 @@ export class PopupContainerComponent implements OnInit {
 
   onPopupHiding(e) {
     this.onHiding.emit();
+  }
+
+  onPopupReady(e) {
+    this.onReady.emit();
   }
 }

@@ -27,6 +27,7 @@ namespace LeaguerManagement.Services
         private readonly ILogger _logger;
 
         private IRepository<Leaguer> _leaguerRepository;
+        private IRepository<RatingResult> _ratingResultRepository;
         private IRepository<LeaguerAttachment> _leaguerAttachmentRepository;
         private IRepository<AppliedDocument> _appliedDocumentRepository;
         private IRepository<AppliedDocumentAttachment> _appliedDocumentAttachmentRepository;
@@ -59,6 +60,7 @@ namespace LeaguerManagement.Services
             var source = await _leaguerRepository.GetAllLeaguers(unitOfWork.CurrentUser.UnitId);
             return LoadCustom(source, loadOptions);
         }
+
         public async Task<IList<StatusStatisticModel>> GetStatusStatistics()
         {
             using var unitOfWork = UnitOfWorkFactory();
@@ -92,7 +94,7 @@ namespace LeaguerManagement.Services
 
             return await _leaguerRepository.IsExistingLeaguer(input.LeaguerName, input.CardNumber, input.LeaguerId);
         }
-
+        
         public async Task<int> AddLeaguer(LeaguerModel input)
         {
             try
@@ -135,6 +137,8 @@ namespace LeaguerManagement.Services
                 var leaguer = await GetOrThrow(_leaguerRepository, input.Id,
                     string.Format(AppMessages.ThisObjectNotFound, "Đảng viên"));
                 //
+                // non-update rating result
+                input.RatingResults = null;
                 //
                 unitOfWork.BeginTransaction();
                 //
@@ -342,9 +346,6 @@ namespace LeaguerManagement.Services
                 // check exist leaguer
                 var leaguer = await GetOrThrow(_leaguerRepository, leaguerId, string.Format(AppMessages.ThisObjectNotFound, "Đảng viên"));
                 //
-                var appliedDocuments = await _appliedDocumentRepository.GetAppliedDocuments(leaguer.Id);
-                var attachments = await _appliedDocumentAttachmentRepository.GetAppliedOfficialAttachments(leaguer.Id);
-                if (!attachments.Any() || attachments.Count >= appliedDocuments.Count) return false;
                 leaguer.StatusId = AppLeaguerStatus.Official.ToInt();
                 await unitOfWork.SaveChangesAsync();
                 return true;
@@ -469,6 +470,87 @@ namespace LeaguerManagement.Services
                 throw new AppException(e.Message);
             }
         }
+
+        #region Rating Results
+
+        public async Task<int> AddRatingResult(RatingResultModel input)
+        {
+            try
+            {
+                using var unitOfWork = UnitOfWorkFactory();
+                _ratingResultRepository = unitOfWork.Repository<RatingResult>();
+
+                // check exist with card number
+                if (await _ratingResultRepository.IsExistingRatingResult(0, input.Year))
+                    throw new AppException(string.Format(AppMessages.ThisObjectIsExist, $"Xếp loại năm {input.Year}"));
+                //
+                // adding
+                var ratingResult = _mapper.Map<RatingResultModel, RatingResult>(input);
+                await _ratingResultRepository.InsertAsync(ratingResult);
+
+                return ratingResult.Id;
+            }
+            catch (Exception e)
+            {
+                _logger.Error(e, e.Message);
+                throw new AppException(e.Message);
+            }
+        }
+
+
+        public async Task<bool> UpdateRatingResult(RatingResultModel input)
+        {
+            using var unitOfWork = UnitOfWorkFactory();
+            _ratingResultRepository = unitOfWork.Repository<RatingResult>();
+
+            try
+            {
+                // check exist with card number (except current)
+                if (await _ratingResultRepository.IsExistingRatingResult(input.Id, input.Year))
+                    throw new AppException(string.Format(AppMessages.ThisObjectIsExist, $"Xếp loại năm {input.Year}"));
+                //
+                // check exist leaguer
+                var ratingResult = await GetOrThrow(_ratingResultRepository, input.Id,
+                    string.Format(AppMessages.ThisObjectNotFound, "Xếp loại"));
+                //
+                // updating
+                _mapper.Map(input, ratingResult);
+                await unitOfWork.SaveChangesAsync();
+
+                return true;
+            }
+            catch (Exception e)
+            {
+                _logger.Error(e, e.Message);
+                throw new AppException(e.Message);
+            }
+        }
+
+        public async Task<bool> DeleteRatingResult(int id)
+        {
+            using var unitOfWork = UnitOfWorkFactory();
+            _ratingResultRepository = unitOfWork.Repository<RatingResult>();
+
+            try
+            {
+                //
+                // check exist leaguer
+                var ratingResult = await GetOrThrow(_ratingResultRepository, id,
+                    string.Format(AppMessages.ThisObjectNotFound, "Xếp loại"));
+
+                // delete leaguer
+                await _ratingResultRepository.DeleteAsync(ratingResult);
+
+                return true;
+            }
+            catch (Exception e)
+            {
+                _logger.Error(e, e.Message);
+                throw new AppException(e.Message);
+            }
+        }
+
+        #endregion
 
         #region Export Excel
 
@@ -617,7 +699,6 @@ namespace LeaguerManagement.Services
                 throw new AppException(e.Message);
             }
         }
-
 
         #endregion
 

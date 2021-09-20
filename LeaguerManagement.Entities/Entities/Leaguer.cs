@@ -11,6 +11,7 @@ namespace LeaguerManagement.Entities.Entities
         {
             AppliedDocuments = new HashSet<AppliedDocument>();
             LeaguerAttachments = new HashSet<LeaguerAttachment>();
+            RatingResults = new HashSet<RatingResult>();
         }
 
         public int Id { get; set; }
@@ -50,5 +51,6 @@ namespace LeaguerManagement.Entities.Entities
         public virtual Unit Unit { get; set; }
         public virtual ICollection<AppliedDocument> AppliedDocuments { get; set; }
         public virtual ICollection<LeaguerAttachment> LeaguerAttachments { get; set; }
+        public virtual ICollection<RatingResult> RatingResults { get; set; }
     }
 }

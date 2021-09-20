@@ -15,6 +15,7 @@ export enum LookupDataType {
   Statuses = 'Statuses',
   ChangeOfficialDocumentTypes = 'ChangeOfficialDocumentTypes',
   ChangeOfficialDocuments = 'ChangeOfficialDocuments',
+  Ratings = 'Ratings',
 }
 
 export enum AppLeaguerStatus {

@@ -273,22 +273,29 @@
         </div>
         <!--dead date/reason-->
         <div class="form-group mt-2">
-          <div class="group-title">Thông tin từ trần:</div>
-          <div class="row">
-            <div class="col-12 col-lg-4">
-              <div class="field row-layout">
-                <div class="field-label">Ngày từ trần - lý do:</div>
-                <dx-date-box class="field-value w-100"
-                             [displayFormat]="'dd/MM/yyy'" [(max)]="now"
-                             [(value)]="leaguer.deadDate"
-                             type="date"></dx-date-box>
+          <div class="d-flex justify-content-between align-items-center">
+            <div class="group-title">Kết quả xếp loại Đảng viên:</div>
+            <dx-button type="default" [text]="isProcessing ? '' : 'Thêm mới kết quả'"
+                       icon="{{isProcessing?'fas fa-spinner fa-spin':'fas fa-plus'}}" class="ml-2"
+                       (onClick)="onShowAddingRatingResultPopup()" [disabled]="isProcessing"></dx-button>
+          </div>
+          <div class="form-group mt-2" *ngFor="let result of leaguer.ratingResults">
+            <div class="row">
+              <div class="col-12 col-lg-4">
+                <div class="field row-layout">
+                  <div class="field-label">Năm: <strong>{{result.year}}</strong></div>
+                </div>
               </div>
-            </div>
-            <div class="col-12 col-lg-5">
-              <div class="field row-layout">
-                <div class="field-label">Lý do từ trần:</div>
-                <dx-text-box class="field-value w-100" [(value)]="leaguer.deathReason"
-                             [valueChangeEvent]="'keyup'"></dx-text-box>
+              <div class="col-12 col-lg-4">
+                <div class="field row-layout">
+                  <div class="field-label">Xếp loại: <strong>{{result.ratingName}}</strong></div>
+                  <div class="ml-2" title="Sửa" (click)="onShowAddingRatingResultPopup(result)">
+                    <i class="fas fa-pencil-alt"></i>
+                  </div>
+                  <div class="ml-2" title="Xóa" (click)="onConfirmDeleteRatingResult($event, result)">
+                    <i class="far fa-trash-alt"></i>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -329,7 +336,7 @@
       <!--attachment-->
       <div class="form-group mt-2" *ngIf="leaguer && leaguer.id">
         <div class="group-title">Hồ sơ liên quan:</div>
-        <app-upload-attachments [leaguerId]="leaguerId"
+        <app-upload-attachments [referenceId]="leaguerId"
                                 (onAttachmentChanged)="getLeaguer()"
                                 [data]="data">
         </app-upload-attachments>
@@ -346,7 +353,7 @@
         <!--attachment-->
         <div class="form-group mt-2" *ngIf="leaguer && leaguer.id && leaguer.statusId === AppLeaguerStatus.Official">
           <div class="group-title">Hồ sơ công nhận Đảng viên chính thức:</div>
-          <app-upload-attachments [leaguerId]="leaguerId" *ngFor="let item of leaguer.officialDocuments"
+          <app-upload-attachments [referenceId]="leaguerId" *ngFor="let item of leaguer.officialDocuments"
                                   (onAttachmentChanged)="getLeaguer()"
                                   [data]="item">
           </app-upload-attachments>
@@ -363,3 +370,49 @@
     </div>
   </dx-validation-group>
 </div>
+
+<app-popover-confirm-box #deletingConfirmBox
+                         [message]="GENERAL_MESSAGE.DeleteRecordConfirmQuestion.format('Xếp loại năm', selectedResult.year)"
+                         (onConfirm)="onDeleteRatingResult()"></app-popover-confirm-box>
+
+<app-popup-container *ngIf="isShowAddingRatingResultPopup"
+                     [title]="selectedResult.id ? 'Cập nhật Kết quả xếp loại' : 'Tạo mới Kết quả xếp loại'"
+                     [width]="550"
+                     [height]="'auto'"
+                     [(visible)]="isShowAddingRatingResultPopup"
+                     (onReady)="focusFirstBox(yearBox)">
+  <div class="form-wrapper">
+    <dx-validation-group #validationGroup>
+      <div class="field">
+        <span class="field-label">Năm <span class="lbl-required">*</span></span>
+        <div class="field-value">
+          <dx-text-box #yearBox [(value)]="selectedResult.year" [maxLength]="255">
+            <dx-validator>
+              <dxi-validation-rule type="required"
+                                   [message]="GENERAL_MESSAGE.TheFieldIsRequired.format('Năm')"></dxi-validation-rule>
+            </dx-validator>
+          </dx-text-box>
+        </div>
+      </div>
+      <div class="field">
+        <span class="field-label">Xếp loại <span class="lbl-required">*</span></span>
+        <div class="field-value">
+          <dx-select-box [dataSource]="ratings"
+                         valueExpr="key" displayExpr="value"
+                         [(value)]="selectedResult.ratingId">
+            <dxi-validation-rule type="required"
+                                 [message]="GENERAL_MESSAGE.TheFieldIsRequired.format('Xếp loại')"></dxi-validation-rule>
+          </dx-select-box>
+
+        </div>
+      </div>
+      <div class="field-action">
+        <dx-button class="mr-2" type="default"
+                   [text]="isProcessing ? '' : 'Lưu'"
+                   icon="{{isProcessing?'fas fa-spinner fa-spin':''}}"
+                   (onClick)="onSaveRatingResult(validationGroup)" [disabled]="isProcessing"></dx-button>
+        <dx-button text="Hủy" (onClick)="isShowAddingRatingResultPopup = false"></dx-button>
+      </div>
+    </dx-validation-group>
+  </div>
+</app-popup-container>

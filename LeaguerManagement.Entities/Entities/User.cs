@@ -9,6 +9,7 @@ namespace LeaguerManagement.Entities.Entities
     {
         public User()
         {
+            DocumentationAttachments = new HashSet<DocumentationAttachment>();
             LeaguerAttachments = new HashSet<LeaguerAttachment>();
         }
 
@@ -22,6 +23,7 @@ namespace LeaguerManagement.Entities.Entities
         public int? UnitId { get; set; }
 
         public virtual Unit Unit { get; set; }
+        public virtual ICollection<DocumentationAttachment> DocumentationAttachments { get; set; }
         public virtual ICollection<LeaguerAttachment> LeaguerAttachments { get; set; }
     }
 }

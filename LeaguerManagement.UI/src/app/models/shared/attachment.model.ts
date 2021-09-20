@@ -141,14 +141,14 @@ export class AttachmentModel {
     return str;
   }
 
-  private static getFileLink(attachmentId: number, fileId: number, path: string, type: string): string {
+  private static getFileLink(attachmentId: number, referenceId: number, path: string, type: string): string {
     if (!attachmentId) {
       return null;
     }
     const imageToken = AppStorage.getTokenData(IMAGE_TOKEN_KEY);
     const baseUrl = environment.baseUrl ? environment.baseUrl : location.origin;
 
-    return `${baseUrl}/${API_ENDPOINT.Files}/${type}/${path}?leaId=${fileId}&attId=${attachmentId}&sc=${imageToken}`;
+    return `${baseUrl}/${API_ENDPOINT.Files}/${type}/${path}?leaId=${referenceId}&attId=${attachmentId}&sc=${imageToken}`;
   }
 }
 

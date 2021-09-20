@@ -3,7 +3,7 @@
     <div class="field">
       <span class="field-label">{{fieldLabel}} <span class="lbl-required">*</span></span>
       <div class="field-value">
-        <dx-text-box [(value)]="model.name" [maxLength]="255">
+        <dx-text-box #nameBox [(value)]="model.name" [maxLength]="255" (onEnterKey)="onSave()">
           <dx-validator>
             <dxi-validation-rule type="required"
                                  [message]="GENERAL_MESSAGE.TheFieldIsRequired.format(fieldLabel)"></dxi-validation-rule>

@@ -8,6 +8,7 @@ import {KeyCode} from '@app/shared/enums';
 import {finalize} from 'rxjs/operators';
 import {AttachmentService} from '@app/services/features/attachment.service';
 import {ALLOWED_FILE_TYPES} from '@app/shared/constants';
+import {API_ENDPOINT} from '@app/services/endpoints';
 
 @Component({
   selector: 'app-upload-attachments',
@@ -20,18 +21,20 @@ export class UploadAttachmentsComponent implements OnInit {
   @ViewChild('deletingConfirmBox', {static: true}) deletingConfirmBox: PopoverConfirmBoxComponent;
   @ViewChild('renamingTextBox', {static: false}) renamingTextBox: DxTextBoxComponent;
 
-  @Input() leaguerId: number;
+  @Input() allowEditing: boolean = true;
+  @Input() referenceId: number;
+  @Input() endPoint: string = API_ENDPOINT.Leaguers;
 
   private _data: ReferenceWithAttachmentModel<any> = new ReferenceWithAttachmentModel<any>();
   @Input()
   get data() {
-    AttachmentModel.setAttachmentsList(this._data.attachments, this.leaguerId);
+    AttachmentModel.setAttachmentsList(this._data.attachments, this.referenceId);
     return this._data;
   }
 
   set data(value) {
     this._data = value;
-    AttachmentModel.setAttachmentsList(this._data.attachments, this.leaguerId);
+    AttachmentModel.setAttachmentsList(this._data.attachments, this.referenceId);
   }
 
   @Output() onAttachmentChanged = new EventEmitter();
@@ -82,7 +85,7 @@ export class UploadAttachmentsComponent implements OnInit {
       const newName = attachment.tmpName + attachment.fileExtension;
       if (newName !== attachment.fileName) {
         attachment.fileName = newName;
-        this.attachmentService.renameAttachment(attachment, attachment.referenceName).subscribe(res => {
+        this.attachmentService.renameAttachment(this.endPoint, attachment, attachment.referenceName).subscribe(res => {
           attachment = res;
           AppNotify.success('Sửa tên file thành công ');
         });
@@ -123,7 +126,7 @@ export class UploadAttachmentsComponent implements OnInit {
     const model = this._data;
     this.selectedAttachment.isDeleting = true;
     this.showProcessing();
-    this.attachmentService.deleteAttachment(this.selectedAttachment.referenceId,
+    this.attachmentService.deleteAttachment(this.endPoint, this.selectedAttachment.referenceId,
       this.selectedAttachment.id, this.selectedAttachment.referenceName).pipe(
       finalize(() => {
         this.hideProcessing();

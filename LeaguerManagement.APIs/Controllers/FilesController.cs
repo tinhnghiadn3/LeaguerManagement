@@ -1,6 +1,5 @@
 ﻿using System.IO;
 using LeaguerManagement.APIs.Configurations;
-using LeaguerManagement.APIs.Controllers;
 using LeaguerManagement.Entities.Utilities;
 using LeaguerManagement.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -8,7 +7,7 @@ using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.Options;
 using Microsoft.Net.Http.Headers;
 
-namespace LeaguerManagement.Api.Controllers
+namespace LeaguerManagement.APIs.Controllers
 {
     [Route("api/[controller]")]
     [FileAuthorize]
@@ -55,11 +54,23 @@ namespace LeaguerManagement.Api.Controllers
             return GetServerFile(leaId, attId, "Official");
         }
 
+        [HttpGet("documentation/image")]
+        public IActionResult GetDocumentationImage([FromQuery] int leaId, [FromQuery] int attId)
+        {
+            return GetServerFile(leaId, attId, "Documentations", true);
+        }
+
+        [HttpGet("documentation/download")]
+        public IActionResult DownloadDocumentationFile([FromQuery] int leaId, [FromQuery] int attId)
+        {
+            return GetServerFile(leaId, attId, "Documentations", true);
+        }
+
         #region Private Method
 
-        private IActionResult GetServerFile(int leaguerId, int attachmentId, string pathType)
+        private IActionResult GetServerFile(int leaguerId, int attachmentId, string pathType, bool isDocumentation = false)
         {
-            var bytes = _fileService.GetFile(leaguerId, attachmentId, pathType, out var fileName);
+            var bytes = _fileService.GetFile(leaguerId, attachmentId, pathType, isDocumentation, out var fileName);
             if (bytes == null)
                 return null;
 

@@ -24,9 +24,13 @@ namespace LeaguerManagement.Entities.Contexts
         public virtual DbSet<AppliedDocumentAttachment> AppliedDocumentAttachments { get; set; }
         public virtual DbSet<ChangeOfficialDocument> ChangeOfficialDocuments { get; set; }
         public virtual DbSet<ChangeOfficialDocumentType> ChangeOfficialDocumentTypes { get; set; }
+        public virtual DbSet<Documentation> Documentations { get; set; }
+        public virtual DbSet<DocumentationAttachment> DocumentationAttachments { get; set; }
         public virtual DbSet<Leaguer> Leaguers { get; set; }
         public virtual DbSet<LeaguerAttachment> LeaguerAttachments { get; set; }
         public virtual DbSet<Pronoun> Pronouns { get; set; }
+        public virtual DbSet<Rating> Ratings { get; set; }
+        public virtual DbSet<RatingResult> RatingResults { get; set; }
         public virtual DbSet<Role> Roles { get; set; }
         public virtual DbSet<Status> Statuses { get; set; }
         public virtual DbSet<Unit> Units { get; set; }
@@ -103,6 +107,37 @@ namespace LeaguerManagement.Entities.Contexts
                 entity.ToTable("ChangeOfficialDocumentType");
             });
 
+            modelBuilder.Entity<Documentation>(entity =>
+            {
+                entity.ToTable("Documentation");
+
+                entity.Property(e => e.Name).IsRequired();
+            });
+
+            modelBuilder.Entity<DocumentationAttachment>(entity =>
+            {
+                entity.ToTable("DocumentationAttachment");
+
+                entity.Property(e => e.CreatedDate).HasColumnType("datetime");
+
+                entity.Property(e => e.FileExtension).IsRequired();
+
+                entity.Property(e => e.FileName).IsRequired();
+
+                entity.Property(e => e.FilePath).IsRequired();
+
+                entity.HasOne(d => d.CreatedByUser)
+                    .WithMany(p => p.DocumentationAttachments)
+                    .HasForeignKey(d => d.CreatedByUserId)
+                    .HasConstraintName("FK__Documenta__Creat__5629CD9C");
+
+                entity.HasOne(d => d.Documentation)
+                    .WithMany(p => p.DocumentationAttachments)
+                    .HasForeignKey(d => d.DocumentationId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Documenta__Docum__5535A963");
+            });
+
             modelBuilder.Entity<Leaguer>(entity =>
             {
                 entity.ToTable("Leaguer");
@@ -172,6 +207,33 @@ namespace LeaguerManagement.Entities.Contexts
                     .HasConstraintName("FK__LeaguerAt__Leagu__44FF419A");
             });
 
+            modelBuilder.Entity<Rating>(entity =>
+            {
+                entity.ToTable("Rating");
+
+                entity.Property(e => e.Name).IsRequired();
+            });
+
+            modelBuilder.Entity<RatingResult>(entity =>
+            {
+                entity.ToTable("RatingResult");
+
+                entity.Property(e => e.Year)
+                    .IsRequired()
+                    .HasMaxLength(55)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.Leaguer)
+                    .WithMany(p => p.RatingResults)
+                    .HasForeignKey(d => d.LeaguerId)
+                    .HasConstraintName("FK__RatingRes__Leagu__72C60C4A");
+
+                entity.HasOne(d => d.Rating)
+                    .WithMany(p => p.RatingResults)
+                    .HasForeignKey(d => d.RatingId)
+                    .HasConstraintName("FK__RatingRes__Ratin__71D1E811");
+            });
+
             modelBuilder.Entity<Role>(entity =>
             {
                 entity.ToTable("Role");
@@ -213,7 +275,7 @@ namespace LeaguerManagement.Entities.Contexts
                 entity.HasOne(d => d.Unit)
                     .WithMany(p => p.Users)
                     .HasForeignKey(d => d.UnitId)
-                    .HasConstraintName("FK__User__UnitId__5AEE82B9");
+                    .HasConstraintName("FK__User__UnitId__4F7CD00D");
             });
 
             modelBuilder.Entity<UserRole>(entity =>

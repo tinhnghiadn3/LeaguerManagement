@@ -76,37 +76,14 @@ namespace LeaguerManagement.Services
             return folderPath;
         }
 
-        //protected async Task<File> GetOrCreateFolder(string name, string parentId)
-        //{
-        //    //
-        //    // Find folder by name in parent folder.
-        //    var listRequest = DriveService.Files.List();
-        //    listRequest.Spaces = "drive";
-        //    listRequest.PageSize = 1;
-        //    listRequest.Fields = $"nextPageToken, files({_fileFields})";
-        //    listRequest.Q = $"trashed = false and name='{name}'";
-        //    if (parentId != null)
-        //    {
-        //        listRequest.Q += $" and '{parentId}' in parents";
-        //    }
-        //    var result = await listRequest.ExecuteAsync();
-        //    if (result.Files.Any())
-        //    {
-        //        return result.Files.First();
-        //    }
-        //    //
-        //    // Create new folder
-        //    var fileMetadata = new File
-        //    {
-        //        Name = name,
-        //        MimeType = "application/vnd.google-apps.folder",
-        //        Parents = parentId == null ? null : new List<string> { parentId }
-        //    };
-        //    var request = DriveService.Files.Create(fileMetadata);
-        //    request.Fields = _fileFields;
-
-        //    return request.Execute();
-        //}
+        protected string GetOrCreateDocumentationFolder(string childPath, int documentationId)
+        {
+            var folderPath = Path.Combine("Contents", "Uploads", childPath, documentationId.ToString());
+            if (Directory.Exists(folderPath))
+                return folderPath;
+            Directory.CreateDirectory(folderPath);
+            return folderPath;
+        }
 
 
         public async Task<T> GetOrThrow<T>(IRepository<T> repository, int id, string message) where T : class

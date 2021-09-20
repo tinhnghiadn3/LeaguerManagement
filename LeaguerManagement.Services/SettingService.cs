@@ -59,7 +59,8 @@ namespace LeaguerManagement.Services
                     ChangeOfficialDocumentTypes = (await unitOfWork.Repository<ChangeOfficialDocumentType>().GetAllAsync()).Select(_ =>
                         new DropDownModel<int> { Key = _.Id, Value = _.Name }).ToList(),
                     //
-                    ChangeOfficialDocuments = _mapper.Map<IList<ChangeOfficialDocumentModel>>(await unitOfWork.Repository<ChangeOfficialDocument>().GetAllAsync()).ToList(),
+                    Ratings = (await unitOfWork.Repository<Rating>().GetAllAsync()).Select(_ =>
+                        new DropDownModel<int> { Key = _.Id, Value = _.Name }).ToList(),
                 };
             }
 

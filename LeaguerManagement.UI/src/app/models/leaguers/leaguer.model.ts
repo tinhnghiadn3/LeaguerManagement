@@ -1,5 +1,6 @@
 import {ReferenceWithAttachmentModel} from '@app/models/shared/attachment.model';
 import {AppliedDocumentModel} from '@app/models/leaguers/applied-document.model';
+import {RatingResultModel} from '@app/models/leaguers/rating-result.model';
 
 export class LeaguerModel {
   id: number;
@@ -26,8 +27,6 @@ export class LeaguerModel {
   officeComing: string;
   moveInDated: string;
   atOffice: string;
-  deadDate: string;
-  deathReason: string;
   getOutDate: string;
   formOut: string;
   phone: number;
@@ -39,6 +38,7 @@ export class LeaguerModel {
   avatarImg: string;
   //
   officialDocuments: ReferenceWithAttachmentModel<AppliedDocumentModel>[] = [];
+  ratingResults: RatingResultModel[] = [];
 
   constructor(init?: Partial<LeaguerModel>) {
     Object.assign(this, init);

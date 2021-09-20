@@ -22,6 +22,11 @@ namespace LeaguerManagement.APIs.Configurations
             CreateMap<LeaguerAttachment, AttachmentModel>().ReverseMap();
             CreateMap<ChangeOfficialDocument, ChangeOfficialDocumentModel>().ReverseMap();
             CreateMap<AppliedDocumentAttachment, AttachmentModel>().ReverseMap();
+            CreateMap<RatingResultModel, RatingResult>().ReverseMap();
+            // Documentation
+            CreateMap<Documentation, BaseSettingModel>().ReverseMap();
+            CreateMap<DocumentationAttachment, AttachmentModel>().ReverseMap();
+
         }
     }
 }

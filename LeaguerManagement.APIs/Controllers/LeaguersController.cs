@@ -227,5 +227,26 @@ namespace LeaguerManagement.APIs.Controllers
         {
             return await _leaguerService.DeleteOfficialAttachmentAsync(appliedId, attachmentId);
         }
+
+        // rating results
+
+        [HttpPost("rating-results")]
+        public async Task<int> AddRatingResult(RatingResultModel input)
+        {
+            return await _leaguerService.AddRatingResult(input);
+        }
+
+        [HttpPut("rating-results")]
+        public async Task<bool> UpdateRatingResult(RatingResultModel input)
+        {
+            return await _leaguerService.UpdateRatingResult(input);
+        }
+
+        [HttpDelete("rating-results/{id:int}")]
+        public async Task<bool> DeleteRatingResult(int id)
+        {
+            return await _leaguerService.DeleteRatingResult(id);
+        }
+
     }
 }

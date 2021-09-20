@@ -1,8 +1,9 @@
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
-import {DocumentationModel, ReferenceWithAttachmentModel} from '@app/models';
+import {AttachmentModel, DocumentationModel, LeaguerModel, ReferenceWithAttachmentModel} from '@app/models';
 import {API_ENDPOINT} from '@app/services/endpoints';
 import {ApiService} from '@app/services/shared';
+import {AttachmentService} from '@app/services/features/attachment.service';
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +11,8 @@ import {ApiService} from '@app/services/shared';
 
 export class DocumentationService {
 
-  constructor(private baseService: ApiService) {
+  constructor(private baseService: ApiService,
+              private attachmentService: AttachmentService) {
   }
 
   /**
@@ -30,6 +32,11 @@ export class DocumentationService {
   }
 
   deleteDocumentation(documentationId: number) {
-    return this.baseService.delete(`${API_ENDPOINT.Leaguers}/${documentationId}`);
+    return this.baseService.delete(`${API_ENDPOINT.Documentations}/${documentationId}`);
+  }
+
+  uploadDocumentationAttachment(files: File[], uploading: ReferenceWithAttachmentModel<LeaguerModel>): Promise<AttachmentModel[]> {
+    const url = `${API_ENDPOINT.Documentations}/${uploading.reference.id}/attachments`;
+    return this.attachmentService.uploadAttachment(files, uploading, url);
   }
 }

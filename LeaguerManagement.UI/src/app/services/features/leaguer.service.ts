@@ -9,18 +9,18 @@ import {
   AttachmentModel,
   CheckExistDataModel,
   AppliedDocumentModel,
-  StatusStatisticModel,
+  StatusStatisticModel, RatingResultModel,
 } from '@app/models';
 import {LoadOptions} from 'devextreme/data/load_options';
-import {HttpEventType, HttpResponse} from '@angular/common/http';
-import {AppNotify} from '@app/shared/utilities/notification-helper';
+import {AttachmentService} from '@app/services/features/attachment.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LeaguerService {
 
-  constructor(private baseService: ApiService) {
+  constructor(private baseService: ApiService,
+              private attachmentService: AttachmentService) {
   }
 
   getCurrentLeaguers(loadOptions: LoadOptions): Observable<SearchResultBaseModel<LeaguerModel[]>> {
@@ -60,6 +60,22 @@ export class LeaguerService {
   }
 
   /**
+   * Rating Result
+   */
+
+  addRatingResult(adding: RatingResultModel): Observable<number> {
+    return this.baseService.post(`${API_ENDPOINT.Leaguers}/rating-results`, adding);
+  }
+
+  updateRatingResult(updating: RatingResultModel): Observable<boolean> {
+    return this.baseService.update(`${API_ENDPOINT.Leaguers}/rating-results`, updating);
+  }
+
+  deleteRatingResult(resultId: number) {
+    return this.baseService.delete(`${API_ENDPOINT.Leaguers}/rating-results/${resultId}`);
+  }
+
+  /**
    * Applied Official Document
    */
 
@@ -83,48 +99,18 @@ export class LeaguerService {
    * Attachment
    */
 
-  uploadAttachment(files: File[], uploading: ReferenceWithAttachmentModel<any>, url: string): Promise<AttachmentModel[]> {
-    const counting = files.length > 1 ? (files.length + ' files') : ('1 file');
-    return new Promise((resolve, reject) => {
-      uploading.isUploading = true;
-      this.baseService.postFile(url, files).subscribe((event) => {
-        if (event.type === HttpEventType.UploadProgress) {
-          uploading.uploadingPercent = Math.round(100 * event.loaded / event.total);
-        } else if (event instanceof HttpResponse) {
-          uploading.uploadingPercent = 0;
-          uploading.isUploading = false;
-          //
-          // Show success message
-          AppNotify.success(`Upload ${counting} thành công`);
-          //
-          // Add to attachments list
-          const attachments = event.body as AttachmentModel[];
-          AttachmentModel.addAttachments(uploading, attachments);
-
-          // Resolve
-          resolve(event.body as AttachmentModel[]);
-        }
-      }, (error) => {
-        AppNotify.error((error as any).error.message);
-        uploading.uploadingPercent = 0;
-        uploading.isUploading = false;
-        reject();
-      });
-    });
-  }
-
   uploadLeaguerAttachment(files: File[], uploading: ReferenceWithAttachmentModel<LeaguerModel>): Promise<AttachmentModel[]> {
     const url = `${API_ENDPOINT.Leaguers}/${uploading.reference.id}/attachments`;
-    return this.uploadAttachment(files, uploading, url);
+    return this.attachmentService.uploadAttachment(files, uploading, url);
   }
 
   uploadAvatar(files: File[], uploading: ReferenceWithAttachmentModel<LeaguerModel>): Promise<AttachmentModel[]> {
     const url = `${API_ENDPOINT.Leaguers}/${uploading.reference.id}/avatars`;
-    return this.uploadAttachment(files, uploading, url);
+    return this.attachmentService.uploadAttachment(files, uploading, url);
   }
 
   uploadOfficialAttachment(files: File[], uploading: ReferenceWithAttachmentModel<AppliedDocumentModel>): Promise<AttachmentModel[]> {
     const url = `${API_ENDPOINT.Leaguers}/${uploading.reference.id}/officials`;
-    return this.uploadAttachment(files, uploading, url);
+    return this.attachmentService.uploadAttachment(files, uploading, url);
   }
 }

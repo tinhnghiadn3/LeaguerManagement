@@ -1,15 +1,17 @@
-import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
-import {DxValidationGroupComponent} from 'devextreme-angular';
+import {AfterViewInit, Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
+import {DxTextBoxComponent, DxValidationGroupComponent} from 'devextreme-angular';
 import {BaseSettingModel} from '@app/models';
 import {GENERAL_MESSAGE} from '@app/shared/messages';
 import {cloneDeep} from 'lodash';
+
 @Component({
   selector: 'app-base-setting-editing',
   templateUrl: './base-setting-editing.component.html',
   styleUrls: ['./base-setting-editing.component.scss']
 })
-export class BaseSettingEditingComponent implements OnInit {
+export class BaseSettingEditingComponent implements OnInit, AfterViewInit {
   @ViewChild('validationGroup', {static: false}) validationGroup: DxValidationGroupComponent;
+  @ViewChild('nameBox', {static: false}) nameBox: DxTextBoxComponent;
 
   @Input() fieldLabel: string = 'Tên';
   @Input() isProcessing: boolean = false;
@@ -38,6 +40,12 @@ export class BaseSettingEditingComponent implements OnInit {
 
   ngOnInit() {
     this.model = cloneDeep(this.selectedModel);
+  }
+
+  ngAfterViewInit() {
+    setTimeout(() => {
+      this.nameBox.instance.focus();
+    }, 500);
   }
 
   onSave() {

@@ -65,6 +65,9 @@ export class LookupService {
           case LookupDataType.ChangeOfficialDocuments:
             currentLookup.changeOfficialDocuments = data.changeOfficialDocuments;
             break;
+          case LookupDataType.Ratings:
+            currentLookup.ratings = data.ratings;
+            break;
           default:
             break;
         }
