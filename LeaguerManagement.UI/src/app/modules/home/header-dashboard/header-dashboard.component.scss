@@ -4,8 +4,12 @@
   align-items: center;
 
   .total {
-    ::ng-deep #pie {
+    ::ng-deep .pie {
       height: 250px;
+    }
+
+    ::ng-deep .isLoading {
+      display: none;
     }
   }
 

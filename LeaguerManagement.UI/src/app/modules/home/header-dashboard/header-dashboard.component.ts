@@ -11,14 +11,15 @@ import {LeaguerService} from '@app/services/features/leaguer.service';
 export class HeaderDashboardComponent {
 
   @Input() statusStatistics: StatusStatisticModel[] = [];
+  @Input() isHidden: boolean = false;
   @Output() onSelectedStatusChange = new EventEmitter();
 
-  pipe: any = new PercentPipe('en-US');
   isLoading: boolean = false;
 
   customizeTooltip(arg: any) {
+    const pipe: PercentPipe = new PercentPipe('en-US');
     return {
-      text: arg.valueText + ' - ' + this.pipe.transform(arg.percent, '1.2-2')
+      text: arg.valueText + ' - ' + pipe.transform(arg.percent, '1.2-2')
     };
   }
 

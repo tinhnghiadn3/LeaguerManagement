@@ -21,7 +21,6 @@ namespace LeaguerManagement.Entities.Utilities
         public int MaxFileSize { get; set; }
         public int MaxFileNameLength { get; set; }
         public int DefaultPerformancePeriodReview { get; set; }
-        public int EnLabTenantId { get; set; }
         public float TimeZoneDefault { get; set; }
     }
 

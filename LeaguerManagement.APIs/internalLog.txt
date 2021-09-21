@@ -1,0 +1,5 @@
+2021-09-21 17:15:15.6670 Info Message Template Auto Format enabled
+2021-09-21 17:15:15.6924 Info Loading assembly: NLog.Web.AspNetCore
+2021-09-21 17:15:15.7341 Info Adding target FileTarget(Name=alldata)
+2021-09-21 17:15:15.7341 Info Adding target FileTarget(Name=otherFile-web)
+2021-09-21 17:15:15.7548 Info Validating config: TargetNames=alldata, otherFile-web, ConfigItems=45, FilePath=H:\LeaguerManagement\LeaguerManagement.APIs\bin\Debug\net5.0\nlog.config

@@ -18,7 +18,10 @@
     <div class="collapse navbar-collapse nav-collapse " id="navbarSupportedContent">
       <ul class="navbar-nav m-auto">
         <li class="nav-item" *ngFor="let item of menuItems" [hidden]="!item.visible">
-          <a class="nav-link menu-item" routerLink="{{item.path}}" routerLinkActive="active">{{item.text}}</a>
+          <a class="nav-link menu-item" *ngIf="item.visible"
+             routerLink="{{item.path}}" routerLinkActive="active">
+            {{item.text}}
+          </a>
         </li>
       </ul>
     </div>

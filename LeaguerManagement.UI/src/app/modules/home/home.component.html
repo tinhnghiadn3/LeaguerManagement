@@ -7,7 +7,7 @@
   </dx-load-panel>
 
   <div class="d-flex align-items-center flex-column">
-    <app-header-dashboard [statusStatistics]="statusStatistics"
+    <app-header-dashboard [statusStatistics]="statusStatistics" [isHidden]="!dataSource.isLoaded()"
                           (onSelectedStatusChange)="getCurrentStaffs($event)"></app-header-dashboard>
 
     <div class="col-12 mt-2">

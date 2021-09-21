@@ -80,7 +80,7 @@ export class LeaguerListComponent implements OnInit, OnDestroy {
     e.component.expandRow(e.currentSelectedRowKeys[0]);
     this.selectedLeaguer = e.currentSelectedRowKeys[0];
     // set avatar
-    if (this.selectedLeaguer.avatarId) {
+    if (this.selectedLeaguer && this.selectedLeaguer.avatarId) {
       this.selectedLeaguer.avatarImg = AttachmentModel.getImageLink(this.selectedLeaguer.avatarId, this.selectedLeaguer.id, 'avatar');
     }
   }

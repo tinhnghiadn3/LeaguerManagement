@@ -18,7 +18,6 @@
     [columnResizingMode]="'widget'"
     [allowColumnResizing]="true"
     [rowAlternationEnabled]="true"
-    [masterDetail]="{ enabled: false, template: 'detail' }"
     (onContentReady)="contentReady($event)"
     (onSelectionChanged)="selectionChanged($event)"
     (onRowDblClick)="goToDetail($event.data)">
@@ -146,6 +145,8 @@
       </div>
     </dxi-column>
 
+    <dxo-selection mode="single"></dxo-selection>
+    <dxo-master-detail [enabled]="false" template="detail"></dxo-master-detail>
     <div *dxTemplate="let item of 'detail'" class="container-fluid form-wrapper">
       <div class="form-group">
         <div class="row">

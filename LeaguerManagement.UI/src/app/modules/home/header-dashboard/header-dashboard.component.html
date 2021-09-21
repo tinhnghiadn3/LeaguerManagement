@@ -1,6 +1,7 @@
 <div class="dashboard mt-2">
   <div class="total">
-    <dx-pie-chart id="pie" type="doughnut" title="Thống kê năm 2021" palette="Soft Pastel"
+    <dx-pie-chart class="pie" type="doughnut" title="Thống kê năm 2021" palette="Soft Pastel"
+                  [class.isLoading]="isHidden"
                   [dataSource]="statusStatistics" (onPointClick)="pointClickHandler($event)">
       <dxi-series argumentField="statusName" valueField="amount">
         <dxo-label [visible]="true">
