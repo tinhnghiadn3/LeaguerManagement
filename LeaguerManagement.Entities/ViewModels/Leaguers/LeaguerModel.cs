@@ -12,6 +12,7 @@ namespace LeaguerManagement.Entities.ViewModels
         }
         public int Id { get; set; }
         public int UnitId { get; set; }
+        public int? LivingUnitId { get; set; }
         public string Name { get; set; }
         public int? AvatarId { get; set; }
         public int BornYear { get; set; }

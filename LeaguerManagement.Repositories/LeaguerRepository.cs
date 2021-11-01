@@ -55,9 +55,9 @@ namespace LeaguerManagement.Repositories
                 _.Id != id && string.Equals(_.Name, name) && string.Equals(_.CardNumber, cardNumber));
         }
 
-        public static async Task<bool> IsExistingRatingResult(this IRepository<RatingResult> repository, int id, string year)
+        public static async Task<bool> IsExistingRatingResult(this IRepository<RatingResult> repository, int leaguerId, string year)
         {
-            return await repository.Entities.AnyAsync(_ => _.Id != id && _.Year == year);
+            return await repository.Entities.AnyAsync(_ => _.LeaguerId == leaguerId && _.Year == year);
         }
 
         public static async Task<ReferenceWithAttachmentModel<LeaguerModel>> GetLeaguerDetail(this IRepository<Leaguer> repository, int id)

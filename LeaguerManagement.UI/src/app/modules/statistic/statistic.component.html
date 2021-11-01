@@ -1,0 +1,37 @@
+<app-layout-default>
+  <dx-load-panel [visible]="true" *ngIf="isLoading" [showPane]="false"></dx-load-panel>
+  <dx-load-panel *ngIf="isProcessing"
+                 [visible]="true" [showPane]="false"
+                 [message]="'Processing'">
+  </dx-load-panel>
+
+  <div class="d-flex justify-content-start align-items-center flex-column">
+
+    <div>
+      <h4 class="m-0">Năm thống kê/tổng hợp:</h4>
+      <dx-select-box [dataSource]="units" class="field-value w-100"
+                     displayExpr="value"
+                     valueExpr="key"
+                     placeholder="Sinh hoạt tại..."
+                     noDataText=""
+                     [(value)]="leaguer.livingUnitId"
+                     [valueChangeEvent]="'input'">
+      </dx-select-box>
+    </div>
+
+    <div class="d-flex justify-content-start align-items-center mb-2">
+      <h4>Kết quả đánh giá phân loại đảng viên</h4>
+      <dx-button type="default" [text]="isProcessing ? '' : 'Tổng hợp'"
+                 class="ml-2" (onClick)="export5BTC()" [disabled]="isProcessing"></dx-button>
+    </div>
+
+    <div class="d-flex justify-content-start align-items-center mb-2">
+      <h4>Chia theo dân tộc và tôn giáo</h4>
+      <dx-button type="default" [text]="isProcessing ? '' : 'Thống kê'"
+                 class="ml-2" (onClick)="export4TW()" [disabled]="isProcessing"></dx-button>
+    </div>
+
+  </div>
+
+
+</app-layout-default>

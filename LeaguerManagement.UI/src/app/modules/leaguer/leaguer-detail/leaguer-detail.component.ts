@@ -33,10 +33,11 @@ export class LeaguerDetailComponent implements OnInit, OnDestroy {
   units: DropDownModel[] = [];
   statuses: DropDownModel[] = [];
   ratings: DropDownModel[] = [];
+  years: DropDownModel[] = [];
 
   isLoading: boolean = false;
   isProcessing: boolean = false;
-  isShowAddingRatingResultPopup: boolean = false;
+  isShowEditingRatingResultPopup: boolean = false;
   isExistData: boolean = false;
   leaguerId: number;
 
@@ -66,6 +67,7 @@ export class LeaguerDetailComponent implements OnInit, OnDestroy {
         this.units = lookup.units;
         this.statuses = lookup.statuses;
         this.ratings = lookup.ratings;
+        this.years = lookup.years;
       }));
   }
 
@@ -168,7 +170,7 @@ export class LeaguerDetailComponent implements OnInit, OnDestroy {
   }
 
   onShowAddingRatingResultPopup(result = null) {
-    this.isShowAddingRatingResultPopup = true;
+    this.isShowEditingRatingResultPopup = true;
     this.selectedResult = result ?? new RatingResultModel({
       leaguerId: this.leaguerId
     });
@@ -198,7 +200,7 @@ export class LeaguerDetailComponent implements OnInit, OnDestroy {
       result.id = res;
       this.leaguer.ratingResults.push(result);
       AppNotify.success(GENERAL_MESSAGE.ADD_SUCCESS.format('Xếp loại năm', this.selectedResult.year));
-      this.isShowAddingRatingResultPopup = false;
+      this.isShowEditingRatingResultPopup = false;
       this.hideProcessing();
       this.refresh();
     }, () => {
@@ -209,6 +211,7 @@ export class LeaguerDetailComponent implements OnInit, OnDestroy {
   updateRatingResult() {
     this.leaguerService.updateRatingResult(this.selectedResult).subscribe(() => {
       AppNotify.success(GENERAL_MESSAGE.ADD_SUCCESS.format('Xếp loại năm', this.selectedResult.year));
+      this.isShowEditingRatingResultPopup = false;
       this.hideProcessing();
       this.refresh();
     }, () => {

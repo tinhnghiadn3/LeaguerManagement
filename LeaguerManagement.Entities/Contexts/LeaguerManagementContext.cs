@@ -37,9 +37,15 @@ namespace LeaguerManagement.Entities.Contexts
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<UserRole> UserRoles { get; set; }
         public virtual DbSet<UserToken> UserTokens { get; set; }
+        public virtual DbSet<Year> Years { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+            if (!optionsBuilder.IsConfigured)
+            {
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+                optionsBuilder.UseSqlServer("Data Source=ADMIN-PC;Initial Catalog=LeaguerManagement;Integrated Security=True");
+            }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -68,7 +74,7 @@ namespace LeaguerManagement.Entities.Contexts
                     .WithMany(p => p.AppliedDocuments)
                     .HasForeignKey(d => d.LeaguerId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__AppliedDo__Leagu__3F466844");
+                    .HasConstraintName("FK__AppliedDo__Leagu__46E78A0C");
             });
 
             modelBuilder.Entity<AppliedDocumentAttachment>(entity =>
@@ -87,7 +93,7 @@ namespace LeaguerManagement.Entities.Contexts
                     .WithMany(p => p.AppliedDocumentAttachments)
                     .HasForeignKey(d => d.AppliedDocumentId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__AppliedDo__Appli__403A8C7D");
+                    .HasConstraintName("FK__AppliedDo__Appli__47DBAE45");
             });
 
             modelBuilder.Entity<ChangeOfficialDocument>(entity =>
@@ -99,7 +105,7 @@ namespace LeaguerManagement.Entities.Contexts
                 entity.HasOne(d => d.ChangeOfficialDocumentType)
                     .WithMany(p => p.ChangeOfficialDocuments)
                     .HasForeignKey(d => d.ChangeOfficialDocumentTypeId)
-                    .HasConstraintName("FK__ChangeOff__Chang__412EB0B6");
+                    .HasConstraintName("FK__ChangeOff__Chang__48CFD27E");
             });
 
             modelBuilder.Entity<ChangeOfficialDocumentType>(entity =>
@@ -129,13 +135,13 @@ namespace LeaguerManagement.Entities.Contexts
                 entity.HasOne(d => d.CreatedByUser)
                     .WithMany(p => p.DocumentationAttachments)
                     .HasForeignKey(d => d.CreatedByUserId)
-                    .HasConstraintName("FK__Documenta__Creat__5629CD9C");
+                    .HasConstraintName("FK__Documenta__Creat__49C3F6B7");
 
                 entity.HasOne(d => d.Documentation)
                     .WithMany(p => p.DocumentationAttachments)
                     .HasForeignKey(d => d.DocumentationId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Documenta__Docum__5535A963");
+                    .HasConstraintName("FK__Documenta__Docum__4AB81AF0");
             });
 
             modelBuilder.Entity<Leaguer>(entity =>
@@ -169,17 +175,22 @@ namespace LeaguerManagement.Entities.Contexts
 
                 entity.Property(e => e.PreliminaryApplyDate).HasColumnType("datetime");
 
+                entity.HasOne(d => d.LivingUnit)
+                    .WithMany(p => p.LeaguerLivingUnits)
+                    .HasForeignKey(d => d.LivingUnitId)
+                    .HasConstraintName("FK__Leaguer__LivingU__6E01572D");
+
                 entity.HasOne(d => d.Status)
                     .WithMany(p => p.Leaguers)
                     .HasForeignKey(d => d.StatusId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Leaguer__StatusI__4222D4EF");
+                    .HasConstraintName("FK__Leaguer__StatusI__4BAC3F29");
 
                 entity.HasOne(d => d.Unit)
-                    .WithMany(p => p.Leaguers)
+                    .WithMany(p => p.LeaguerUnits)
                     .HasForeignKey(d => d.UnitId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Leaguer__UnitId__4316F928");
+                    .HasConstraintName("FK__Leaguer__UnitId__4CA06362");
             });
 
             modelBuilder.Entity<LeaguerAttachment>(entity =>
@@ -198,13 +209,13 @@ namespace LeaguerManagement.Entities.Contexts
                     .WithMany(p => p.LeaguerAttachments)
                     .HasForeignKey(d => d.CreatedByUserId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__LeaguerAt__Creat__440B1D61");
+                    .HasConstraintName("FK__LeaguerAt__Creat__4D94879B");
 
                 entity.HasOne(d => d.Leaguer)
                     .WithMany(p => p.LeaguerAttachments)
                     .HasForeignKey(d => d.LeaguerId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__LeaguerAt__Leagu__44FF419A");
+                    .HasConstraintName("FK__LeaguerAt__Leagu__4E88ABD4");
             });
 
             modelBuilder.Entity<Rating>(entity =>
@@ -226,12 +237,12 @@ namespace LeaguerManagement.Entities.Contexts
                 entity.HasOne(d => d.Leaguer)
                     .WithMany(p => p.RatingResults)
                     .HasForeignKey(d => d.LeaguerId)
-                    .HasConstraintName("FK__RatingRes__Leagu__72C60C4A");
+                    .HasConstraintName("FK__RatingRes__Leagu__4F7CD00D");
 
                 entity.HasOne(d => d.Rating)
                     .WithMany(p => p.RatingResults)
                     .HasForeignKey(d => d.RatingId)
-                    .HasConstraintName("FK__RatingRes__Ratin__71D1E811");
+                    .HasConstraintName("FK__RatingRes__Ratin__5070F446");
             });
 
             modelBuilder.Entity<Role>(entity =>
@@ -275,7 +286,7 @@ namespace LeaguerManagement.Entities.Contexts
                 entity.HasOne(d => d.Unit)
                     .WithMany(p => p.Users)
                     .HasForeignKey(d => d.UnitId)
-                    .HasConstraintName("FK__User__UnitId__4F7CD00D");
+                    .HasConstraintName("FK__User__UnitId__5165187F");
             });
 
             modelBuilder.Entity<UserRole>(entity =>

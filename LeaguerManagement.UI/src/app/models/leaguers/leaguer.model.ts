@@ -5,6 +5,7 @@ import {RatingResultModel} from '@app/models/leaguers/rating-result.model';
 export class LeaguerModel {
   id: number;
   unitId: number;
+  livingUnitId: number | undefined;
   name: string;
   bornYear: number;
   gender: boolean;

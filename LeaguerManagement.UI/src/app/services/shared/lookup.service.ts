@@ -68,6 +68,9 @@ export class LookupService {
           case LookupDataType.Ratings:
             currentLookup.ratings = data.ratings;
             break;
+          case LookupDataType.Years:
+            currentLookup.years = data.years;
+            break;
           default:
             break;
         }

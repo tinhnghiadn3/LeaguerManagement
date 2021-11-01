@@ -506,7 +506,7 @@ namespace LeaguerManagement.Services
             try
             {
                 // check exist with card number (except current)
-                if (await _ratingResultRepository.IsExistingRatingResult(input.Id, input.Year))
+                if (await _ratingResultRepository.IsExistingRatingResult(input.LeaguerId, input.Year))
                     throw new AppException(string.Format(AppMessages.ThisObjectIsExist, $"Xếp loại năm {input.Year}"));
                 //
                 // check exist leaguer

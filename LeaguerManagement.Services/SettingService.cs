@@ -61,6 +61,9 @@ namespace LeaguerManagement.Services
                     //
                     Ratings = (await unitOfWork.Repository<Rating>().GetAllAsync()).Select(_ =>
                         new DropDownModel<int> { Key = _.Id, Value = _.Name }).ToList(),
+                    //
+                    Years = (await unitOfWork.Repository<Rating>().GetAllAsync()).Select(_ =>
+                        new DropDownModel<int> { Key = _.Id, Value = _.Name }).ToList(),
                 };
             }
 

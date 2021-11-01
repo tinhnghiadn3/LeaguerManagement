@@ -131,6 +131,20 @@
                                  [valueChangeEvent]="'keyup'"></dx-number-box>
                 </div>
               </div>
+              <!--phone-->
+              <div class="col-12 col-lg-6">
+                <div class="field row-layout">
+                  <div class="field-label">Đơn vị sinh hoạt:</div>
+                  <dx-select-box [dataSource]="units" class="field-value w-100"
+                                 displayExpr="value"
+                                 valueExpr="key"
+                                 placeholder="Sinh hoạt tại..."
+                                 noDataText=""
+                                 [(value)]="leaguer.livingUnitId"
+                                 [valueChangeEvent]="'input'">
+                  </dx-select-box>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -172,7 +186,7 @@
               <dx-select-box [dataSource]="units" class="field-value w-100"
                              displayExpr="value"
                              valueExpr="key"
-                             placeholder="Ông/Bà"
+                             placeholder="Công tác tại..."
                              noDataText=""
                              [(value)]="leaguer.unitId"
                              [valueChangeEvent]="'input'">
@@ -375,23 +389,23 @@
                          [message]="GENERAL_MESSAGE.DeleteRecordConfirmQuestion.format('Xếp loại năm', selectedResult.year)"
                          (onConfirm)="onDeleteRatingResult()"></app-popover-confirm-box>
 
-<app-popup-container *ngIf="isShowAddingRatingResultPopup"
+<app-popup-container *ngIf="isShowEditingRatingResultPopup"
                      [title]="selectedResult.id ? 'Cập nhật Kết quả xếp loại' : 'Tạo mới Kết quả xếp loại'"
                      [width]="550"
                      [height]="'auto'"
-                     [(visible)]="isShowAddingRatingResultPopup"
+                     [(visible)]="isShowEditingRatingResultPopup"
                      (onReady)="focusFirstBox(yearBox)">
   <div class="form-wrapper">
     <dx-validation-group #validationGroup>
       <div class="field">
         <span class="field-label">Năm <span class="lbl-required">*</span></span>
         <div class="field-value">
-          <dx-text-box #yearBox [(value)]="selectedResult.year" [maxLength]="255">
-            <dx-validator>
-              <dxi-validation-rule type="required"
-                                   [message]="GENERAL_MESSAGE.TheFieldIsRequired.format('Năm')"></dxi-validation-rule>
-            </dx-validator>
-          </dx-text-box>
+          <dx-select-box #yearBox [dataSource]="years"
+                         valueExpr="key" displayExpr="value"
+                         [(value)]="selectedResult.year">
+            <dxi-validation-rule type="required"
+                                 [message]="GENERAL_MESSAGE.TheFieldIsRequired.format('Năm')"></dxi-validation-rule>
+          </dx-select-box>
         </div>
       </div>
       <div class="field">
@@ -411,7 +425,7 @@
                    [text]="isProcessing ? '' : 'Lưu'"
                    icon="{{isProcessing?'fas fa-spinner fa-spin':''}}"
                    (onClick)="onSaveRatingResult(validationGroup)" [disabled]="isProcessing"></dx-button>
-        <dx-button text="Hủy" (onClick)="isShowAddingRatingResultPopup = false"></dx-button>
+        <dx-button text="Hủy" (onClick)="isShowEditingRatingResultPopup = false"></dx-button>
       </div>
     </dx-validation-group>
   </div>

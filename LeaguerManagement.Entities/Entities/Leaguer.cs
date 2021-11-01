@@ -46,7 +46,9 @@ namespace LeaguerManagement.Entities.Entities
         public string Notes { get; set; }
         public int StatusId { get; set; }
         public bool IsActivated { get; set; }
+        public int? LivingUnitId { get; set; }
 
+        public virtual Unit LivingUnit { get; set; }
         public virtual Status Status { get; set; }
         public virtual Unit Unit { get; set; }
         public virtual ICollection<AppliedDocument> AppliedDocuments { get; set; }

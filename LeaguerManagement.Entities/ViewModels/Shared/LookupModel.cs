@@ -10,6 +10,7 @@ namespace LeaguerManagement.Entities.ViewModels
         public IList<DropDownModel<int>> ChangeOfficialDocumentTypes { get; set; }
         public IList<ChangeOfficialDocumentModel> ChangeOfficialDocuments { get; set; }
         public IList<DropDownModel<int>> Ratings { get; set; }
+        public IList<DropDownModel<int>> Years { get; set; }
 
         public LookupModel()
         {
@@ -19,6 +20,7 @@ namespace LeaguerManagement.Entities.ViewModels
             ChangeOfficialDocumentTypes = new List<DropDownModel<int>>();
             ChangeOfficialDocuments = new List<ChangeOfficialDocumentModel>();
             Ratings = new List<DropDownModel<int>>();
+            Years = new List<DropDownModel<int>>();
         }
     }
 }

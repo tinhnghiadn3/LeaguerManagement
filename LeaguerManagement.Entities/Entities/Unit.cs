@@ -9,7 +9,8 @@ namespace LeaguerManagement.Entities.Entities
     {
         public Unit()
         {
-            Leaguers = new HashSet<Leaguer>();
+            LeaguerLivingUnits = new HashSet<Leaguer>();
+            LeaguerUnits = new HashSet<Leaguer>();
             Users = new HashSet<User>();
         }
 
@@ -17,7 +18,8 @@ namespace LeaguerManagement.Entities.Entities
         public string Name { get; set; }
         public string IdentifyNumber { get; set; }
 
-        public virtual ICollection<Leaguer> Leaguers { get; set; }
+        public virtual ICollection<Leaguer> LeaguerLivingUnits { get; set; }
+        public virtual ICollection<Leaguer> LeaguerUnits { get; set; }
         public virtual ICollection<User> Users { get; set; }
     }
 }

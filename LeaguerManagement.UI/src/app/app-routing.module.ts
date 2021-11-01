@@ -26,6 +26,11 @@ const routes: Routes = [
     canActivate: [AuthGuard],
   },
   {
+    path: 'statistic',
+    loadChildren: () => import('@app/modules/statistic/statistic.module').then(m => m.StatisticModule),
+    canActivate: [AuthGuard],
+  },
+  {
     path: 'settings',
     loadChildren: () => import('@app/modules/settings/settings.module').then(m => m.SettingsModule),
     canActivate: [AuthGuard, NgxPermissionsGuard],

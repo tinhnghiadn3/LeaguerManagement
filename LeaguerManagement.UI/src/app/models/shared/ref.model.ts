@@ -7,6 +7,7 @@ export class LookupModel {
   changeOfficialDocumentTypes: DropDownModel[] = [];
   changeOfficialDocuments: ChangeOfficialDocumentModel[] = [];
   ratings: DropDownModel[] = [];
+  years: DropDownModel[] = [];
 
   constructor(init?: Partial<LookupModel>) {
     Object.assign(this, init);
