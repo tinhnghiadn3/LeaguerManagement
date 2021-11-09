@@ -5,6 +5,7 @@ import {Subscription} from 'rxjs';
 import {DropDownModel} from '@app/models';
 import {StatisticService} from '@app/services/features/statistic.service';
 import {saveAs} from 'file-saver';
+import {AppNotify} from '@app/shared/utilities/notification-helper';
 
 @Component({
   selector: 'app-statistic',
@@ -15,7 +16,7 @@ export class StatisticComponent implements OnInit, OnDestroy {
 
   years: DropDownModel[] = [];
 
-  selectedYear: number;
+  selectedYear: number = 0;
   isLoading: boolean = false;
   isProcessing: boolean = false;
   subscription: Subscription = new Subscription();
@@ -25,19 +26,28 @@ export class StatisticComponent implements OnInit, OnDestroy {
     this.subscription.add(
       this.lookupService.lookup.subscribe((lookup: LookupModel) => {
         this.years = lookup.years;
-        console.log(this.years);
       })
     );
   }
 
   ngOnInit() {
-    this.selectedYear = new Date().getFullYear();
+  }
+
+  validateYear(): boolean {
+    if (!this.selectedYear) {
+      AppNotify.warning('Chọn năm trước khi xuất thống kê/tổng hợp');
+      return false;
+    }
+    return true;
   }
 
   export5BTC() {
+    if (!this.validateYear()) {
+      return;
+    }
     this.showProcessing();
     this.statisticService.export5BTC(this.selectedYear).subscribe(blob => {
-      saveAs(blob, `Tong hop Ket qua danh gia phan loai Dang vien.xls`);
+      saveAs(blob, `Tong hop Ket qua danh gia phan loai Dang vien.xlsx`);
       this.hideProcessing();
     }, () => {
       this.hideProcessing();
@@ -45,9 +55,12 @@ export class StatisticComponent implements OnInit, OnDestroy {
   }
 
   export4TW() {
+    if (!this.validateYear()) {
+      return;
+    }
     this.showProcessing();
     this.statisticService.export4TW(this.selectedYear).subscribe(blob => {
-      saveAs(blob, `Thong ke chia theo Dan toc va Ton giao.xls`);
+      saveAs(blob, `Thong ke chia theo Dan toc va Ton giao.xlsx`);
       this.hideProcessing();
     }, () => {
       this.hideProcessing();

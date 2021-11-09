@@ -17,7 +17,7 @@ export const API_ENDPOINT = {
   Files: `api/files`,
   //
   // Statistic
-  Statistic: `api/statistic`,
+  Statistics: `api/statistics`,
   //
   // Documentations
   Documentations: `api/documentations`,

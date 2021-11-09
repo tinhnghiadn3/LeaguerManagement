@@ -36,7 +36,7 @@ namespace LeaguerManagement.Entities.Utilities.Helper
             System.Threading.Thread.Sleep(300);
         }
 
-        private static void GenerateRowAndStyling(this IXLWorksheet worksheet, int currentRow, int totalColumns, bool isFontBold = false)
+        public static void GenerateRowAndStyling(this IXLWorksheet worksheet, int currentRow, int totalColumns, bool isFontBold = false)
         {
             worksheet.Row(currentRow).Style.Font.FontName = "Times New Roman";
             worksheet.Row(currentRow).Style.Font.Bold = isFontBold;
@@ -79,7 +79,7 @@ namespace LeaguerManagement.Entities.Utilities.Helper
             }
         }
 
-        private static void GenerateMergeCell(this IXLWorksheet worksheet, int row, MergeCellModel mergeCell)
+        public static void GenerateMergeCell(this IXLWorksheet worksheet, int row, MergeCellModel mergeCell)
         {
             worksheet.Cell(row, mergeCell.From).Value = mergeCell.Text;
             worksheet.Cell(row, mergeCell.From).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;

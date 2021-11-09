@@ -156,6 +156,7 @@ namespace LeaguerManagement.APIs
             services.AddScoped<LeaguerService>();
             services.AddScoped<FileService>();
             services.AddScoped<DocumentationService>();
+            services.AddScoped<StatisticsService>();
             //
             // If using IIS:
             services.Configure<IISServerOptions>(options =>

@@ -222,5 +222,35 @@ namespace LeaguerManagement.Repositories
 
             return source;
         }
+
+        public static async Task<Report5BTCModel> GetData5BTC(this IRepository<Leaguer> repository, int year)
+        {
+            var source = new Report5BTCModel();
+            await repository.LoadStoredProc("spGetData5BTC")
+                .WithSqlParam("@year", year)
+                .ExecuteStoredProcAsync((result) =>
+                {
+                    source.Units = result.ReadNextListOrEmpty<UnitModel>().ToList();
+                    source.Leaguers = result.ReadNextListOrEmpty<Leaguer5BtcModel>().ToList();
+                });
+
+            return source;
+        }
+
+        public static async Task<Report4TWModel> GetData4TW(this IRepository<Leaguer> repository, int year)
+        {
+            var source = new Report4TWModel();
+            await repository.LoadStoredProc("spGetData4TW")
+                .WithSqlParam("@year", year)
+                .ExecuteStoredProcAsync((result) =>
+                {
+                    source.Folks = result.ReadNextListOrEmpty<Data4TWModel>().ToList();
+                    source.FemaleFolks = result.ReadNextListOrEmpty<Data4TWModel>().ToList();
+                    source.Religions = result.ReadNextListOrEmpty<Data4TWModel>().ToList();
+                    source.Total = result.ReadNextListOrEmpty<Data4TWModel>().First().Total;
+                });
+
+            return source;
+        }
     }
 }

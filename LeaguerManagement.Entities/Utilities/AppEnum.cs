@@ -24,4 +24,13 @@ namespace LeaguerManagement.Entities.Utilities
         GetOut = 3,
         Dead = 4
     }
+
+    public enum AppLeaguerRating
+    {
+        Best = 1,
+        Well = 2,
+        Done = 3,
+        NotDone = 4,
+        Temp = 5
+    }
 }

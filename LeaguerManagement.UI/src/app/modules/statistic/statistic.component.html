@@ -5,28 +5,28 @@
                  [message]="'Processing'">
   </dx-load-panel>
 
-  <div class="d-flex justify-content-start align-items-center flex-column">
+  <div class="d-flex justify-content-start align-items-center flex-column w-50 m-auto">
 
-    <div>
+    <div class="d-flex mb-2">
       <h4 class="m-0">Năm thống kê/tổng hợp:</h4>
-      <dx-select-box [dataSource]="units" class="field-value w-100"
+      <dx-select-box [dataSource]="years" class="ml-2"
                      displayExpr="value"
-                     valueExpr="key"
-                     placeholder="Sinh hoạt tại..."
+                     valueExpr="value"
+                     placeholder="Chọn năm"
                      noDataText=""
-                     [(value)]="leaguer.livingUnitId"
+                     [(value)]="selectedYear"
                      [valueChangeEvent]="'input'">
       </dx-select-box>
     </div>
 
-    <div class="d-flex justify-content-start align-items-center mb-2">
-      <h4>Kết quả đánh giá phân loại đảng viên</h4>
+    <div class="d-flex justify-content-start align-items-center mb-2 mr-auto">
+      <h5 class="m-0">1. Kết quả đánh giá phân loại đảng viên</h5>
       <dx-button type="default" [text]="isProcessing ? '' : 'Tổng hợp'"
                  class="ml-2" (onClick)="export5BTC()" [disabled]="isProcessing"></dx-button>
     </div>
 
-    <div class="d-flex justify-content-start align-items-center mb-2">
-      <h4>Chia theo dân tộc và tôn giáo</h4>
+    <div class="d-flex justify-content-start align-items-center mb-2 mr-auto">
+      <h5 class="m-0">2. Chia theo dân tộc và tôn giáo</h5>
       <dx-button type="default" [text]="isProcessing ? '' : 'Thống kê'"
                  class="ml-2" (onClick)="export4TW()" [disabled]="isProcessing"></dx-button>
     </div>
